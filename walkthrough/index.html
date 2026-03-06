@@ -1,0 +1,1649 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AA 737 FO Walkthrough</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0d1117">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="737 FO">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/svg+xml" href="icon.svg">
+<style>
+/* ===== RESET & VARIABLES ===== */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #21262d;
+  --bg-elevated: #282e36;
+  --border: #30363d;
+  --border-light: #3a424b;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent-navy: #003366;
+  --accent-blue: #58a6ff;
+  --accent-green: #3fb950;
+  --accent-orange: #d29922;
+  --accent-red: #f85149;
+  --accent-purple: #bc8cff;
+  --accent-yellow: #e8c838;
+  --sidebar-width: 260px;
+  --header-height: 52px;
+  --nav-height: 56px;
+}
+html { font-size: 15px; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ===== HEADER ===== */
+.header {
+  height: var(--header-height);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+}
+.header-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--accent-blue);
+  letter-spacing: 0.5px;
+}
+.header-title span { color: var(--text-muted); font-weight: 400; }
+.header-center {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+.phase-indicator {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+}
+.progress-bar-outer {
+  width: 160px;
+  height: 4px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.progress-bar-inner {
+  height: 100%;
+  background: var(--accent-blue);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.header-actions {
+  display: flex;
+  gap: 8px;
+}
+.btn-header {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  padding: 6px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.2s;
+}
+.btn-header:hover { background: var(--bg-elevated); color: var(--text-primary); }
+.btn-header.active { background: var(--accent-purple); color: #fff; border-color: var(--accent-purple); }
+
+/* ===== LAYOUT ===== */
+.app-layout {
+  display: flex;
+  position: fixed;
+  top: var(--header-height);
+  bottom: var(--nav-height);
+  left: 0; right: 0;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: var(--sidebar-width);
+  background: var(--bg-secondary);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  flex-shrink: 0;
+  padding: 8px 0;
+}
+.sidebar::-webkit-scrollbar { width: 4px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.sidebar-progress {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+.sidebar-progress-text {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+}
+.sidebar-progress-bar {
+  height: 3px;
+  background: var(--bg-tertiary);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.sidebar-progress-fill {
+  height: 100%;
+  background: var(--accent-green);
+  transition: width 0.4s;
+}
+.phase-item {
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.phase-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  gap: 8px;
+  border-left: 3px solid transparent;
+  transition: all 0.15s;
+}
+.phase-header:hover { background: var(--bg-tertiary); }
+.phase-item.active > .phase-header { border-left-color: var(--accent-blue); background: rgba(88,166,255,0.08); }
+.phase-item.completed > .phase-header .phase-check { color: var(--accent-green); }
+.phase-number {
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: var(--bg-tertiary);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.65rem; font-weight: 700;
+  color: var(--text-secondary);
+  flex-shrink: 0;
+}
+.phase-item.active > .phase-header .phase-number { background: var(--accent-blue); color: #fff; }
+.phase-item.completed > .phase-header .phase-number { background: var(--accent-green); color: #fff; }
+.phase-title {
+  font-size: 0.78rem;
+  color: var(--text-secondary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.phase-item.active > .phase-header .phase-title { color: var(--text-primary); font-weight: 600; }
+.phase-check { font-size: 0.7rem; color: transparent; }
+.phase-steps {
+  display: none;
+  padding: 2px 0 6px 0;
+}
+.phase-item.active .phase-steps,
+.phase-item.expanded .phase-steps { display: block; }
+.step-item {
+  padding: 4px 12px 4px 46px;
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+.step-item:hover { color: var(--text-secondary); background: var(--bg-tertiary); }
+.step-item.active { color: var(--accent-blue); font-weight: 600; }
+.step-item.completed { color: var(--accent-green); }
+.step-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+.step-item.active .step-dot { background: var(--accent-blue); box-shadow: 0 0 6px var(--accent-blue); }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 32px;
+}
+.main-content::-webkit-scrollbar { width: 6px; }
+.main-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+/* Step Header */
+.step-header {
+  margin-bottom: 20px;
+}
+.step-breadcrumb {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+}
+.step-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.who-badge {
+  padding: 3px 10px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+.who-CA { background: var(--accent-navy); color: #8bb8e8; }
+.who-FO { background: #0a3d1e; color: var(--accent-green); }
+.who-PF { background: #1a2744; color: var(--accent-blue); }
+.who-PM { background: #3d2b00; color: var(--accent-orange); }
+.who-CAFO { background: #1a2233; color: #7dafdb; }
+.who-PFPM { background: #1a2744; color: #9dc3f0; }
+.step-main-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+/* Trigger Bar */
+.trigger-bar {
+  background: rgba(210,153,34,0.1);
+  border-left: 3px solid var(--accent-orange);
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  border-radius: 0 6px 6px 0;
+  font-size: 0.85rem;
+  color: var(--accent-orange);
+  font-style: italic;
+}
+
+/* Flow Items */
+.flow-items {
+  margin-bottom: 20px;
+}
+.flow-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.15s;
+  border-left: 3px solid transparent;
+}
+.flow-item:hover { background: var(--bg-tertiary); }
+.flow-item.critical { border-left-color: var(--accent-red); }
+.flow-item.checked { opacity: 0.5; }
+.flow-checkbox {
+  width: 18px; height: 18px;
+  border: 2px solid var(--border-light);
+  border-radius: 4px;
+  flex-shrink: 0;
+  margin-top: 1px;
+  display: flex; align-items: center; justify-content: center;
+  transition: all 0.2s;
+}
+.flow-item.checked .flow-checkbox {
+  background: var(--accent-green);
+  border-color: var(--accent-green);
+}
+.flow-item.checked .flow-checkbox::after {
+  content: '\2713';
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+.flow-text { font-size: 0.9rem; line-height: 1.4; flex: 1; }
+.critical-badge {
+  background: rgba(248,81,73,0.15);
+  color: var(--accent-red);
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ===== FLOW REFERENCE CARD (new numbered item-setting format) ===== */
+.flow-ref {
+  margin-bottom: 20px;
+  font-family: 'SF Mono', 'Menlo', 'Consolas', monospace;
+}
+.flow-ref-item {
+  display: flex;
+  align-items: baseline;
+  padding: 5px 0;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  border-left: 3px solid transparent;
+  padding-left: 4px;
+}
+.flow-ref-item:hover { background: rgba(255,255,255,0.02); }
+.flow-ref-item.critical { border-left-color: var(--accent-red); }
+.flow-ref-item.checked { opacity: 0.4; }
+.flow-ref-item.checked .flow-ref-setting::before { content: '\2713 '; color: var(--accent-green); }
+.flow-ref-num {
+  width: 28px;
+  font-weight: 700;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-size: 0.8rem;
+}
+.flow-ref-name {
+  color: var(--text-primary);
+  font-size: 0.85rem;
+  white-space: nowrap;
+}
+.flow-ref-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--border);
+  margin: 0 6px;
+  min-width: 20px;
+  align-self: center;
+  height: 0;
+}
+.flow-ref-setting {
+  color: var(--accent-green);
+  font-weight: 600;
+  font-size: 0.85rem;
+  white-space: nowrap;
+  text-align: right;
+}
+.flow-ref-setting.critical-setting { color: var(--accent-red); }
+.flow-ref-setting.note-setting { color: var(--accent-blue); }
+.flow-ref-note {
+  padding-left: 32px;
+  font-size: 0.78rem;
+  color: var(--accent-red);
+  font-weight: 600;
+  padding-bottom: 2px;
+}
+.flow-ref-sub {
+  padding-left: 32px;
+}
+.flow-ref-sub-item {
+  display: flex;
+  align-items: baseline;
+  padding: 2px 0;
+}
+.flow-ref-sub-bullet {
+  width: 14px;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  font-size: 0.75rem;
+}
+.flow-ref-sub-name {
+  color: var(--text-secondary);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+.flow-ref-sub-dots {
+  flex: 1;
+  border-bottom: 1px dotted var(--border);
+  margin: 0 5px;
+  min-width: 12px;
+  align-self: center;
+  height: 0;
+}
+.flow-ref-sub-setting {
+  color: var(--accent-green);
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.flow-ref-sub-note {
+  color: var(--accent-orange);
+  font-size: 0.78rem;
+  font-style: italic;
+  padding-left: 14px;
+}
+
+/* ===== CALLOUT GRID (two-column PF|PM with milestones) ===== */
+.callout-grid {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+.callout-grid-header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--bg-tertiary);
+  border-bottom: 1px solid var(--border);
+}
+.callout-grid-header div {
+  padding: 8px 14px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+.cg-col-pf { color: var(--accent-blue); border-right: 1px solid var(--border); }
+.cg-col-pm { color: var(--accent-orange); }
+.cg-milestone {
+  padding: 6px 14px;
+  font-weight: 700;
+  font-size: 0.78rem;
+  color: var(--accent-red);
+  background: rgba(248,81,73,0.06);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.cg-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 28px;
+}
+.cg-cell {
+  padding: 4px 14px;
+  font-size: 0.82rem;
+  line-height: 1.4;
+  display: flex;
+  align-items: flex-start;
+}
+.cg-cell-pf { border-right: 1px solid var(--border); }
+.cg-cell-pm {}
+.cg-entry-callout {
+  font-weight: 600;
+  color: var(--text-primary);
+}
+.cg-entry-callout::before { content: '\201C'; color: var(--text-muted); margin-right: 1px; }
+.cg-entry-callout::after { content: '\201D'; color: var(--text-muted); margin-left: 1px; }
+.cg-entry-action {
+  color: var(--text-secondary);
+  font-size: 0.78rem;
+}
+.cg-entry-action::before { content: '\2014\00a0'; color: var(--text-muted); }
+
+/* Quiz blur for new renderers */
+.quiz-hidden .flow-ref-setting { filter: blur(6px); cursor: pointer; transition: filter 0.3s; user-select: none; }
+.quiz-hidden .flow-ref-setting.revealed { filter: none; }
+.quiz-hidden .flow-ref-sub-setting { filter: blur(6px); cursor: pointer; transition: filter 0.3s; user-select: none; }
+.quiz-hidden .flow-ref-sub-setting.revealed { filter: none; }
+.quiz-hidden .cg-entry-callout { filter: blur(6px); cursor: pointer; transition: filter 0.3s; user-select: none; }
+.quiz-hidden .cg-entry-callout.revealed { filter: none; }
+
+/* Legacy quiz blur */
+.quiz-hidden .flow-text-answer { filter: blur(6px); cursor: pointer; transition: filter 0.3s; user-select: none; }
+.quiz-hidden .flow-text-answer.revealed { filter: none; }
+.quiz-hidden .cr-response { filter: blur(6px); cursor: pointer; transition: filter 0.3s; }
+.quiz-hidden .cr-response.revealed { filter: none; }
+.quiz-hidden .callout-says { filter: blur(6px); cursor: pointer; transition: filter 0.3s; }
+.quiz-hidden .callout-says.revealed { filter: none; }
+
+/* Image Gallery */
+.image-gallery {
+  margin: 16px 0;
+}
+.image-gallery-title {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.image-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 8px;
+}
+.image-strip::-webkit-scrollbar { height: 4px; }
+.image-strip::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+.image-thumb {
+  width: 140px;
+  height: 100px;
+  border-radius: 6px;
+  border: 2px solid var(--border);
+  overflow: hidden;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: border-color 0.2s, transform 0.2s;
+  position: relative;
+}
+.image-thumb:hover { border-color: var(--accent-blue); transform: translateY(-2px); }
+.image-thumb img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.image-thumb-label {
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  background: rgba(0,0,0,0.7);
+  font-size: 0.6rem;
+  padding: 3px 5px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Expandable Panels */
+.panel {
+  margin-bottom: 8px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+.panel-header {
+  display: flex;
+  align-items: center;
+  padding: 10px 14px;
+  cursor: pointer;
+  gap: 8px;
+  background: var(--bg-secondary);
+  transition: background 0.15s;
+}
+.panel-header:hover { background: var(--bg-tertiary); }
+.panel-arrow {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+.panel.open .panel-arrow { transform: rotate(90deg); }
+.panel-title {
+  font-size: 0.8rem;
+  font-weight: 600;
+  flex: 1;
+}
+.panel-body {
+  display: none;
+  padding: 10px 14px;
+  background: var(--bg-primary);
+}
+.panel.open .panel-body { display: block; }
+.panel-item {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding: 3px 0;
+  line-height: 1.4;
+}
+.panel.panel-green .panel-header { border-left: 3px solid var(--accent-green); }
+.panel.panel-red .panel-header { border-left: 3px solid var(--accent-red); }
+.panel.panel-orange .panel-header { border-left: 3px solid var(--accent-orange); }
+.panel.panel-blue .panel-header { border-left: 3px solid var(--accent-blue); }
+.panel.panel-purple .panel-header { border-left: 3px solid var(--accent-purple); }
+.panel.panel-yellow .panel-header { border-left: 3px solid var(--accent-yellow); }
+
+/* Step Description */
+.step-description {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  line-height: 1.5;
+  margin-bottom: 16px;
+  padding: 0 2px;
+  font-style: italic;
+}
+
+/* T/F Flashcard Badge */
+.flashcard-tf-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  background: rgba(188,140,255,0.15);
+  color: var(--accent-purple);
+  margin-left: 6px;
+  vertical-align: middle;
+}
+
+/* Reset Button */
+.btn-header.btn-reset:hover {
+  background: rgba(248,81,73,0.15);
+  color: var(--accent-red);
+  border-color: var(--accent-red);
+}
+
+/* Checklist Step */
+.checklist-card {
+  border: 1px solid var(--accent-orange);
+  border-top: 3px dashed var(--accent-orange);
+  border-radius: 8px;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+.checklist-initiate {
+  padding: 10px 14px;
+  background: rgba(210,153,34,0.08);
+  font-size: 0.85rem;
+  color: var(--accent-orange);
+}
+.checklist-initiate strong { color: var(--text-primary); }
+.cr-row {
+  display: flex;
+  padding: 8px 14px;
+  border-bottom: 1px solid var(--border);
+  align-items: center;
+  gap: 12px;
+}
+.cr-row:last-child { border-bottom: none; }
+.cr-challenge { flex: 1; font-size: 0.85rem; font-weight: 600; }
+.cr-response { flex: 1; font-size: 0.85rem; color: var(--accent-green); }
+.cr-who {
+  font-size: 0.65rem;
+  color: var(--text-muted);
+  width: 40px;
+  text-align: center;
+}
+.checklist-complete {
+  padding: 10px 14px;
+  background: rgba(63,185,80,0.08);
+  font-size: 0.85rem;
+  color: var(--accent-green);
+  border-top: 1px solid var(--border);
+}
+
+/* Callout Step */
+.callout-card {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 16px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+.callout-who {
+  padding: 3px 8px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.callout-content { flex: 1; }
+.callout-says {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.callout-says::before { content: '\201C'; color: var(--text-muted); }
+.callout-says::after { content: '\201D'; color: var(--text-muted); }
+.callout-when {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* Flashcard in panel */
+.flashcard-mini {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+.flashcard-mini:hover { border-color: var(--accent-purple); }
+.flashcard-q {
+  font-size: 0.82rem;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+}
+.flashcard-a {
+  display: none;
+  font-size: 0.82rem;
+  color: var(--accent-green);
+  padding-top: 6px;
+  border-top: 1px solid var(--border);
+}
+.flashcard-e {
+  font-size: 0.75rem;
+  color: var(--accent-blue);
+  margin-top: 4px;
+  font-style: italic;
+}
+.flashcard-mini.flipped .flashcard-a { display: block; }
+
+/* Quiz banner */
+.quiz-banner {
+  display: none;
+  background: rgba(188,140,255,0.1);
+  border: 1px solid var(--accent-purple);
+  border-radius: 6px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  font-size: 0.82rem;
+  color: var(--accent-purple);
+  text-align: center;
+}
+.quiz-banner.show { display: block; }
+.quiz-score { font-weight: 700; }
+
+/* Info step */
+.info-block {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px 16px;
+  margin-bottom: 12px;
+}
+.info-block h4 {
+  font-size: 0.85rem;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+}
+.info-block-items {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 20px;
+}
+.info-block-item {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  padding-left: 12px;
+  position: relative;
+}
+.info-block-item::before {
+  content: '\2022';
+  position: absolute;
+  left: 0;
+  color: var(--text-muted);
+}
+
+/* ===== NAV BAR ===== */
+.nav-bar {
+  height: var(--nav-height);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 24px;
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  z-index: 100;
+}
+.btn-nav {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  padding: 8px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-nav:hover { background: var(--bg-elevated); border-color: var(--accent-blue); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-step-info {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  min-width: 80px;
+  text-align: center;
+}
+.nav-keys {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+.nav-keys kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  padding: 1px 5px;
+  border-radius: 3px;
+  font-size: 0.65rem;
+}
+
+/* ===== LIGHTBOX ===== */
+.lightbox {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.92);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.lightbox.open { display: flex; }
+.lightbox-close {
+  position: absolute;
+  top: 16px; right: 20px;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+.lightbox-img {
+  max-width: 92vw;
+  max-height: 82vh;
+  border-radius: 8px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+}
+.lightbox-label {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  margin-top: 12px;
+}
+.lightbox-counter {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  margin-top: 4px;
+}
+.lightbox-nav {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.1);
+  border: none;
+  color: #fff;
+  font-size: 1.5rem;
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.lightbox-nav:hover { background: rgba(255,255,255,0.2); }
+.lightbox-prev { left: 16px; }
+.lightbox-next { right: 16px; }
+
+/* ===== KEYBOARD HELP MODAL ===== */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  z-index: 500;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.open { display: flex; }
+.modal {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+}
+.modal h3 { margin-bottom: 16px; font-size: 1rem; }
+.modal-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  font-size: 0.82rem;
+}
+.modal-row kbd {
+  background: var(--bg-tertiary);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 3px;
+  font-size: 0.75rem;
+}
+
+/* ===== WELCOME SCREEN ===== */
+.welcome {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  text-align: center;
+  padding: 40px;
+}
+.welcome h1 {
+  font-size: 2rem;
+  color: var(--accent-blue);
+  margin-bottom: 8px;
+}
+.welcome h2 {
+  font-size: 1.1rem;
+  color: var(--text-secondary);
+  font-weight: 400;
+  margin-bottom: 24px;
+}
+.welcome p {
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  max-width: 500px;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+.btn-start {
+  background: var(--accent-blue);
+  color: #fff;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.btn-start:hover { transform: translateY(-1px); box-shadow: 0 4px 16px rgba(88,166,255,0.3); }
+.resume-note {
+  margin-top: 16px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
+.resume-note a {
+  color: var(--accent-blue);
+  cursor: pointer;
+  text-decoration: underline;
+}
+</style>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-title">AA 737 FO <span>Walkthrough</span></div>
+  <div class="header-center">
+    <span class="phase-indicator" id="phaseIndicator">Phase 1 of 18</span>
+    <div class="progress-bar-outer">
+      <div class="progress-bar-inner" id="progressBar" style="width:0%"></div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <button class="btn-header" id="btnQuiz" onclick="toggleQuiz()">Quiz Mode</button>
+    <button class="btn-header" id="btnHelp" onclick="toggleHelp()">?</button>
+    <button class="btn-header btn-reset" onclick="resetProgress()">Reset</button>
+  </div>
+</header>
+
+<div class="app-layout">
+  <nav class="sidebar" id="sidebar"></nav>
+  <main class="main-content" id="main"></main>
+</div>
+
+<div class="nav-bar" id="navBar">
+  <button class="btn-nav" id="btnPrev" onclick="prevStep()">&#9664; Previous</button>
+  <div>
+    <div class="nav-step-info" id="navStepInfo">Step 1 of 1</div>
+    <div class="nav-keys"><kbd>&larr;</kbd> <kbd>&rarr;</kbd> navigate &nbsp; <kbd>Q</kbd> quiz &nbsp; <kbd>?</kbd> help</div>
+  </div>
+  <button class="btn-nav" id="btnNext" onclick="nextStep()">Next &#9654;</button>
+</div>
+
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+  <button class="lightbox-nav lightbox-prev" onclick="lightboxNav(-1)">&#9664;</button>
+  <button class="lightbox-nav lightbox-next" onclick="lightboxNav(1)">&#9654;</button>
+  <img class="lightbox-img" id="lightboxImg">
+  <div class="lightbox-label" id="lightboxLabel"></div>
+  <div class="lightbox-counter" id="lightboxCounter"></div>
+</div>
+
+<div class="modal-overlay" id="helpModal">
+  <div class="modal">
+    <h3>Keyboard Shortcuts</h3>
+    <div class="modal-row"><span>Next step</span><kbd>&rarr;</kbd> or <kbd>Space</kbd></div>
+    <div class="modal-row"><span>Previous step</span><kbd>&larr;</kbd></div>
+    <div class="modal-row"><span>Toggle quiz mode</span><kbd>Q</kbd></div>
+    <div class="modal-row"><span>Close overlay</span><kbd>Esc</kbd></div>
+    <div class="modal-row"><span>Lightbox prev/next</span><kbd>&larr;</kbd> <kbd>&rarr;</kbd></div>
+    <div class="modal-row"><span>Jump to phase 1-9</span><kbd>1</kbd>-<kbd>9</kbd></div>
+    <br>
+    <div class="modal-row"><span>Reset all progress</span><button class="btn-header btn-reset" onclick="resetProgress(); toggleHelp();" style="padding:3px 10px;font-size:0.7rem;">Start Over</button></div>
+    <br>
+    <button class="btn-header" onclick="toggleHelp()" style="width:100%">Close</button>
+  </div>
+</div>
+
+<script src="walkthrough-data.js"></script>
+<script src="flashcards-data.js"></script>
+<script>
+(function() {
+  'use strict';
+
+  // ===== STATE =====
+  const state = {
+    phaseIndex: 0,
+    stepIndex: 0,
+    quizMode: false,
+    quizRevealed: new Set(),
+    quizTotal: 0,
+    checkedItems: new Set(),
+    completedSteps: new Set(),
+    lightboxOpen: false,
+    lightboxImages: [],
+    lightboxIndex: 0,
+    helpOpen: false,
+    started: false
+  };
+
+  // ===== HELPERS =====
+  const $ = id => document.getElementById(id);
+  const phases = () => FLIGHT_DATA.phases;
+  const currentPhase = () => phases()[state.phaseIndex];
+  const currentStep = () => currentPhase().steps[state.stepIndex];
+  const totalSteps = () => phases().reduce((n, p) => n + p.steps.length, 0);
+  const completedCount = () => state.completedSteps.size;
+
+  function whoClass(who) {
+    if (!who) return '';
+    const w = who.replace(/\//g, '');
+    if (w === 'CAFO') return 'who-CAFO';
+    if (w === 'PFPM') return 'who-PFPM';
+    return 'who-' + w;
+  }
+
+  function getFlashcards(sections) {
+    if (!sections || !sections.length || typeof FLASHCARDS === 'undefined') return [];
+    const pool = FLASHCARDS.filter(c => sections.includes(c.section));
+    // Shuffle and take 5
+    for (let i = pool.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [pool[i], pool[j]] = [pool[j], pool[i]];
+    }
+    return pool.slice(0, 5);
+  }
+
+  // ===== SAVE/LOAD =====
+  function saveProgress() {
+    localStorage.setItem('aa737-walkthrough', JSON.stringify({
+      phaseIndex: state.phaseIndex,
+      stepIndex: state.stepIndex,
+      completed: [...state.completedSteps],
+      ts: Date.now()
+    }));
+  }
+
+  function loadProgress() {
+    try {
+      const d = JSON.parse(localStorage.getItem('aa737-walkthrough'));
+      if (d && d.phaseIndex !== undefined) return d;
+    } catch(e) {}
+    return null;
+  }
+
+  // ===== RENDER SIDEBAR =====
+  function renderSidebar() {
+    const sb = $('sidebar');
+    const pct = Math.round(completedCount() / totalSteps() * 100);
+    let html = `<div class="sidebar-progress">
+      <div class="sidebar-progress-text">${completedCount()} / ${totalSteps()} steps completed (${pct}%)</div>
+      <div class="sidebar-progress-bar"><div class="sidebar-progress-fill" style="width:${pct}%"></div></div>
+    </div>`;
+
+    phases().forEach((phase, pi) => {
+      const isActive = pi === state.phaseIndex;
+      const allDone = phase.steps.every((_, si) => state.completedSteps.has(`${pi}-${si}`));
+      const cls = [
+        'phase-item',
+        isActive ? 'active' : '',
+        allDone ? 'completed' : ''
+      ].filter(Boolean).join(' ');
+
+      html += `<div class="${cls}">
+        <div class="phase-header" onclick="goToPhase(${pi})">
+          <div class="phase-number">${phase.number}</div>
+          <div class="phase-title">${phase.title}</div>
+          <div class="phase-check">${allDone ? '&#10003;' : ''}</div>
+        </div>
+        <div class="phase-steps">`;
+
+      phase.steps.forEach((step, si) => {
+        const stepActive = isActive && si === state.stepIndex;
+        const stepDone = state.completedSteps.has(`${pi}-${si}`);
+        const scls = ['step-item', stepActive ? 'active' : '', stepDone ? 'completed' : ''].filter(Boolean).join(' ');
+        html += `<div class="${scls}" onclick="goToStep(${pi},${si})">
+          <div class="step-dot"></div>
+          <span>${step.title}</span>
+        </div>`;
+      });
+
+      html += '</div></div>';
+    });
+
+    sb.innerHTML = html;
+  }
+
+  // ===== RENDER MAIN =====
+  function renderMain() {
+    if (!state.started) {
+      renderWelcome();
+      return;
+    }
+
+    const phase = currentPhase();
+    const step = currentStep();
+    const m = $('main');
+    const quizCls = state.quizMode ? 'quiz-hidden' : '';
+
+    let html = '';
+
+    // Quiz banner
+    html += `<div class="quiz-banner ${state.quizMode ? 'show' : ''}">
+      Quiz Mode Active &mdash; recall before clicking to reveal
+      ${state.quizTotal > 0 ? ` | <span class="quiz-score">Revealed: ${state.quizRevealed.size}/${state.quizTotal}</span>` : ''}
+    </div>`;
+
+    // Step header
+    html += `<div class="step-header">
+      <div class="step-breadcrumb">Phase ${phase.number}: ${phase.title} &rsaquo; Step ${state.stepIndex + 1} of ${phase.steps.length}</div>
+      <div class="step-title-row">
+        ${step.who ? `<span class="who-badge ${whoClass(step.who)}">${step.who}</span>` : ''}
+        <h2 class="step-main-title">${step.title}</h2>
+      </div>
+    </div>`;
+
+    // Trigger
+    if (step.trigger) {
+      html += `<div class="trigger-bar">${step.trigger}</div>`;
+    }
+
+    // Step description
+    if (step.description) {
+      html += `<div class="step-description">${step.description}</div>`;
+    }
+
+    // Render by type — detect new formats first
+    if (step.type === 'flow' && step.items && step.items.length && step.items[0].name !== undefined) {
+      html += renderFlowRefStep(step, quizCls);
+    } else if (step.type === 'flow') {
+      html += renderFlowStep(step, quizCls);
+    } else if (step.type === 'checklist') {
+      html += renderChecklistStep(step, quizCls);
+    } else if (step.type === 'callout' && step.calloutSequence) {
+      html += renderCalloutGridStep(step, quizCls);
+    } else if (step.type === 'callout') {
+      html += renderCalloutStep(step, quizCls);
+    } else if (step.type === 'info') {
+      html += renderInfoStep(step);
+    }
+
+    // Images
+    if (step.images && step.images.length) {
+      html += renderImageGallery(step.images);
+    }
+
+    // Expandable panels
+    html += '<div style="margin-top:20px">';
+
+    if (step.panelState && step.panelState.length) {
+      html += renderPanel('Panel State After This Flow', step.panelState, 'green');
+    }
+    if (step.gotchas && step.gotchas.length) {
+      html += renderPanel('Gotchas & Warnings', step.gotchas, 'red');
+    }
+    if (step.timing) {
+      html += renderPanel('Timing Notes', [step.timing], 'orange');
+    }
+    if (step.aomRef) {
+      html += renderPanel('AOM Reference', [step.aomRef], 'blue');
+    }
+    if (step.standards && step.standards.length) {
+      html += renderPanel('Standards & Criteria', step.standards, 'yellow');
+    }
+    if (step.relatedFlashcards && step.relatedFlashcards.length) {
+      html += renderFlashcardPanel(step.relatedFlashcards);
+    }
+
+    html += '</div>';
+
+    m.innerHTML = html;
+    m.scrollTop = 0;
+
+    // Update quiz total
+    if (state.quizMode) {
+      state.quizTotal = m.querySelectorAll('.flow-text-answer, .cr-response, .callout-says, .flow-ref-setting, .flow-ref-sub-setting, .cg-entry-callout').length;
+    }
+
+    updateNav();
+  }
+
+  function renderFlowStep(step, quizCls) {
+    let html = `<div class="flow-items ${quizCls}">`;
+    (step.items || []).forEach((item, i) => {
+      const key = `${state.phaseIndex}-${state.stepIndex}-${i}`;
+      const checked = state.checkedItems.has(key);
+      html += `<div class="flow-item ${item.critical ? 'critical' : ''} ${checked ? 'checked' : ''}" onclick="toggleItem('${key}')">
+        <div class="flow-checkbox"></div>
+        <div class="flow-text"><span class="flow-text-answer" data-qi="${key}" onclick="revealQuiz(event,'${key}')">${item.text}</span></div>
+        ${item.critical ? '<span class="critical-badge">CRITICAL</span>' : ''}
+      </div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderFlowRefStep(step, quizCls) {
+    let html = `<div class="flow-ref ${quizCls}">`;
+    (step.items || []).forEach((item, i) => {
+      const key = `fr-${state.phaseIndex}-${state.stepIndex}-${i}`;
+      const checked = state.checkedItems.has(key);
+      const critCls = item.critical ? 'critical' : '';
+      const chkCls = checked ? 'checked' : '';
+      const settingCls = item.critical ? 'critical-setting' : '';
+
+      html += `<div class="flow-ref-item ${critCls} ${chkCls}" onclick="toggleItem('${key}')">`;
+      if (item.num !== undefined) {
+        html += `<span class="flow-ref-num">${item.num}.</span>`;
+      }
+      html += `<span class="flow-ref-name">${item.name}</span>`;
+      if (item.setting) {
+        html += `<span class="flow-ref-dots"></span>`;
+        html += `<span class="flow-ref-setting ${settingCls}" data-qi="${key}" onclick="revealQuiz(event,'${key}')">${item.setting}</span>`;
+      }
+      html += '</div>';
+
+      // Note line
+      if (item.note) {
+        html += `<div class="flow-ref-note">${item.note}</div>`;
+      }
+
+      // Sub-items
+      if (item.subitems && item.subitems.length) {
+        html += '<div class="flow-ref-sub">';
+        item.subitems.forEach(sub => {
+          if (sub.isNote) {
+            html += `<div class="flow-ref-sub-note">${sub.name}</div>`;
+          } else {
+            html += '<div class="flow-ref-sub-item">';
+            html += `<span class="flow-ref-sub-bullet">&middot;</span>`;
+            html += `<span class="flow-ref-sub-name">${sub.name}</span>`;
+            if (sub.setting) {
+              html += `<span class="flow-ref-sub-dots"></span>`;
+              const subKey = `${key}-s${item.subitems.indexOf(sub)}`;
+              html += `<span class="flow-ref-sub-setting" data-qi="${subKey}" onclick="revealQuiz(event,'${subKey}')">${sub.setting}</span>`;
+            }
+            html += '</div>';
+          }
+        });
+        html += '</div>';
+      }
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderCalloutGridStep(step, quizCls) {
+    const seq = step.calloutSequence || [];
+    let html = `<div class="callout-grid ${quizCls}">`;
+    html += `<div class="callout-grid-header">
+      <div class="cg-col-pf">Pilot Flying</div>
+      <div class="cg-col-pm">Pilot Monitoring</div>
+    </div>`;
+
+    // Process sequence: group entries between milestones into rows
+    let i = 0;
+    while (i < seq.length) {
+      const entry = seq[i];
+      if (entry.type === 'milestone') {
+        html += `<div class="cg-milestone">${entry.text}</div>`;
+        i++;
+        continue;
+      }
+
+      // Collect entries until next milestone
+      const pfEntries = [];
+      const pmEntries = [];
+      while (i < seq.length && seq[i].type !== 'milestone') {
+        const e = seq[i];
+        const who = (e.who || '').toUpperCase();
+        if (who === 'PF' || who === 'CA') {
+          pfEntries.push(e);
+        } else {
+          pmEntries.push(e);
+        }
+        i++;
+      }
+
+      // Render paired rows
+      const maxRows = Math.max(pfEntries.length, pmEntries.length);
+      for (let r = 0; r < maxRows; r++) {
+        html += '<div class="cg-row">';
+        // PF cell
+        html += '<div class="cg-cell cg-cell-pf">';
+        if (r < pfEntries.length) {
+          const pe = pfEntries[r];
+          const qKey = `cg-pf-${state.phaseIndex}-${state.stepIndex}-${r}`;
+          if (pe.type === 'callout') {
+            html += `<span class="cg-entry-callout" data-qi="${qKey}" onclick="revealQuiz(event,'${qKey}')">${pe.text}</span>`;
+          } else {
+            html += `<span class="cg-entry-action">${pe.text}</span>`;
+          }
+        }
+        html += '</div>';
+        // PM cell
+        html += '<div class="cg-cell cg-cell-pm">';
+        if (r < pmEntries.length) {
+          const pe = pmEntries[r];
+          const qKey = `cg-pm-${state.phaseIndex}-${state.stepIndex}-${r}`;
+          if (pe.type === 'callout') {
+            html += `<span class="cg-entry-callout" data-qi="${qKey}" onclick="revealQuiz(event,'${qKey}')">${pe.text}</span>`;
+          } else {
+            html += `<span class="cg-entry-action">${pe.text}</span>`;
+          }
+        }
+        html += '</div>';
+        html += '</div>';
+      }
+    }
+
+    html += '</div>';
+    return html;
+  }
+
+  function renderChecklistStep(step, quizCls) {
+    let html = `<div class="checklist-card ${quizCls}">`;
+    if (step.initiatorSays) {
+      html += `<div class="checklist-initiate"><strong>${step.initiator || 'CA'}:</strong> "${step.initiatorSays}"</div>`;
+    }
+    (step.challengeResponse || []).forEach((cr, i) => {
+      const key = `cr-${state.phaseIndex}-${state.stepIndex}-${i}`;
+      html += `<div class="cr-row">
+        <div class="cr-who">${cr.who || ''}</div>
+        <div class="cr-challenge">${cr.challenge}</div>
+        <div class="cr-response" data-qi="${key}" onclick="revealQuiz(event,'${key}')">${cr.response}</div>
+      </div>`;
+    });
+    if (step.completionCall) {
+      html += `<div class="checklist-complete"><strong>${step.completionWho || 'FO'}:</strong> "${step.completionCall}"</div>`;
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderCalloutStep(step, quizCls) {
+    let html = `<div class="${quizCls}">`;
+    (step.callouts || []).forEach((c, i) => {
+      const key = `co-${state.phaseIndex}-${state.stepIndex}-${i}`;
+      const color = c.who === 'CA' ? 'who-CA' : c.who === 'FO' ? 'who-FO' : c.who === 'PF' ? 'who-PF' : 'who-PM';
+      html += `<div class="callout-card">
+        <span class="callout-who ${color}">${c.who}</span>
+        <div class="callout-content">
+          <div class="callout-says" data-qi="${key}" onclick="revealQuiz(event,'${key}')">${c.says}</div>
+          ${c.when ? `<div class="callout-when">${c.when}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += '</div>';
+    return html;
+  }
+
+  function renderInfoStep(step) {
+    let html = '<div class="info-block">';
+    if (step.title) html += `<h4>${step.title}</h4>`;
+    if (step.items && step.items.length) {
+      html += '<div class="info-block-items">';
+      step.items.forEach(item => {
+        const text = typeof item === 'string' ? item : item.text;
+        html += `<div class="info-block-item">${text}</div>`;
+      });
+      html += '</div>';
+    }
+    html += '</div>';
+    return html;
+  }
+
+  function renderImageGallery(images) {
+    let html = `<div class="image-gallery">
+      <div class="image-gallery-title">AOM Flow Diagrams (${images.length})</div>
+      <div class="image-strip">`;
+    images.forEach((img, i) => {
+      html += `<div class="image-thumb" onclick="openLightbox(${i})">
+        <img src="../img/${img.file}.png" alt="${img.label}" loading="lazy">
+        <div class="image-thumb-label">${img.label}</div>
+      </div>`;
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderPanel(title, items, color) {
+    return `<div class="panel panel-${color}">
+      <div class="panel-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="panel-arrow">&#9654;</span>
+        <span class="panel-title">${title}</span>
+        <span style="font-size:0.7rem;color:var(--text-muted)">${items.length}</span>
+      </div>
+      <div class="panel-body">
+        ${items.map(i => `<div class="panel-item">${i}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  function renderFlashcardPanel(sections) {
+    const cards = getFlashcards(sections);
+    if (!cards.length) return '';
+    let html = `<div class="panel panel-purple">
+      <div class="panel-header" onclick="this.parentElement.classList.toggle('open')">
+        <span class="panel-arrow">&#9654;</span>
+        <span class="panel-title">Related Flashcards</span>
+        <span style="font-size:0.7rem;color:var(--text-muted)">${cards.length}</span>
+      </div>
+      <div class="panel-body">`;
+    cards.forEach((c, i) => {
+      const isTF = c.answer.trim() === 'True' || c.answer.trim() === 'False';
+      const tfBadge = isTF ? ' <span class="flashcard-tf-badge">T/F</span>' : '';
+      html += `<div class="flashcard-mini" onclick="this.classList.toggle('flipped')">
+        <div class="flashcard-q">${c.question}${tfBadge}</div>
+        <div class="flashcard-a">
+          <div>${c.answer}</div>
+          ${c.explanation ? `<div class="flashcard-e">${c.explanation}</div>` : ''}
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+    return html;
+  }
+
+  function renderWelcome() {
+    const saved = loadProgress();
+    let resumeHtml = '';
+    if (saved && saved.phaseIndex > 0) {
+      const p = phases()[saved.phaseIndex];
+      resumeHtml = `<div class="resume-note">
+        You have saved progress at Phase ${p.number}: ${p.title}.
+        <a onclick="resumeProgress()">Resume</a>
+      </div>`;
+    }
+
+    $('main').innerHTML = `<div class="welcome">
+      <h1>AA 737 FO Walkthrough</h1>
+      <h2>Cold &amp; Dark to Shutdown</h2>
+      <p>Walk through every flow, checklist, callout, and procedure in sequence —
+      from powering up a cold airplane to parking at the gate. Includes AOM flow diagrams,
+      panel states, gotchas, and self-quiz mode.</p>
+      <button class="btn-start" onclick="startWalkthrough()">Begin Walkthrough</button>
+      ${resumeHtml}
+    </div>`;
+  }
+
+  // ===== NAVIGATION =====
+  function updateNav() {
+    const phase = currentPhase();
+    $('phaseIndicator').textContent = `Phase ${phase.number} of ${phases().length}`;
+    $('progressBar').style.width = Math.round(completedCount() / totalSteps() * 100) + '%';
+    $('navStepInfo').textContent = `Step ${state.stepIndex + 1} of ${phase.steps.length}`;
+    $('btnPrev').disabled = state.phaseIndex === 0 && state.stepIndex === 0;
+    $('btnNext').disabled = state.phaseIndex === phases().length - 1 && state.stepIndex === currentPhase().steps.length - 1;
+  }
+
+  window.goToStep = function(pi, si) {
+    // Mark current step completed
+    if (state.started) {
+      state.completedSteps.add(`${state.phaseIndex}-${state.stepIndex}`);
+    }
+    state.phaseIndex = pi;
+    state.stepIndex = si;
+    state.checkedItems.clear();
+    state.quizRevealed.clear();
+    state.quizTotal = 0;
+    saveProgress();
+    renderSidebar();
+    renderMain();
+  };
+
+  window.goToPhase = function(pi) {
+    goToStep(pi, 0);
+  };
+
+  window.resetProgress = function() {
+    if (!confirm('Reset all progress? This will clear completed steps and return to the welcome screen.')) return;
+    localStorage.removeItem('aa737-walkthrough');
+    state.phaseIndex = 0;
+    state.stepIndex = 0;
+    state.completedSteps.clear();
+    state.checkedItems.clear();
+    state.quizMode = false;
+    state.quizRevealed.clear();
+    state.quizTotal = 0;
+    state.started = false;
+    $('btnQuiz').classList.remove('active');
+    renderSidebar();
+    renderMain();
+  };
+
+  window.nextStep = function() {
+    if (!state.started) { startWalkthrough(); return; }
+    const phase = currentPhase();
+    if (state.stepIndex < phase.steps.length - 1) {
+      goToStep(state.phaseIndex, state.stepIndex + 1);
+    } else if (state.phaseIndex < phases().length - 1) {
+      goToStep(state.phaseIndex + 1, 0);
+    }
+  };
+
+  window.prevStep = function() {
+    if (state.stepIndex > 0) {
+      goToStep(state.phaseIndex, state.stepIndex - 1);
+    } else if (state.phaseIndex > 0) {
+      const prevPhase = phases()[state.phaseIndex - 1];
+      goToStep(state.phaseIndex - 1, prevPhase.steps.length - 1);
+    }
+  };
+
+  window.startWalkthrough = function() {
+    state.started = true;
+    state.phaseIndex = 0;
+    state.stepIndex = 0;
+    renderSidebar();
+    renderMain();
+  };
+
+  window.resumeProgress = function() {
+    const saved = loadProgress();
+    if (saved) {
+      state.started = true;
+      state.phaseIndex = saved.phaseIndex;
+      state.stepIndex = saved.stepIndex;
+      state.completedSteps = new Set(saved.completed || []);
+      renderSidebar();
+      renderMain();
+    }
+  };
+
+  // ===== INTERACTIONS =====
+  window.toggleItem = function(key) {
+    if (state.checkedItems.has(key)) {
+      state.checkedItems.delete(key);
+    } else {
+      state.checkedItems.add(key);
+    }
+    renderMain();
+  };
+
+  window.revealQuiz = function(event, key) {
+    if (!state.quizMode) return;
+    event.stopPropagation();
+    const el = event.target.closest('[data-qi]');
+    if (el && !el.classList.contains('revealed')) {
+      el.classList.add('revealed');
+      state.quizRevealed.add(key);
+      // Update score display
+      const banner = document.querySelector('.quiz-score');
+      if (banner) banner.textContent = `Revealed: ${state.quizRevealed.size}/${state.quizTotal}`;
+    }
+  };
+
+  window.toggleQuiz = function() {
+    state.quizMode = !state.quizMode;
+    state.quizRevealed.clear();
+    state.quizTotal = 0;
+    $('btnQuiz').classList.toggle('active', state.quizMode);
+    renderMain();
+  };
+
+  // ===== LIGHTBOX =====
+  window.openLightbox = function(index) {
+    const step = currentStep();
+    if (!step.images || !step.images.length) return;
+    state.lightboxImages = step.images;
+    state.lightboxIndex = index;
+    state.lightboxOpen = true;
+    updateLightbox();
+    $('lightbox').classList.add('open');
+  };
+
+  window.closeLightbox = function() {
+    state.lightboxOpen = false;
+    $('lightbox').classList.remove('open');
+  };
+
+  window.lightboxNav = function(dir) {
+    state.lightboxIndex = (state.lightboxIndex + dir + state.lightboxImages.length) % state.lightboxImages.length;
+    updateLightbox();
+  };
+
+  function updateLightbox() {
+    const img = state.lightboxImages[state.lightboxIndex];
+    $('lightboxImg').src = `../img/${img.file}.png`;
+    $('lightboxLabel').textContent = img.label;
+    $('lightboxCounter').textContent = `${state.lightboxIndex + 1} of ${state.lightboxImages.length}`;
+  }
+
+  // ===== HELP MODAL =====
+  window.toggleHelp = function() {
+    state.helpOpen = !state.helpOpen;
+    $('helpModal').classList.toggle('open', state.helpOpen);
+  };
+
+  // ===== KEYBOARD =====
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+
+    if (state.lightboxOpen) {
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') lightboxNav(-1);
+      if (e.key === 'ArrowRight') lightboxNav(1);
+      return;
+    }
+
+    if (state.helpOpen && e.key === 'Escape') {
+      toggleHelp();
+      return;
+    }
+
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextStep(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevStep(); }
+    if (e.key === 'q' || e.key === 'Q') toggleQuiz();
+    if (e.key === '?') toggleHelp();
+
+    // Jump to phase 1-9
+    const num = parseInt(e.key);
+    if (num >= 1 && num <= 9 && num <= phases().length) {
+      if (state.started) goToPhase(num - 1);
+    }
+  });
+
+  // ===== INIT =====
+  function init() {
+    if (typeof FLIGHT_DATA === 'undefined') {
+      $('main').innerHTML = '<div class="welcome"><h1>Loading Error</h1><p>Could not load walkthrough-data.js. Make sure the file exists in the walkthrough directory.</p></div>';
+      return;
+    }
+    renderSidebar();
+    renderWelcome();
+  }
+
+  document.addEventListener('DOMContentLoaded', init);
+})();
+</script>
+<script>if('serviceWorker' in navigator) navigator.serviceWorker.register('sw.js');</script>
+</body>
+</html>

@@ -1,0 +1,2369 @@
+/**
+ * AA 737 FO Interactive Walkthrough — Complete Flight Data
+ * Gate-to-gate: every flow, checklist, callout, panel state, gotcha, and timing note.
+ *
+ * Built from:
+ *   - build_timeline.py  (18 phases, detail_box content)
+ *   - fo_flows.md         (detailed FO flow items)
+ *   - callouts.md         (who / says / when tables)
+ *
+ * Image references omit the .png extension — the app appends it at render time.
+ * Image paths are relative to ../img/ from the walkthrough directory.
+ */
+
+const FLIGHT_DATA = {
+  // ───────────────────────────────────────────────────────────
+  // META
+  // ───────────────────────────────────────────────────────────
+  meta: {
+    title: "AA 737 FO Flight Walkthrough",
+    subtitle: "Gate to Gate — Every Flow, Checklist & Callout in Sequence",
+    totalPhases: 19,
+    version: "1.0.0"
+  },
+
+  // ───────────────────────────────────────────────────────────
+  // PHASES
+  // ───────────────────────────────────────────────────────────
+  phases: [
+
+    // ========================================================
+    // PHASE 1 — ELECTRICAL POWER-UP
+    // ========================================================
+    {
+      id: "electrical_power_up",
+      number: 1,
+      title: "Electrical Power-Up",
+      category: "ground",
+      steps: [
+        {
+          id: "power_up_flow",
+          type: "flow",
+          who: "CA/FO",
+          title: "Electrical Power-Up",
+          trigger: "Arriving at cold & dark airplane",
+          description: "Establishing electrical power to a cold-and-dark aircraft. The BAT switch powers essential busses and standby instruments, while setting the IRS selectors to NAV begins inertial alignment, which takes roughly 10 minutes and is the longest warm-up item on the ground.",
+          items: [
+            { num: 1, name: "BAT switch", setting: "ON (or connect external power)", critical: false, subitems: [] },
+            { num: 2, name: "IRS Mode Selectors", setting: "NAV (start alignment)", critical: false, subitems: [] },
+            { num: 3, name: "Establish electrical power", setting: "to aircraft", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "BAT switch: ON",
+            "IRS Mode Selectors: NAV (alignment begins)",
+            "Standby instruments and IRS powered"
+          ],
+          gotchas: [
+            "IRS alignment is latitude-dependent — longer near equator, shorter near poles",
+            "If external power available, use it to save APU cycles",
+            "BAT switch ON first — gives standby instruments and IRS power",
+            "Do NOT move aircraft until IRS alignment is complete"
+          ],
+          timing: "IRS takes ~10 min to align. Start ASAP.",
+          aomRef: "",
+          relatedFlashcards: ["Electrical", "Navigation", "Flight Instruments"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 2 — ORIGINATION
+    // ========================================================
+    {
+      id: "origination",
+      number: 2,
+      title: "Origination",
+      category: "ground",
+      steps: [
+        {
+          id: "origination_flow",
+          type: "flow",
+          who: "FO",
+          title: "Origination Flow",
+          trigger: "First crew flight of the day OR after unobserved maintenance",
+          description: "A thorough flight-deck inspection performed only on the first flight of the day or after unobserved maintenance. Covers emergency equipment, circuit breakers, system warning tests (mach/stall), oil quantities, and flight-deck access — items that only need verification once per crew sequence.",
+          items: [
+            // --- Left Panel (aft to forward) ---
+            { num: 1, name: "Emergency Equipment", setting: "Check", critical: false, subitems: [] },
+            { num: 2, name: "Circuit Breakers", setting: "Check", critical: false, subitems: [
+              { name: "P6/P18 panels and control stand", isNote: true }
+            ]},
+            { num: 3, name: "Quick Reference Cards (QRCs)", setting: "Check", critical: false, subitems: [
+              { name: "2 in glareshield holder", isNote: true }
+            ]},
+            { num: 4, name: "Aft Overhead Annunciator Panel", setting: "Set", critical: false, subitems: [] },
+            { num: 5, name: "SERVICE INTERPHONE switch", setting: "OFF", critical: false, subitems: [] },
+            { num: 6, name: "ENGINE Panel", setting: "Set", critical: false, subitems: [] },
+            { num: 7, name: "Oxygen Panel", setting: "Set", critical: false, subitems: [] },
+            { num: 8, name: "Landing Gear Indicator lights", setting: "Illuminated (3 green)", critical: true, subitems: [], note: "--- Right Panel (every flight) ---" },
+            // --- Right Panel (every flight) ---
+            { num: 9, name: "BROADBAND SYSTEM switch", setting: "Guarded", critical: false, subitems: [] },
+            { num: 10, name: "FLIGHT RECORDER Switch", setting: "Guarded", critical: false, subitems: [] },
+            { num: 11, name: "MACH AIRSPEED WARNING test switches", setting: "Test", critical: true, subitems: [] },
+            { num: 12, name: "STALL WARNING TEST switches", setting: "Test", critical: true, subitems: [] },
+            { num: 13, name: "Eng Oil / Hydraulic Fluid Quantities", setting: "Check", critical: false, subitems: [] },
+            { num: 14, name: "Parking Brake", setting: "Set", critical: false, subitems: [] },
+            { num: 15, name: "Manual Gear Extension Access Door", setting: "Closed", critical: false, subitems: [] },
+            { num: 16, name: "Yellow Book", setting: "Onboard", critical: false, subitems: [] },
+            { num: 17, name: "SERVICE INTERPHONE switch", setting: "OFF", critical: false, subitems: [] },
+            { num: 18, name: "Flight Deck Access System", setting: "Check", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "orig_trigger", label: "Origination flow trigger" },
+            { file: "orig_diagram_1", label: "Origination flow diagram (left panel)" },
+            { file: "orig_diagram_2", label: "Origination flow diagram (right panel)" },
+            { file: "orig_expanded_1", label: "Origination expanded detail 1" },
+            { file: "orig_expanded_2", label: "Origination expanded detail 2" },
+            { file: "orig_expanded_3", label: "Origination expanded detail 3" },
+            { file: "orig_expanded_4", label: "Origination expanded detail 4" },
+            { file: "01_origination_flow_1", label: "Origination flow page 1" },
+            { file: "01_origination_flow_2", label: "Origination flow page 2" }
+          ],
+          panelState: [],
+          gotchas: [
+            "MACH/STALL WARNING tests — hold both switches simultaneously for each test",
+            "SERVICE INTERPHONE — check OFF on BOTH left and right panels",
+            "Oil qty: check for minimum AND note qty for trend monitoring",
+            "Skip this flow on subsequent legs (same crew, observed turns)"
+          ],
+          timing: "",
+          aomRef: "AOM Ch3f: Origination Flow Diagram + Expanded Flow",
+          relatedFlashcards: ["Emergency Equipment", "Engines", "Oxygen", "Landing Gear", "Flight Instruments", "Communications"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 3 — FLIGHT PREPARATION
+    // ========================================================
+    {
+      id: "flight_preparation",
+      number: 3,
+      title: "Flight Preparation",
+      category: "ground",
+      steps: [
+        {
+          id: "flight_prep_parallel",
+          type: "info",
+          who: "CA/FO",
+          title: "Flight Preparation — Parallel Tasks",
+          trigger: "After origination flow complete",
+          description: "Both pilots work in parallel on flight-preparation tasks: obtaining ATIS, programming the FMS, verifying the route and performance data against the dispatch release, completing the departure brief, and coordinating with flight attendants. The FO also performs the exterior walkaround inspection.",
+          items: [
+            { text: "ATIS - Obtain", critical: false },
+            { text: "CNC (Crew Notification Center)", critical: false },
+            { text: "Prep A/P + Panels", critical: false },
+            { text: "FMS Preflight", critical: false },
+            { text: "Route / Legs / Perf verification", critical: true },
+            { text: "Departure Brief Card", critical: true },
+            { text: "FA Brief + Welcome Aboard PA", critical: false },
+            { text: "Exterior Inspection (walkround)", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "FMS: verify route legs match dispatch release waypoints",
+            "Cost Index entered per company policy",
+            "Perf Init: ZFW, reserves, CRZ ALT, transition alt",
+            "Verify TAKEOFF REF page: V-speeds, flap setting, thrust rating",
+            "FMS crosscheck with dispatch release — BOTH pilots independently verify"
+          ],
+          timing: "FMS: verify route, enter perf data, crosscheck with dispatch release",
+          aomRef: "",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight", "Communications", "Performance"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 4 — GENERAL PREFLIGHT
+    // ========================================================
+    {
+      id: "general_preflight",
+      number: 4,
+      title: "General Preflight",
+      category: "ground",
+      steps: [
+        {
+          id: "general_preflight_flow",
+          type: "flow",
+          who: "CA/FO",
+          title: "General Preflight Flow",
+          trigger: "Prior to every flight",
+          description: "A systematic scan of the entire flight deck performed before every flight. Both pilots verify every switch position on the overhead panel, glareshield, MCP, forward panel, and pedestal to ensure the aircraft is properly configured. This is the most comprehensive pre-departure flow.",
+          items: [
+            // --- OVERHEAD PANEL (Left to Right) ---
+            { num: 1, name: "Flt Control Panel", setting: "Check", critical: false, subitems: [
+              { name: "All Guarded/Existing EXCEPT:", isNote: true },
+              { name: "Flt Ctrl LO PRESSURE", setting: "ILLUM" },
+              { name: "YAW DAMPER", setting: "ON" }
+            ]},
+            { num: 2, name: "NAV Panel", setting: "Set (Normal)", critical: false },
+            { num: 3, name: "Displays Panel", setting: "Auto/Normal", critical: false },
+            { num: 4, name: "Fuel Panel", setting: "OFF/EXTG", critical: false, subitems: [
+              { name: "XFEED", setting: "CLOSED" }
+            ]},
+            { num: 5, name: "Electrical", setting: "SET", critical: false, subitems: [
+              { name: "CAB/UTIL PWR", setting: "ON" },
+              { name: "IFE/PASS", setting: "ON" },
+              { name: "Drive Lights", setting: "Illum" },
+              { name: "GEN OFF BUS", setting: "Illum" }
+            ]},
+            { num: 6, name: "FIRE TESTS", setting: "", critical: true, note: "If no Elec Pwr Up Previously" },
+            { num: 7, name: "APU", setting: "Start", critical: false },
+            { num: 8, name: "LAV SMOKE", setting: "Ext", critical: false },
+            { num: 9, name: "Equip Cooling/Exhaust", setting: "Norm", critical: false },
+            { num: 10, name: "EMER EXIT", setting: "Guarded", critical: false },
+            { num: 11, name: "Fasten Belts", setting: "OFF", critical: false },
+            { num: 12, name: "Wipers", setting: "Park", critical: false },
+            { num: 13, name: "Window Heat", setting: "ON", critical: false, subitems: [
+              { name: "OVHT lights OFF in 5 seconds", isNote: true }
+            ]},
+            { num: 14, name: "A/B Probe HT", setting: "Illum/AUTO", critical: false },
+            { num: 15, name: "Anti-ice Wing", setting: "Illum/OFF", critical: false },
+            { num: 16, name: "Eng Anti-ice", setting: "Ext Illum/OFF", critical: false },
+            { num: 17, name: "Hyd Panel", setting: "SET", critical: false, subitems: [
+              { name: "ENG 1/2 Pumps", setting: "ON" }
+            ]},
+            { num: 18, name: "Cockpit Voice", setting: "Test", critical: false },
+            { num: 19, name: "A/C Panel", setting: "SET", critical: false, subitems: [
+              { name: "Trim Air", setting: "ON" },
+              { name: "RAM AIR FULL OPEN LT", setting: "Illum" },
+              { name: "L/R Recirc Switches", setting: "AUTO" }
+            ], note: "APU Running: Bld ON + Packs / GND: Packs OFF" },
+            // --- GLARESHIELD (Left to Right) ---
+            { num: 20, name: "Cabin Press", setting: "SET", critical: false, subitems: [
+              { name: "FLT ALT CRZ", setting: "Set" },
+              { name: "LAND ALT", setting: "SET" },
+              { name: "DIFF Press/FPM", setting: "0" }
+            ]},
+            { num: 21, name: "CA Lighting", setting: "SET", critical: false },
+            { num: 22, name: "Ignition", setting: "L/R", critical: false, note: "Start Considerations (BOTH etc)" },
+            { num: 23, name: "ENG START", setting: "AUTO", critical: false },
+            { num: 24, name: "FO Lighting", setting: "SET", critical: false, subitems: [
+              { name: "Logo", setting: "ON" },
+              { name: "Position", setting: "STEADY" },
+              { name: "Anti-Collision", setting: "OFF" }
+            ]},
+            { num: 25, name: "Compass", setting: "Check", critical: false },
+            { num: 26, name: "EFIS (Mins)", setting: "Set", critical: false, subitems: [
+              { name: "RST", setting: "Press" },
+              { name: "Wx/Terr.", setting: "As Req" },
+              { name: "WXR", setting: "OFF" }
+            ]},
+            // --- MCP ---
+            { num: 27, name: "MCP", setting: "Set", critical: false, subitems: [
+              { name: "RWY HDG", setting: "Set" },
+              { name: "F/D Switches", setting: "Both ON" },
+              { name: "A/T", setting: "ARM" },
+              { name: "IAS/MACH", setting: "Set to V2" },
+              { name: "HDG", setting: "RWY" },
+              { name: "LNAV/VNAV", setting: "As Req" },
+              { name: "ALT", setting: "Initn Set" },
+              { name: "AUTOPILOT", setting: "Disengaged" },
+              { name: "BAR UP ↑", isNote: true }
+            ]},
+            { num: 28, name: "FO EFIS", setting: "Same as CA", critical: false },
+            { num: 29, name: "Displays", setting: "SET", critical: false },
+            { num: 30, name: "CONFIG/CABIN ALT", setting: "Ext.", critical: false },
+            { num: 31, name: "Disengage Test", setting: "Test", critical: false, note: "HOLD 1/2: Steady Amber/Red" },
+            { num: 32, name: "Lights", setting: "Test", critical: false },
+            { num: 33, name: "Instruments", setting: "Check", critical: false },
+            // --- FORWARD PANEL ---
+            { num: 34, name: "ISPD", setting: "SET", critical: false },
+            { num: 35, name: "LDG Gear", setting: "Down", critical: false },
+            { num: 36, name: "ENG INST", setting: "Check", critical: false },
+            { num: 37, name: "FO CABIN ALT/CONFIG", setting: "Check", critical: false },
+            { num: 38, name: "FO DU PANEL", setting: "Set", critical: false },
+            { num: 39, name: "FO Instruments", setting: "Check", critical: false },
+            { num: 40, name: "Ground Prox", setting: "Check", critical: false, subitems: [
+              { name: "Guarded/Ext", isNote: true }
+            ]},
+            { num: 41, name: "AUTOBRAKE/ANTI-SKID", setting: "Check", critical: false },
+            // --- PEDESTAL ---
+            { num: 42, name: "PEDESTAL", setting: "", critical: false, note: "Section — Center Pedestal" },
+            { num: 43, name: "SPD BRK", setting: "Down", critical: false },
+            { num: 44, name: "TRs", setting: "Down", critical: false },
+            { num: 45, name: "TLs", setting: "Closed", critical: false },
+            { num: 46, name: "Park Brake", setting: "Set", critical: false },
+            { num: 47, name: "ENG Start", setting: "Cutoff", critical: false },
+            { num: 48, name: "FIRE TESTS", setting: "", critical: true, note: "If not previously completed" },
+            { num: 49, name: "STAB TRIM CUTOUT", setting: "NORM", critical: false },
+            { num: 50, name: "CARGO FIRE", setting: "TEST", critical: true, subitems: [
+              { name: "Belts/lights → Ext → Green Test", isNote: true }
+            ]},
+            { num: 51, name: "Radios", setting: "Set", critical: false, note: "No HF during Fuel" },
+            { num: 52, name: "Aileron/Rudder Trim", setting: "SET", critical: false, subitems: [
+              { name: "HYD (chk) 1/2 ON: Check for movement", isNote: true },
+              { name: "Set", setting: "0/0" },
+              { name: "HYD Pumps", setting: "OFF" }
+            ]},
+            { num: 53, name: "XPDR", setting: "SET", critical: false },
+            { num: 54, name: "TA/RA", setting: "SELECT", critical: false },
+            { num: 55, name: "WX/RAD", setting: "TEST/OFF", critical: false, subitems: [
+              { name: "AOM 21p.1.6 — Test", isNote: true }
+            ]},
+            { num: 56, name: "T/O Config Switch", setting: "Test", critical: false, subitems: [
+              { name: "AOM 21p.1.7 — Test", isNote: true }
+            ]},
+            { num: 57, name: "Stab Trim", setting: "Guarded", critical: false }
+          ],
+          images: [
+            { file: "gen_pf_trigger", label: "General preflight trigger" },
+            { file: "gen_pf_diagram", label: "General preflight flow diagram" },
+            { file: "gen_pf_exp_01", label: "General preflight expanded 1" },
+            { file: "gen_pf_exp_02", label: "General preflight expanded 2" },
+            { file: "gen_pf_exp_03", label: "General preflight expanded 3" },
+            { file: "gen_pf_exp_04", label: "General preflight expanded 4" },
+            { file: "gen_pf_exp_05", label: "General preflight expanded 5" },
+            { file: "gen_pf_exp_06", label: "General preflight expanded 6" },
+            { file: "gen_pf_exp_07", label: "General preflight expanded 7" },
+            { file: "gen_pf_exp_08", label: "General preflight expanded 8" },
+            { file: "gen_pf_exp_09", label: "General preflight expanded 9" },
+            { file: "gen_pf_exp_10", label: "General preflight expanded 10" },
+            { file: "gen_pf_exp_11", label: "General preflight expanded 11" },
+            { file: "gen_pf_exp_12", label: "General preflight expanded 12" },
+            { file: "gen_pf_exp_13", label: "General preflight expanded 13" },
+            { file: "gen_pf_exp_14", label: "General preflight expanded 14" },
+            { file: "gen_pf_exp_15", label: "General preflight expanded 15" },
+            { file: "gen_pf_exp_16", label: "General preflight expanded 16" },
+            { file: "gen_pf_exp_17", label: "General preflight expanded 17" },
+            { file: "gen_pf_exp_18", label: "General preflight expanded 18" },
+            { file: "02_general_preflight_flow", label: "General preflight flow page" }
+          ],
+          panelState: [
+            "OVHD: All switches normal/guarded, no annunciators illuminated",
+            "WINDOW HEAT - ON (all 4)",
+            "PROBE HEAT - AUTO",
+            "YAW DAMPER - ON",
+            "STAB TRIM cutout switches - NORMAL",
+            "TRANSPONDER - set (TA/RA after takeoff)",
+            "MCP: FD switches ON, A/T ARM, HDG/ALT/SPD bugs set",
+            "Glareshield: MASTER CAUTION lights reset, no warnings"
+          ],
+          gotchas: [],
+          timing: "Both pilots scan entire flight deck systematically",
+          aomRef: "AOM Ch3f: General Preflight — 18 pages of expanded flow detail",
+          relatedFlashcards: [
+            "Air Conditioning", "Electrical", "Hydraulics", "Flight Controls",
+            "Flight Instruments", "Autoflight", "Pressurization", "Ice and Rain Protection",
+            "Pneumatics", "Fire Protection", "Aircraft Lighting", "Weather Radar",
+            "Navigation", "Communications", "GPWS", "ATC/TCAS", "Oxygen", "Fuel"
+          ]
+        },
+        {
+          id: "fo_preflight_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO Preflight Flow",
+          trigger: "Prior to every flight",
+          description: "The FO's personal seat-area setup. Adjust seat and rudder pedals for proper reach, fasten the harness, test the oxygen mask for flow and seal, stow visors and shades, and set up the EFB with the correct charts for departure, destination, and alternate.",
+          items: [
+            { num: 1, name: "Seat", setting: "Adjust", critical: false, subitems: [] },
+            { num: 2, name: "Rudder Pedals", setting: "Adjust", critical: false, subitems: [] },
+            { num: 3, name: "Seat Belt/Harness", setting: "Fasten", critical: false, subitems: [] },
+            { num: 4, name: "O2 Mask", setting: "Check/test", critical: true, subitems: [] },
+            { num: 5, name: "Sun Visors", setting: "Stow", critical: false, subitems: [] },
+            { num: 6, name: "Roller Shades", setting: "Stow", critical: false, subitems: [] },
+            { num: 7, name: "EFB", setting: "Set up", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "fo_pf_diagram", label: "FO preflight flow diagram" },
+            { file: "fo_pf_exp_1", label: "FO preflight expanded 1" },
+            { file: "fo_pf_exp_2", label: "FO preflight expanded 2" }
+          ],
+          panelState: [],
+          gotchas: [
+            "O2 mask test: verify flow, mask seal, and microphone function",
+            "EFB: confirm charts loaded for departure/destination/alternate",
+            "Harness: shoulder harness required for takeoff and landing"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Oxygen", "Flight Instruments"]
+        },
+        {
+          id: "ca_preflight_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA Preflight Flow",
+          trigger: "Prior to every flight",
+          description: "The Captain's personal seat-area setup, mirroring the FO's flow on the left side. Seat and rudder pedal adjustment, harness fastened, and oxygen mask tested for flow, seal, and microphone function.",
+          items: [
+            { num: 1, name: "Seat / Rudder Pedals", setting: "Adjust", critical: false, subitems: [] },
+            { num: 2, name: "Seat Belt / Harness", setting: "Fasten", critical: false, subitems: [] },
+            { num: 3, name: "O2 Mask", setting: "Check/test", critical: true, subitems: [] }
+          ],
+          images: [
+            { file: "ca_pf_diagram", label: "CA preflight flow diagram" },
+            { file: "ca_pf_exp_1", label: "CA preflight expanded 1" },
+            { file: "ca_pf_exp_2", label: "CA preflight expanded 2" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Verify CA has tested O2 mask (you cannot check this for them)",
+            "Both pilots should have independent O2 supply confirmed"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Oxygen"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 5 — BEFORE START
+    // ========================================================
+    {
+      id: "before_start",
+      number: 5,
+      title: "Before Start",
+      category: "ground",
+      steps: [
+        {
+          id: "ca_before_start_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA Before Start Flow",
+          trigger: "Fueling complete, ~10 min to push",
+          description: "The Captain prepares the aircraft for engine start once fueling is complete. Fasten-belts sign goes ON for passengers, the APU is placed on the busses to power the aircraft independently of ground power, the fuel panel is configured, and flight forms and AML are reviewed for open maintenance items.",
+          items: [
+            { num: 1, name: "FASTEN BELTS", setting: "ON", critical: false, subitems: [] },
+            { num: 2, name: "APU", setting: "ON Busses", critical: false, subitems: [] },
+            { num: 3, name: "FUEL Panel", setting: "Set", critical: false, subitems: [] },
+            { num: 4, name: "Flight Forms and AML", setting: "Check", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "ca_bstart_diagram", label: "CA Before Start flow diagram" },
+            { file: "ca_bstart_exp_1", label: "CA Before Start expanded 1" },
+            { file: "ca_bstart_exp_2", label: "CA Before Start expanded 2" },
+            { file: "03_ca_before_start_flow", label: "CA Before Start flow page" }
+          ],
+          panelState: [
+            "FASTEN BELTS - ON",
+            "APU GEN ON BUS (transfer bus powered)",
+            "FUEL: Center pumps OFF until after both engines running",
+            "FUEL: L and R FWD/AFT pumps ON (or LOW PRESSURE light logic)",
+            "AML reviewed — both pilots verify no open items affecting dispatch"
+          ],
+          gotchas: [
+            "Verify fuel quantity matches dispatch release (+/- tolerance)",
+            "Confirm APU GEN OFF BUS light extinguished (APU powering busses)"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["APU", "Fuel", "Electrical"]
+        },
+        {
+          id: "fo_before_start_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO Before Start Flow",
+          trigger: "Fueling complete, ~10 min to push",
+          description: "The FO's before-start responsibility is to independently review the flight forms and Aircraft Maintenance Log (AML), verifying no open items affect dispatch. This cross-check ensures both pilots are aware of any deferred maintenance.",
+          items: [
+            { num: 1, name: "Flight Forms and AML", setting: "Check", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "fo_bstart_trigger", label: "FO Before Start trigger" },
+            { file: "fo_bstart_exp_1", label: "FO Before Start expanded" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: []
+        },
+        {
+          id: "before_start_checklist",
+          type: "checklist",
+          who: "CA/FO",
+          title: "Before Start Checklist — To the Line",
+          trigger: "After Before Start flows complete",
+          description: "The formal challenge-and-response verification that critical before-start items are set. Run 'to the line' now; the below-the-line items are completed after the Before Pushback flows. Oxygen, flight instruments, fuel quantity, parking brake, and fasten belts are all confirmed aloud.",
+          items: [],
+          images: [
+            { file: "bstart_cl_1", label: "Before Start checklist page 1" },
+            { file: "bstart_cl_2", label: "Before Start checklist page 2" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "toTheLine",
+          initiator: "CA",
+          initiatorSays: "Before Start Checklist",
+          completionCall: "To the Line",
+          completionWho: "FO",
+          challengeResponse: [
+            { challenge: "Oxygen / Interphone / Windows", response: "Checked / Set", who: "Both" },
+            { challenge: "Flight Instruments", response: "Checked", who: "Both" },
+            { challenge: "Fuel", response: "___ pounds, set", who: "FO" },
+            { challenge: "Parking Brake", response: "Set", who: "CA" },
+            { challenge: "Fasten Belts", response: "On", who: "CA" }
+          ],
+          callouts: [
+            { who: "CA", says: "Before Start Checklist", when: "After Before Start flow complete" },
+            { who: "FO", says: "To the Line", when: "After completing checklist items to the line" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 6 — BEFORE PUSHBACK
+    // ========================================================
+    {
+      id: "before_pushback",
+      number: 6,
+      title: "Before Pushback",
+      category: "ground",
+      steps: [
+        {
+          id: "fo_before_pushback_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO Before Pushback Flow",
+          trigger: "All external doors closed, cabin ready, guideperson ready for pushback reports received",
+          description: "Final cabin-security items before the aircraft moves. The FO secures the flight-deck door, turns probe heat ON to protect pitot/static/AOA probes, configures the hydraulic panel, verifies all doors and windows are closed, and turns on the anti-collision beacon to warn ground personnel.",
+          items: [
+            { num: 1, name: "Flightdeck Door", setting: "Closed & Secured", critical: false, subitems: [] },
+            { num: 2, name: "PROBE HEAT switches", setting: "ON", critical: true, subitems: [] },
+            { num: 3, name: "HYDRAULIC Panel", setting: "Set", critical: false, subitems: [] },
+            { num: 4, name: "Doors/Windows", setting: "Closed / Locked", critical: false, subitems: [] },
+            { num: 5, name: "ANTI-COLLISION light", setting: "ON", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "fo_bpush_trigger", label: "FO Before Pushback trigger" },
+            { file: "fo_bpush_diagram", label: "FO Before Pushback diagram" },
+            { file: "fo_bpush_exp", label: "FO Before Pushback expanded" },
+            { file: "04_fo_before_pushback_flow", label: "FO Before Pushback flow page" }
+          ],
+          panelState: [
+            "Flightdeck door: CLOSED & SECURED (green light)",
+            "ANTI-COLLISION: ON (beacon visible to ground crew)",
+            "PROBE HEAT: ON",
+            "WINDOW HEAT: ON (from General Preflight)",
+            "HYD: All pumps configured, no LOW PRESSURE lights"
+          ],
+          gotchas: [
+            "PROBE HEAT goes ON here (Before Pushback), not at engine start",
+            "Protects pitot/static/AOA probes from ice during pushback/taxi",
+            "On ground with engines off, probes can overheat — PROBE HEAT inhibited on ground",
+            "HYD panel: all ELEC pumps ON, verify no LOW PRESSURE lights"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Hydraulics", "Ice and Rain Protection", "Aircraft Lighting"]
+        },
+        {
+          id: "ca_before_pushback_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA Before Pushback Flow",
+          trigger: "All external doors closed, cabin ready",
+          description: "The Captain's before-pushback items mirror the FO's door and window checks from the left side. Verifying the flight-deck door is closed and secured and that all doors and windows are locked provides a redundant cross-check before the aircraft begins to move.",
+          items: [
+            { num: 1, name: "Flightdeck Door", setting: "Closed and Secured", critical: false, subitems: [] },
+            { num: 2, name: "Doors/Windows", setting: "Closed / Locked", critical: false, subitems: [] }
+          ],
+          images: [
+            { file: "ca_bpush_exp", label: "CA Before Pushback expanded" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: []
+        },
+        {
+          id: "before_pushback_checklist",
+          type: "checklist",
+          who: "CA/FO",
+          title: "Before Start Checklist — Below the Line",
+          trigger: "After Before Pushback flows complete",
+          description: "Completing the below-the-line portion of the Before Start Checklist. These items — doors closed/locked and anti-collision light on — could only be verified after the Before Pushback flows, which is why the checklist is split into two parts.",
+          items: [],
+          images: [
+            { file: "bstart_cl_1", label: "Before Start checklist page 1" },
+            { file: "bstart_cl_2", label: "Before Start checklist page 2" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "belowTheLine",
+          initiator: "CA",
+          initiatorSays: "Below the Line",
+          completionCall: "Before Start Checklist Complete",
+          completionWho: "FO",
+          challengeResponse: [
+            { challenge: "Doors", response: "Closed / Locked", who: "FO" },
+            { challenge: "Anti-Collision Light", response: "On", who: "FO" }
+          ],
+          callouts: [
+            { who: "CA", says: "Below the Line", when: "After Before Pushback flows complete" },
+            { who: "FO", says: "Before Start Checklist Complete", when: "After completing items below the line" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 7 — PUSHBACK / ENGINE START
+    // ========================================================
+    {
+      id: "pushback_engine_start",
+      number: 7,
+      title: "Pushback / Engine Start",
+      category: "ground",
+      steps: [
+        {
+          id: "pushback_comm_sequence",
+          type: "callout",
+          who: "",
+          title: "Pushback Communication Sequence",
+          trigger: "When cleared to start engine(s)",
+          description: "Coordinating with the guideperson and ramp crew to safely push back and start engines. AA has four engine-start scenarios (start during push, start after push, start at gate then push, or start at gate then taxi) — the CA determines which one applies based on ramp configuration and company guidance.",
+          items: [
+            { text: "Guideperson confirms ready for pushback", critical: false },
+            { text: "CA releases parking brake", critical: false },
+            { text: "CA calls for engine start", critical: false }
+          ],
+          images: [
+            { file: "push_proc_1", label: "Pushback procedure 1" },
+            { file: "push_proc_2", label: "Pushback procedure 2" },
+            { file: "push_proc_3", label: "Pushback procedure 3" },
+            { file: "push_proc_4", label: "Pushback procedure 4" },
+            { file: "push_proc_5", label: "Pushback procedure 5" },
+            { file: "push_proc_6", label: "Pushback procedure 6" },
+            { file: "push_proc_7", label: "Pushback procedure 7" },
+            { file: "push_proc_8", label: "Pushback procedure 8" },
+            { file: "20_pushback_starting_during_1", label: "Starting during pushback 1" },
+            { file: "20_pushback_starting_during_2", label: "Starting during pushback 2" },
+            { file: "21_pushback_starting_after_1", label: "Starting after pushback 1" },
+            { file: "21_pushback_starting_after_2", label: "Starting after pushback 2" },
+            { file: "22_pushback_start_at_gate_push_1", label: "Start at gate then push 1" },
+            { file: "22_pushback_start_at_gate_push_2", label: "Start at gate then push 2" },
+            { file: "23_pushback_start_at_gate_taxi", label: "Start at gate then taxi" }
+          ],
+          panelState: [],
+          gotchas: [
+            "4 engine start scenarios — CA determines which based on ramp config and company guidance",
+            "1. Single engine taxi-out: Start one engine at gate, second later",
+            "2. Two engine start at gate: Both engines before push",
+            "3. Pushback then start: Push first, start during/after push",
+            "4. Single engine start + push: Start one, push, start second enroute"
+          ],
+          timing: "See AOM 4-3 thru 4-9 for all 4 starting scenarios",
+          aomRef: "AOM Ch4: Engine Start Procedures",
+          relatedFlashcards: ["Engines", "APU", "Electrical"],
+          callouts: [
+            { who: "Guideperson", says: "All secure below, FOD check complete, steering disengaged with bypass pin installed, standing by for brake release, ready to pushout", when: "When ready for pushback" },
+            { who: "CA", says: "Brakes released, cleared to push", when: "After releasing parking brake" },
+            { who: "CA", says: "Start engine(s) ___", when: "When cleared to start" }
+          ]
+        },
+        {
+          id: "ca_after_start_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA After Start Flow",
+          trigger: "Engine(s) stabilized",
+          description: "Once the engines have stabilized at idle, the Captain sets anti-ice as required by conditions and switches the generators ON, transferring electrical power from the APU to the engine-driven generators. This is a short but critical flow that establishes normal electrical sourcing.",
+          items: [
+            { num: 1, name: "ANTI-ICE switch(es)", setting: "As Required", critical: false },
+            { num: 2, name: "GENERATOR(s)", setting: "ON", critical: false }
+          ],
+          images: [
+            { file: "ca_astart_trigger", label: "CA After Start trigger" },
+            { file: "ca_astart_diagram", label: "CA After Start diagram" },
+            { file: "ca_astart_exp", label: "CA After Start expanded" },
+            { file: "05_ca_after_start_flow", label: "CA After Start flow page" }
+          ],
+          panelState: [
+            "Both engines running, stabilized (N2 idle, oil press normal)",
+            "GEN 1 and GEN 2 ON (SOURCE OFF lights extinguished)",
+            "Bleeds: both engine bleeds ON, packs in AUTO",
+            "ANTI-ICE: set per conditions (eng anti-ice ON if icing)",
+            "Flaps: set to CA-commanded takeoff setting, green light"
+          ],
+          gotchas: [
+            "GEN switches ON transfers from APU power to engine generators"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Engines", "Electrical", "Ice and Rain Protection"]
+        },
+        {
+          id: "fo_after_start_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO After Start Flow",
+          trigger: "Engine(s) stabilized",
+          description: "The FO verifies anti-ice settings, configures air conditioning packs and bleeds for taxi, performs a recall check to ensure no hidden annunciators, reviews secondary engine indications, shuts down the APU if no longer needed, and conducts a joint flight-control check with the CA (full deflection all axes).",
+          items: [
+            { num: 1, name: "ANTI-ICE switch(es)", setting: "Verify", critical: false },
+            { num: 2, name: "Air Conditioning & Bleeds", setting: "Set", critical: false },
+            { num: 3, name: "Recall Check", setting: "Complete", critical: false },
+            { num: 4, name: "Secondary Engine Indications", setting: "Clear", critical: false },
+            { num: 5, name: "APU", setting: "As Required", critical: false },
+            { num: 6, name: "Flight Control Check", setting: "Joint (CA & FO)", critical: false }
+          ],
+          images: [
+            { file: "fo_astart_trigger", label: "FO After Start trigger" },
+            { file: "fo_astart_diagram", label: "FO After Start diagram" },
+            { file: "fo_astart_exp", label: "FO After Start expanded" },
+            { file: "06_fo_after_start_flow", label: "FO After Start flow page" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Clear secondary engine indications AFTER 2nd engine stabilizes",
+            "Recall Check: press RECALL — verify no hidden annunciators",
+            "Flight Control Check: FULL deflection all axes, BOTH pilots verify",
+            "If single-engine taxi: flight control check after 2nd engine start"
+          ],
+          timing: "FO will clear Secondary Engine Indications from displays after second engine stabilized.",
+          aomRef: "",
+          relatedFlashcards: ["Air Conditioning", "Pneumatics", "Ice and Rain Protection", "Flight Controls", "Flight Warning System"]
+        },
+        {
+          id: "after_start_salute",
+          type: "callout",
+          who: "CA",
+          title: "Salute Acknowledgment",
+          trigger: "After receiving salute from guideperson and ground equipment is clear",
+          description: "The guideperson salutes to indicate all ground equipment is clear and the tow bar is disconnected. The CA acknowledges the salute verbally, confirming the aircraft is free to taxi under its own power.",
+          items: [],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          callouts: [
+            { who: "CA", says: "I have a salute", when: "After receiving salute from guideperson and ground equipment is clear" }
+          ]
+        },
+        {
+          id: "after_start_checklist",
+          type: "checklist",
+          who: "CA/FO",
+          title: "After Start Checklist",
+          trigger: "After After Start flows complete",
+          description: "A challenge-and-response checklist confirming all post-engine-start items are complete: generators on, anti-ice set, probe heat on, recall checked, flaps set with green light, and flight controls verified by both pilots. This gates the aircraft for taxi.",
+          items: [],
+          images: [
+            { file: "astart_cl", label: "After Start checklist" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "full",
+          initiator: "CA",
+          initiatorSays: "After Start Checklist",
+          completionCall: "After Start Checklist Complete",
+          completionWho: "FO",
+          challengeResponse: [
+            { challenge: "Generators", response: "On", who: "CA" },
+            { challenge: "Anti-Ice", response: "As required / Set", who: "Both" },
+            { challenge: "Probe Heat", response: "On", who: "FO" },
+            { challenge: "Recall", response: "Checked", who: "FO" },
+            { challenge: "Flaps", response: "___, green light", who: "FO" },
+            { challenge: "Flight Controls", response: "Checked", who: "Both" }
+          ],
+          callouts: [
+            { who: "CA", says: "After Start Checklist", when: "After After Start flows complete" },
+            { who: "FO", says: "(Challenge & response items)", when: "Completing checklist items" },
+            { who: "FO", says: "After Start Checklist Complete", when: "Upon completion" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 8 — TAXI / BEFORE TAKEOFF
+    // ========================================================
+    {
+      id: "taxi_before_takeoff",
+      number: 8,
+      title: "Taxi / Before Takeoff",
+      category: "ground",
+      steps: [
+        {
+          id: "taxi_callouts",
+          type: "callout",
+          who: "CA/FO",
+          title: "Taxi Clearance Callouts",
+          trigger: "Just prior to taxi",
+          description: "Standard callouts as the aircraft begins to taxi. The CA commands the flap setting, the FO sets and verifies it, and both pilots confirm their respective sides are clear before moving. The Load Closeout typically arrives via ACARS during taxi and must be jointly reviewed.",
+          items: [],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "Load Closeout usually arrives via ACARS during taxi. FO holds closeout in view of both pilots for joint review. CA verifies via ACARS, CCI (WBZ* entry), or voice.",
+          aomRef: "",
+          relatedFlashcards: ["ACARS"],
+          callouts: [
+            { who: "CA", says: "Flaps ___", when: "Setting flaps for takeoff" },
+            { who: "FO", says: "Flaps - Set", when: "After setting and verifying flaps" },
+            { who: "CA", says: "Clear Left", when: "Just prior to taxi" },
+            { who: "FO", says: "Clear Right", when: "Response to CA" }
+          ]
+        },
+        {
+          id: "ca_before_takeoff_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA Before Takeoff Flow",
+          trigger: "After Load Closeout reviewed, both engines running, flaps set for takeoff",
+          description: "The Captain verifies the aircraft is correctly configured for takeoff. Takeoff data and bugs are crosschecked, the HUD is set, generators confirmed ON, packs and bleeds in AUTO, flaps at the commanded setting with green light, and stabilizer trim set to match the calculated trim value.",
+          items: [
+            { num: 1, name: "Takeoff Data and Bugs", setting: "Check", critical: false },
+            { num: 2, name: "HUD", setting: "Set", critical: false },
+            { num: 3, name: "GEN1 and GEN2", setting: "ON", critical: false },
+            { num: 4, name: "Air Conditioning & Bleeds", setting: "AUTO and Set", critical: false },
+            { num: 5, name: "FLAPS", setting: "Set and Green light", critical: false },
+            { num: 6, name: "STAB TRIM", setting: "Set", critical: false }
+          ],
+          images: [
+            { file: "ca_btakeoff_trigger", label: "CA Before Takeoff trigger" },
+            { file: "ca_btakeoff_diagram", label: "CA Before Takeoff diagram" },
+            { file: "ca_btakeoff_exp_1", label: "CA Before Takeoff expanded 1" },
+            { file: "ca_btakeoff_exp_2", label: "CA Before Takeoff expanded 2" },
+            { file: "07_ca_before_takeoff_flow", label: "CA Before Takeoff flow page" }
+          ],
+          panelState: [
+            "STAB TRIM: set and crosschecked, green band on wheel",
+            "FLAPS: takeoff setting, green light ON",
+            "AUTOBRAKE: RTO (armed for rejected takeoff)",
+            "TRANSPONDER: TA/RA (or as assigned by ATC)",
+            "All checklist tabs closed out on both EFBs"
+          ],
+          gotchas: [
+            "STAB TRIM must match calculated trim from TPS/load sheet",
+            "Both CA and FO independently verify stab trim — critical cross-check",
+            "Flap green light = flaps agree with lever position",
+            "Bugs: V1, VR, V2 set on both airspeed indicators and FMC"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Controls", "HUD", "Autoflight", "Air Conditioning", "Pneumatics", "Performance"]
+        },
+        {
+          id: "fo_before_takeoff_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO Before Takeoff Flow",
+          trigger: "After Load Closeout reviewed, both engines running, flaps set for takeoff",
+          description: "The FO independently verifies stab trim, flaps, takeoff data and bugs, and air conditioning/bleed settings. Pressing the T/O CONFIG switch (if installed) runs an automated check of flaps, trim, spoilers, and parking brake — a final configuration safety net before taking the runway.",
+          items: [
+            { num: 1, name: "STAB TRIM", setting: "Set", critical: false },
+            { num: 2, name: "FLAPS", setting: "Set and Green Light", critical: false },
+            { num: 3, name: "Takeoff Data and Bugs", setting: "Check", critical: false },
+            { num: 4, name: "Air Conditioning & Bleeds", setting: "AUTO and Set", critical: false },
+            { num: 5, name: "T/O CONFIG switch", setting: "Press (if installed)", critical: false }
+          ],
+          images: [
+            { file: "fo_btakeoff_trigger", label: "FO Before Takeoff trigger" },
+            { file: "fo_btakeoff_diagram", label: "FO Before Takeoff diagram" },
+            { file: "fo_btakeoff_exp_1", label: "FO Before Takeoff expanded 1" },
+            { file: "fo_btakeoff_exp_2", label: "FO Before Takeoff expanded 2" },
+            { file: "fo_btakeoff_exp_3", label: "FO Before Takeoff expanded 3" },
+            { file: "fo_btakeoff_exp_4", label: "FO Before Takeoff expanded 4" },
+            { file: "08_fo_before_takeoff_flow", label: "FO Before Takeoff flow page" }
+          ],
+          panelState: [],
+          gotchas: [
+            "T/O CONFIG test: verifies flaps, trim, spoilers, parking brake config"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Controls", "Performance", "Air Conditioning", "Pneumatics"]
+        },
+        {
+          id: "before_takeoff_checklist",
+          type: "checklist",
+          who: "CA/FO",
+          title: "Before Takeoff Checklist",
+          trigger: "After Before Takeoff flows complete",
+          description: "The final challenge-and-response checklist before takeoff. Both pilots verbally confirm stab trim units and green band, flaps and green light, V-speeds (V1, VR, V2), and cabin readiness. This is the last formal verification gate before approaching the runway.",
+          items: [],
+          images: [
+            { file: "btakeoff_cl_1", label: "Before Takeoff checklist page 1" },
+            { file: "btakeoff_cl_2", label: "Before Takeoff checklist page 2" },
+            { file: "btakeoff_cl_3", label: "Before Takeoff checklist page 3" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Both pilots visually verify all checklist tabs are closed out"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "belowTheLine",
+          initiator: "CA",
+          initiatorSays: "Below The Line",
+          completionCall: "Before Takeoff Checklist Complete",
+          completionWho: "FO",
+          challengeResponse: [
+            { challenge: "Stab Trim", response: "___ units, ___ green band", who: "Both" },
+            { challenge: "Flaps", response: "___, green light", who: "Both" },
+            { challenge: "Takeoff Speeds / Bugs", response: "V1 ___, VR ___, V2 ___, checked", who: "Both" },
+            { challenge: "Cabin", response: "Advised / Ready", who: "FO" }
+          ],
+          callouts: [
+            { who: "CA", says: "Below The Line", when: "After Before Takeoff flows complete" },
+            { who: "FO", says: "Before Takeoff Checklist Complete", when: "Upon completion" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 9 — APPROACHING THE RUNWAY
+    // ========================================================
+    {
+      id: "approaching_runway",
+      number: 9,
+      title: "Approaching the Runway",
+      category: "takeoff",
+      steps: [
+        {
+          id: "approaching_number_one",
+          type: "flow",
+          who: "CA/FO",
+          title: "Approaching #1 for Takeoff",
+          trigger: "Approaching #1 for takeoff",
+          description: "Final items as the aircraft approaches the runway. The HUD is verified deployed, MCP and ND are crosschecked against the departure clearance, exterior lights are set for takeoff visibility, and current fuel is compared against the dispatch minimum takeoff fuel to ensure adequate reserves.",
+          items: [
+            { num: 1, name: "HUD", setting: "Verify Deployed", critical: false },
+            { num: 2, name: "MCP/ND", setting: "Check", critical: false },
+            { num: 3, name: "Exterior Lights", setting: "Set", critical: false },
+            { num: 4, name: "Minimum takeoff fuel", setting: "Verify", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "MCP: Verify HDG, ALT, SPD bugs match departure clearance",
+            "ND: Correct departure procedure displayed, range set",
+            "HUD: Both deployed (CA + FO if dual-HUD equipped)",
+            "Min fuel: compare current fuel to dispatch min takeoff fuel"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["HUD", "Autoflight", "Flight Instruments", "Fuel"]
+        },
+        {
+          id: "fa_prepare_callout",
+          type: "callout",
+          who: "FO",
+          title: "Flight Attendant Notification PA",
+          trigger: "No less than 2 minutes prior to takeoff",
+          description: "A required PA announcement giving flight attendants at least two minutes notice before takeoff. This ensures the cabin crew is seated with harnesses fastened and the cabin is secured for departure.",
+          items: [],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "No less than 2 min prior to takeoff",
+          aomRef: "",
+          relatedFlashcards: [],
+          callouts: [
+            { who: "FO", says: "Flight Attendants Prepare For Takeoff", when: "No less than 2 min prior to takeoff (PA announcement)" }
+          ]
+        },
+        {
+          id: "lineup_taking_position",
+          type: "flow",
+          who: "CA/FO",
+          title: "Line-Up / Taking Position",
+          trigger: "When cleared onto the takeoff runway",
+          description: "The last flow before takeoff roll. The chime-only switch is cycled to alert flight attendants, all exterior lights are set to maximum visibility (runway turnoff, landing, wing, and strobe), and the CA verbalizes the runway number from markings or signage as a deliberate wrong-runway prevention step.",
+          items: [
+            { num: 1, name: "CHIME ONLY switch", setting: "Cycle", critical: false },
+            { num: 2, name: "Runway Turnoff Lights", setting: "ON", critical: false },
+            { num: 3, name: "Landing Lights", setting: "ON", critical: false },
+            { num: 4, name: "Wing Lights", setting: "On", critical: false, note: "--- First Officer ---" },
+            { num: 5, name: "Position Lights", setting: "STROBE AND STEADY", critical: false },
+            { num: 6, name: "(Ready for takeoff)", setting: "", critical: false }
+          ],
+          images: [],
+          panelState: [
+            "Runway Turnoff Lights: ON",
+            "Wing Lights: ON",
+            "Position Lights: STROBE AND STEADY",
+            "Landing Lights: ON (after takeoff clearance)"
+          ],
+          gotchas: [
+            "CA verbalizes runway number from markings/signage — not memory",
+            "This is a deliberate runway verification step to prevent wrong-runway takeoff",
+            "CHIME ONLY cycle: alerts FAs that takeoff is imminent"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Aircraft Lighting"],
+          callouts: [
+            { who: "CA", says: "<Runway Number>, Clear Left", when: "When cleared onto takeoff runway, verbalizing runway by markings/signage" },
+            { who: "FO", says: "Clear Right", when: "Response to CA" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 10 — TAKEOFF
+    // ========================================================
+    {
+      id: "takeoff",
+      number: 10,
+      title: "Takeoff",
+      category: "takeoff",
+      steps: [
+        {
+          id: "normal_takeoff_roll",
+          type: "callout",
+          who: "PF/PM",
+          title: "Normal Takeoff Roll — Actions & Callouts",
+          trigger: "When cleared for takeoff",
+          description: "The takeoff sequence from thrust application through liftoff. PF advances thrust and flies the aircraft while PM monitors engine parameters, guards the controls, and makes standardized speed callouts at 80 knots, V1, and rotate.",
+          items: [
+            { text: "PF: Advance thrust levers, verify both engines stabilize at ~40% N1", critical: false },
+            { text: "PF: Press TO/GA switch", critical: false },
+            { text: "PM: Guard the flight controls; verify symmetric acceleration and target N1", critical: false },
+            { text: "PM: Thrust set callout with target N1", critical: true },
+            { text: "PM: 80 knot callout", critical: true },
+            { text: "PF: Cross-check airspeed — captain ensures all indications agree", critical: true },
+            { text: "PM: V1 callout (if required)", critical: true },
+            { text: "PM: Rotate callout at VR", critical: true },
+            { text: "PM: Positive rate verified on altimeter", critical: true },
+            { text: "PF: Gear Up", critical: true }
+          ],
+          images: [
+            { file: "takeoff_ac_1", label: "Takeoff actions & callouts 1" },
+            { file: "takeoff_ac_2", label: "Takeoff actions & callouts 2" },
+            { file: "takeoff_ac_3", label: "Takeoff actions & callouts 3" },
+            { file: "takeoff_ac_4", label: "Takeoff actions & callouts 4" },
+            { file: "takeoff_ac_5", label: "Takeoff actions & callouts 5" },
+            { file: "takeoff_ac_6", label: "Takeoff actions & callouts 6" },
+            { file: "takeoff_ac_7", label: "Takeoff actions & callouts 7" },
+            { file: "takeoff_ac_8", label: "Takeoff actions & callouts 8" },
+            { file: "takeoff_ac_9", label: "Takeoff actions & callouts 9" },
+            { file: "30_takeoff_actions_callouts_1", label: "Takeoff callouts reference 1" },
+            { file: "30_takeoff_actions_callouts_2", label: "Takeoff callouts reference 2" },
+            { file: "30_takeoff_actions_callouts_3", label: "Takeoff callouts reference 3" },
+            { file: "30_takeoff_actions_callouts_4", label: "Takeoff callouts reference 4" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "AOM Ch6: Normal Takeoff, Noise Abatement, Rejected Takeoff",
+          relatedFlashcards: ["Engines", "Autoflight", "Flight Instruments", "Landing Gear", "Performance"],
+          callouts: [
+            { who: "PF", says: "TOGA.", when: "Pressing TO/GA switch to set takeoff thrust" },
+            { who: "PM", says: "Thrust set __.", when: "After verifying target N1 obtained (e.g. 'Thrust set 91.3.')" },
+            { who: "PM", says: "80.", when: "Passing 80 knots" },
+            { who: "PF", says: "Checked.", when: "Response to 80 — captain ensures all airspeed indications agree" },
+            { who: "PM", says: "V1.", when: "Reaching V1 speed (if required)" },
+            { who: "PM", says: "Rotate.", when: "At VR" },
+            { who: "PM", says: "Positive rate.", when: "After verifying positive rate of climb on altimeter" },
+            { who: "PF", says: "Gear up.", when: "After verifying positive rate of climb on altimeter" }
+          ],
+          calloutSequence: [
+            // ── Commencing Takeoff Roll ──
+            { type: "milestone", text: "Commencing Takeoff Roll" },
+            { who: "PF", type: "action", text: "Advance thrust levers, verify both engines stabilize at ~40% N1" },
+            { who: "PF", type: "action", text: "Press TO/GA switch" },
+            { who: "PF", type: "callout", text: "TOGA." },
+            { who: "PM", type: "action", text: "Guard the flight controls" },
+            { who: "PM", type: "action", text: "Verify symmetric acceleration and target N1" },
+            { who: "PM", type: "callout", text: "Thrust set __." },
+            // ── 80 Knots ──
+            { type: "milestone", text: "80 Knots" },
+            { who: "PM", type: "callout", text: "80." },
+            { who: "PF", type: "callout", text: "Checked." },
+            { who: "PM", type: "action", text: "Verify A/T annunciation changes to THR HLD by 90 knots" },
+            { who: "PF", type: "action", text: "Captain ensures all airspeed indications agree" },
+            // ── V1 ──
+            { type: "milestone", text: "V1" },
+            { who: "PM", type: "callout", text: "V1." },
+            { who: "PF", type: "action", text: "Captain removes hand from thrust levers" },
+            // ── VR ──
+            { type: "milestone", text: "VR" },
+            { who: "PM", type: "callout", text: "Rotate." },
+            { who: "PF", type: "action", text: "Rotate at 2-3 deg/sec" },
+            // ── After Liftoff ──
+            { type: "milestone", text: "After Liftoff" },
+            { who: "PM", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PM", type: "callout", text: "Positive rate." },
+            { who: "PF", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "callout", text: "Gear up." },
+            { who: "PM", type: "action", text: "Position landing gear lever UP" }
+          ]
+        },
+        {
+          id: "flap_retraction_sequence",
+          type: "callout",
+          who: "PF/PM",
+          title: "Flap Retraction & Initial Climb Callouts",
+          trigger: "Above 400 ft RA — at acceleration height",
+          description: "After liftoff, the crew systematically retracts flaps during the initial climb. PF accelerates and calls for each flap setting while PM verifies speed is at or above the retraction speed before selecting flaps. Proper speed verification prevents aerodynamic stall during configuration changes.",
+          items: [
+            { text: "PF: Above 400 ft RA — verify/call for appropriate roll mode", critical: false },
+            { text: "PF: At ACCEL HT — verify, select, or request VNAV (or LVL CHG, set speed)", critical: false },
+            { text: "PF: Reduce pitch and accelerate", critical: false },
+            { text: "PF: Check airspeed — retract flaps per Flap Retraction Schedule", critical: true },
+            { text: "PM: Check airspeed, select proper flap setting, monitor retraction", critical: true },
+            { text: "PM: Accomplish PM After Takeoff Flow and After Takeoff Checklist", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Below 400 ft RA: F/D roll commands hold current ground track",
+            "Above 400 ft RA: LNAV will engage if armed",
+            "If terrain is a factor: maintain UP bug speed until clear of all obstacles"
+          ],
+          timing: "",
+          aomRef: "AOM Ch6: Normal Takeoff Through Flap Retraction",
+          relatedFlashcards: ["Autoflight", "Flight Controls", "Performance"],
+          callouts: [
+            { who: "PF", says: "Flaps ___.", when: "Check airspeed — retract flaps per Flap Retraction Schedule" },
+            { who: "PM", says: "Speed verified.", when: "After verifying airspeed for flap setting" },
+            { who: "PF", says: "Flaps up, after takeoff checklist.", when: "Final flap retraction — requesting clean config and checklist" }
+          ]
+        },
+        {
+          id: "rejected_takeoff",
+          type: "info",
+          who: "PF/PM",
+          title: "Rejected Takeoff (RTO)",
+          trigger: "Decision to reject takeoff (below V1)",
+          description: "RTO decision and execution procedures. Below V1, the captain has sole authority to reject the takeoff. At or above V1, the crew is committed to fly. If rejected, PF applies idle thrust, maximum reverse, and maximum braking while PM monitors speedbrake deployment and deceleration.",
+          items: [
+            { text: "Below V1: CA has sole authority to reject", critical: true },
+            { text: "At/above V1: GO unless the airplane cannot fly", critical: true },
+            { text: "RTO: Thrust levers IDLE, reverse thrust, MAX braking", critical: true },
+            { text: "PM calls: 'Deployed.' (speedbrakes) — monitors deceleration", critical: false },
+            { text: "After stop: PM runs Rejected Takeoff checklist", critical: false }
+          ],
+          images: [
+            { file: "rto_1", label: "Rejected takeoff procedure 1" },
+            { file: "rto_2", label: "Rejected takeoff procedure 2" },
+            { file: "31_rejected_takeoff", label: "Rejected takeoff reference" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Below V1: CA has sole authority to reject",
+            "At/above V1: GO unless the airplane cannot fly",
+            "RTO: Thrust levers IDLE, reverse thrust, MAX braking",
+            "PM calls: 'Deployed.' (speedbrakes) — monitors deceleration",
+            "After stop: PM runs Rejected Takeoff checklist"
+          ],
+          timing: "",
+          aomRef: "AOM Ch6: Rejected Takeoff",
+          relatedFlashcards: ["Engines", "Landing Gear", "Flight Controls", "Performance"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 11 — AFTER TAKEOFF / CLIMB
+    // ========================================================
+    {
+      id: "after_takeoff_climb",
+      number: 11,
+      title: "After Takeoff / Climb",
+      category: "flight",
+      steps: [
+        {
+          id: "pm_after_takeoff_flow",
+          type: "flow",
+          who: "PM",
+          title: "PM After Takeoff Flow",
+          trigger: "After flap and slat retraction complete",
+          description: "PM cleans up the aircraft after flap/slat retraction is complete. Verifies flaps up with no lights, sets gear lever off, disarms autobrake, checks pressurization and bleeds, and manages anti-ice and APU. This is a silent flow — PM completes it independently.",
+          items: [
+            { num: 1, name: "FLAPS", setting: "UP / No Lights", critical: false },
+            { num: 2, name: "Gear", setting: "OFF (or UP per fleet)", critical: false },
+            { num: 3, name: "AUTO BRAKE", setting: "OFF", critical: false },
+            { num: 4, name: "Air Conditioning, Bleeds, Pressurization", setting: "Check", critical: false },
+            { num: 5, name: "ANTI-ICE", setting: "As Required", critical: false },
+            { num: 6, name: "APU", setting: "As Required", critical: false }
+          ],
+          images: [
+            { file: "pm_atakeoff_trigger", label: "PM After Takeoff trigger" },
+            { file: "pm_atakeoff_diagram", label: "PM After Takeoff diagram" },
+            { file: "pm_atakeoff_exp", label: "PM After Takeoff expanded" },
+            { file: "09_pm_after_takeoff_flow", label: "PM After Takeoff flow page" }
+          ],
+          panelState: [
+            "FLAPS: UP, no flap lights",
+            "Gear: OFF (NG) or UP (MAX)",
+            "AUTO BRAKE: OFF",
+            "Air Conditioning and Pressurization: checked and normal",
+            "APU: as required (typically OFF after engine generators on)"
+          ],
+          gotchas: [
+            "NG: Gear lever to OFF (removes hyd pressure from gear actuators)",
+            "MAX: Gear lever to UP (PSEU handles pressure removal automatically)",
+            "After Takeoff is a SILENT checklist — PM completes alone"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Landing Gear", "Air Conditioning", "Pneumatics", "Pressurization", "Ice and Rain Protection", "APU"]
+        },
+        {
+          id: "after_takeoff_checklist",
+          type: "checklist",
+          who: "PM",
+          title: "After Takeoff Checklist",
+          trigger: "PM completes silently after After Takeoff flow",
+          description: "A silent checklist completed by PM alone after the After Takeoff flow. PM verifies all flow items are correct and announces completion. No challenge-response is required.",
+          items: [],
+          images: [
+            { file: "atakeoff_cl", label: "After Takeoff checklist" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "silent",
+          initiator: "PM",
+          initiatorSays: "",
+          completionCall: "After Takeoff Checklist Complete",
+          completionWho: "PM",
+          challengeResponse: [],
+          callouts: [
+            { who: "PM", says: "After Takeoff Checklist Complete", when: "Upon silent completion of After Takeoff checklist" }
+          ]
+        },
+        {
+          id: "climbing_10k",
+          type: "callout",
+          who: "PF/PM",
+          title: "Climbing Through 10,000 ft AFL",
+          trigger: "Climbing through 10,000 ft AFL",
+          description: "Passing 10,000 ft ends the sterile cockpit period. PF chimes to signal the crew and flight attendants, and PM verifies CPDLC is logged on to the appropriate ATC facility.",
+          items: [
+            { text: "PF: Sterile Flightdeck - Chime", critical: false },
+            { text: "PM: CPDLC Log-On - Verify", critical: false }
+          ],
+          images: [
+            { file: "climb_10k", label: "Climbing through 10,000 ft" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Below 10,000 ft AFL: no non-essential conversation or tasks",
+            "Chime signals crew and FAs that sterile cockpit is active/ended",
+            "CPDLC: verify logged on to appropriate ATC facility"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Communications", "ATC/TCAS"],
+          callouts: [
+            { who: "PF", says: "(Chime)", when: "Climbing through 10,000 ft AFL — Sterile Flightdeck" },
+            { who: "PM", says: "CPDLC Log-On verified", when: "After 10,000 ft AFL" }
+          ]
+        },
+        {
+          id: "climbing_transition_alt",
+          type: "callout",
+          who: "PF/PM",
+          title: "Climbing Through Transition Altitude",
+          trigger: "Climbing through transition altitude",
+          description: "At the transition altitude, both pilots switch their altimeters from local QNH to standard pressure (STD). This ensures consistent altitude references when operating in the flight level system above the transition altitude.",
+          items: [
+            { text: "Both set PFD/STBY altimeters to STD", critical: true }
+          ],
+          images: [
+            { file: "trans_alt_pf", label: "Transition altitude — PF" },
+            { file: "trans_alt_pm", label: "Transition altitude — PM" }
+          ],
+          panelState: [
+            "PFD altimeters: STD (standard pressure)",
+            "Standby altimeter: STD"
+          ],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Instruments"],
+          callouts: [
+            { who: "PM", says: "Transition, Standard", when: "Climbing through transition altitude" },
+            { who: "PF", says: "Standard", when: "Response — both set altimeters to STD" }
+          ]
+        },
+        {
+          id: "climbing_fl180",
+          type: "flow",
+          who: "CA/FO",
+          title: "Climbing Through FL180",
+          trigger: "Climbing through 18,000 ft MSL or FL180",
+          description: "Above FL180, exterior lights used for low-altitude visibility are turned off to preserve bulb life. Landing, runway turnoff, and wing lights go off while navigation and anti-collision lights remain on for the entire flight.",
+          items: [
+            { num: 1, name: "Landing Lights", setting: "OFF", critical: false },
+            { num: 2, name: "Runway Turnoff Lights", setting: "OFF", critical: false },
+            { num: 3, name: "Wing Lights", setting: "OFF", critical: false }
+          ],
+          images: [],
+          panelState: [
+            "Landing/Rwy Turnoff/Wing lights: OFF (bulb life, not needed above FL180)",
+            "NAV lights and ANTI-COL: remain ON for entire flight",
+            "Position lights: STROBE & STEADY stays set from takeoff"
+          ],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Aircraft Lighting"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 12 — CRUISE / ENROUTE
+    // ========================================================
+    {
+      id: "cruise_enroute",
+      number: 12,
+      title: "Cruise / Enroute",
+      category: "flight",
+      steps: [
+        {
+          id: "cruise_pf_tasks",
+          type: "info",
+          who: "PF",
+          title: "PF Cruise Tasks",
+          trigger: "During cruise flight",
+          description: "PF manages flight optimization during cruise: setting minimum drag trim, checking descent speed, optimizing the FMS flight plan, updating cruise winds, and entering descent forecasts.",
+          items: [
+            { text: "Minimum Drag Trim Setting", critical: false },
+            { text: "Standard Descent Speed - Check", critical: false },
+            { text: "FMS+ Flight Plan Optimization", critical: false },
+            { text: "Updating Cruise Winds", critical: false },
+            { text: "Entering Descent Forecasts", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight", "Performance"]
+        },
+        {
+          id: "cruise_pm_tasks",
+          type: "info",
+          who: "PM",
+          title: "PM Cruise Tasks",
+          trigger: "During cruise flight",
+          description: "PM handles cruise housekeeping: managing center fuel pumps, completing the initial climb/cruise PA, maintaining the fuel log, reviewing depressurization routes, sending position reports, and checking oil quantities.",
+          items: [
+            { text: "Center Fuel Pump(s) - manage", critical: false },
+            { text: "Accomplish initial climb/cruise PA", critical: false },
+            { text: "Fuel Log - Maintain", critical: false },
+            { text: "Depressurization Routes", critical: false },
+            { text: "Company Position Reports", critical: false },
+            { text: "[3RA-3VM] Oil Quantity Check", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Center tank pumps: turn OFF when center tank is empty (LOW PRESSURE light)",
+            "Monitor fuel balance between L and R main tanks",
+            "Fuel log: record fuel qty at regular intervals per company policy",
+            "Compare actual burn vs planned — flag discrepancies early"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Fuel", "Pressurization", "Communications"]
+        },
+        {
+          id: "prior_to_tod",
+          type: "flow",
+          who: "PF/PM",
+          title: "Prior to Planned Top of Descent",
+          trigger: "Prior to top of descent",
+          description: "Both pilots prepare for descent before reaching the top-of-descent point. PF loads the arrival/approach in the FMS and sets autobrakes, while PM obtains ATIS, checks pressurization, completes the recall check, and makes the before-descent PA.",
+          items: [
+            { num: 1, name: "FMS", setting: "Load/Verify Arrival/Approach Procedure", critical: false },
+            { num: 2, name: "Approach Preparation", setting: "Complete", critical: false },
+            { num: 3, name: "Autobrakes", setting: "As Required", critical: false },
+            { num: 4, name: "Terrain Display", setting: "Select", critical: false },
+            { num: 5, name: "Engine Anti-Ice", setting: "As Required", critical: false },
+            { num: 6, name: "Mechanical Discrepancy Notifications", setting: "", critical: false, note: "--- PM Tasks ---" },
+            { num: 7, name: "ATIS", setting: "Obtain", critical: false },
+            { num: 8, name: "Approach Preparation", setting: "Complete", critical: false },
+            { num: 9, name: "Pressurization", setting: "Checked", critical: false },
+            { num: 10, name: "Recall Check", setting: "", critical: false },
+            { num: 11, name: "Terrain Display", setting: "Selected", critical: false },
+            { num: 12, name: "Before Descent PA", setting: "Accomplish", critical: false }
+          ],
+          images: [
+            { file: "desc_toc", label: "Top of descent preparation" }
+          ],
+          panelState: [],
+          gotchas: [
+            "FMS: arrival/approach procedure loaded and verified",
+            "Landing performance: verify runway length adequate for conditions",
+            "Arrival briefing covers: weather, approach type, missed approach, threats",
+            "BOTH pilots independently verify approach setup in FMS",
+            "Autobrake: typically 2 or 3 for normal ops, MAX for short/contaminated"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight", "Performance", "GPWS", "Weather Radar", "Ice and Rain Protection", "Pressurization"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 13 — DESCENT / ARRIVAL
+    // ========================================================
+    {
+      id: "descent_arrival",
+      number: 13,
+      title: "Descent / Arrival",
+      category: "approach",
+      steps: [
+        {
+          id: "descent_flows",
+          type: "flow",
+          who: "PF/PM",
+          title: "Descent Flows",
+          trigger: "Descending through 18,000 ft MSL or FL180",
+          description: "Configuring the aircraft at key descent altitudes. Lights come back on through FL180, altimeters are set to local QNH at the transition level, and sterile cockpit begins at 10,000 ft AFL. These are the reverse of the climb actions.",
+          items: [
+            { num: 1, name: "Exterior Lights", setting: "Set (CA: Landing + Runway Lights ON, FO: Wing Light ON)", critical: false, note: "--- Through FL180 ---" },
+            { num: 2, name: "FASTEN BELTS switch", setting: "ON", critical: false },
+            { num: 3, name: "PFD/STBY Altimeters", setting: "Set to local altimeter setting", critical: false, note: "--- Through Transition Level ---" },
+            { num: 4, name: "Sterile Flightdeck", setting: "Chime", critical: false, note: "--- Through 10,000' AFL ---" }
+          ],
+          images: [
+            { file: "desc_pf", label: "Descent — PF items" },
+            { file: "desc_pm", label: "Descent — PM items" }
+          ],
+          panelState: [
+            "Landing + Rwy Turnoff + Wing lights: back ON (see and be seen)",
+            "FASTEN BELTS: ON (alerts passengers for descent/turbulence)"
+          ],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Aircraft Lighting"]
+        },
+        {
+          id: "descent_checklist",
+          type: "checklist",
+          who: "PF/PM",
+          title: "Descent Checklist",
+          trigger: "After descent flows complete",
+          description: "Formal challenge-and-response checklist verifying pressurization, recall, autobrake setting, VREF, and the landing runway/approach. Ensures both pilots agree on the critical approach parameters before continuing the descent.",
+          items: [],
+          images: [
+            { file: "desc_cl", label: "Descent checklist" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "full",
+          initiator: "PF",
+          initiatorSays: "Descent Checklist",
+          completionCall: "Descent Checklist Complete",
+          completionWho: "PM",
+          challengeResponse: [
+            { challenge: "Pressurization", response: "Land alt ___, set", who: "PM" },
+            { challenge: "Recall", response: "Checked", who: "PM" },
+            { challenge: "Autobrake", response: "___, set", who: "PM" },
+            { challenge: "VREF", response: "___ knots", who: "Both" },
+            { challenge: "Landing Runway / Approach", response: "Runway ___, ___ approach", who: "Both" }
+          ],
+          callouts: [
+            { who: "PF", says: "Descent Checklist", when: "After descent flows complete" },
+            { who: "PM", says: "(Challenge & response items)", when: "Completing checklist" },
+            { who: "PM", says: "Descent Checklist Complete", when: "Upon completion" }
+          ]
+        },
+        {
+          id: "descending_transition_level",
+          type: "callout",
+          who: "PF/PM",
+          title: "Descending Through Transition Level",
+          trigger: "Descending through transition level",
+          description: "At the transition level, both pilots switch altimeters from standard pressure back to local QNH. This is the reverse of what was done during the climb at the transition altitude, ensuring accurate altitude readings for the approach.",
+          items: [
+            { text: "Both set PFD/STBY altimeters to local QNH", critical: true }
+          ],
+          images: [
+            { file: "trans_lvl_pf", label: "Transition level — PF" },
+            { file: "trans_lvl_pm", label: "Transition level — PM" }
+          ],
+          panelState: [
+            "PFD altimeters: local QNH setting",
+            "Standby altimeter: local QNH setting"
+          ],
+          gotchas: [
+            "Climbing: transition ALTITUDE (set STD above it)",
+            "Descending: transition LEVEL (set local QNH below it)",
+            "Both pilots set altimeters AND read back the setting",
+            "In US: transition altitude/level is 18,000 ft (FL180)"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Instruments"],
+          callouts: [
+            { who: "PM", says: "Transition, <altimeter setting>", when: "Descending through transition level" },
+            { who: "PF", says: "Transition, <altimeter setting>", when: "Response — both set local altimeters" }
+          ]
+        },
+        {
+          id: "descending_10k",
+          type: "callout",
+          who: "PF/PM",
+          title: "Descending Through 10,000 ft AFL",
+          trigger: "Descending through 10,000 ft AFL",
+          description: "Entering the sterile cockpit environment for the approach phase. PF chimes to signal the crew, and PM notifies the flight attendants. No non-essential conversation or tasks below 10,000 ft.",
+          items: [
+            { text: "PF: Sterile Flightdeck - Chime", critical: false },
+            { text: "PM: Flight Attendants - Notify", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Communications"],
+          callouts: [
+            { who: "PF", says: "(Chime)", when: "Descending through 10,000 ft AFL — Sterile Flightdeck" },
+            { who: "PM", says: "(Notifies Flight Attendants)", when: "Descending through 10,000 ft AFL" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 14 — BEFORE LANDING / APPROACH
+    // ========================================================
+    {
+      id: "before_landing_approach",
+      number: 14,
+      title: "Before Landing / Approach",
+      category: "approach",
+      steps: [
+        {
+          id: "initial_approach",
+          type: "callout",
+          who: "PF/PM",
+          title: "Initial Approach — Actions & Callouts",
+          trigger: "Prior to starting approach — waypoints sequenced properly",
+          description: "Configuring the aircraft for the initial approach segment. PF calls for the first flap setting while PM verifies airspeed is at or below the maximum for that setting before extending. Speed must always be verified before any flap change.",
+          items: [
+            { text: "PF: Check airspeed, call for initial flap setting", critical: false },
+            { text: "PM: Verify speed, select requested flap setting, monitor extension", critical: false },
+            { text: "PF: Set/request speed", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Verify airspeed is at or below maximum for requested flap setting before extending",
+            "PM must verify speed before selecting flaps — never extend into overspeed"
+          ],
+          timing: "",
+          aomRef: "AOM Ch10: Initial Approach Actions & Callouts",
+          relatedFlashcards: ["Autoflight", "Flight Controls"],
+          callouts: [
+            { who: "PF", says: "Flaps ___.", when: "Initial approach — requesting first flap setting" },
+            { who: "PM", says: "Speed verified.", when: "After verifying airspeed for flap setting" }
+          ],
+          calloutSequence: [
+            { type: "milestone", text: "Initial Approach" },
+            { who: "PF", type: "action", text: "Check airspeed for flap extension" },
+            { who: "PF", type: "callout", text: "Flaps ___." },
+            { who: "PM", type: "action", text: "Verify airspeed for requested flap setting" },
+            { who: "PM", type: "callout", text: "Speed verified." },
+            { who: "PM", type: "action", text: "Select requested flap setting, monitor extension" },
+            { who: "PF", type: "action", text: "Set or request approach speed" }
+          ]
+        },
+        {
+          id: "before_landing_flows",
+          type: "flow",
+          who: "PF/PM",
+          title: "Before Landing Flows",
+          trigger: "When ready for before landing items",
+          description: "PF calls for the Before Landing Checklist and PM completes it via challenge-and-response. The checklist is split by a dividing line: items above the line are done first with initial flap/gear configuration, items below the line wait for final flaps.",
+          items: [
+            { num: 1, name: "PF calls", setting: "\"Before Landing Checklist\"", critical: false },
+            { num: 2, name: "PM completes via challenge & response", setting: "\"To The Line\"", critical: false }
+          ],
+          images: [
+            { file: "blanding_pf", label: "Before Landing — PF items" },
+            { file: "blanding_pm", label: "Before Landing — PM items" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Before Landing CL has a dividing line between initial and final items",
+            "\"To the Line\": initial items done (gear, flaps partial, speeds set)",
+            "\"Below the Line\": final items after last flap extension (landing config)",
+            "Both pilots verify ALL tabs closed = fully configured for landing"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Autoflight", "Flight Instruments", "Landing Gear", "Flight Controls"]
+        },
+        {
+          id: "before_landing_checklist_ttl",
+          type: "checklist",
+          who: "PF/PM",
+          title: "Before Landing Checklist — To the Line",
+          trigger: "When ready for before landing items",
+          description: "The first portion of the Before Landing Checklist, completed to the dividing line. Covers speedbrake armed, landing gear down with three green lights, and the current flap setting verified. Final configuration items wait until below the line.",
+          items: [],
+
+          images: [
+            { file: "blanding_cl_1", label: "Before Landing checklist page 1" },
+            { file: "blanding_cl_2", label: "Before Landing checklist page 2" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "toTheLine",
+          initiator: "PF",
+          initiatorSays: "Before Landing Checklist",
+          completionCall: "To The Line",
+          completionWho: "PM",
+          challengeResponse: [
+            { challenge: "Speedbrake", response: "Armed, green light", who: "PM" },
+            { challenge: "Landing Gear", response: "Down, 3 green", who: "PM" },
+            { challenge: "Flaps", response: "___, green light", who: "PM" }
+          ],
+          callouts: [
+            { who: "PF", says: "Before Landing Checklist", when: "When ready for before landing items" },
+            { who: "PM", says: "To The Line", when: "Upon completion to the line" }
+          ]
+        },
+        {
+          id: "final_flap_extension",
+          type: "callout",
+          who: "PF/PM",
+          title: "Final Flap Extension",
+          trigger: "When final flap extension is desired",
+          description: "PF calls for the final flap setting and requests completion of below-the-line items. After PM selects final flaps and completes the checklist, both pilots visually verify all checklist tabs are closed, confirming full landing configuration.",
+          items: [],
+          images: [
+            { file: "blanding_cl_btl", label: "Before Landing checklist — below the line" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Both pilots visually verify all tabs are closed out after checklist complete"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Controls"],
+          callouts: [
+            { who: "PF", says: "Flaps ___, Below The Line", when: "When final flap extension desired" },
+            { who: "PM", says: "Before Landing Checklist Complete", when: "Upon completion below the line" }
+          ]
+        },
+        {
+          id: "ils_approach_sequence",
+          type: "callout",
+          who: "PF/PM",
+          title: "ILS Approach Sequence",
+          trigger: "On ILS approach",
+          description: "The full ILS approach from clearance through the landing decision at DA(H). Progresses systematically through LOC capture, glideslope capture, gear and flap extension, stabilization checks at 1,000 and 500 ft, and the final continue/go-around decision at minimums.",
+          items: [
+            { text: "PF: Select/Request APP mode", critical: false },
+            { text: "PF: LOC capture — verify VOR/LOC on FMA", critical: false },
+            { text: "PF: Gear down, Flaps 15, arm speedbrake", critical: false },
+            { text: "PF: Glideslope capture — set missed approach altitude", critical: false },
+            { text: "PF: Final flap extension — below the line", critical: true },
+            { text: "PM: 1000 ft — stabilized approach check", critical: true },
+            { text: "PM: 500 ft — speed/sink call", critical: true },
+            { text: "PM: Plus hundred — approaching DA(H)", critical: true },
+            { text: "PM: Minimums — PF decides continue or go around", critical: true }
+          ],
+          images: [
+            { file: "ils_cat1_1", label: "ILS CAT I procedure 1" },
+            { file: "ils_cat1_2", label: "ILS CAT I procedure 2" },
+            { file: "ils_cat1_3", label: "ILS CAT I procedure 3" },
+            { file: "ils_cat1_4", label: "ILS CAT I procedure 4" },
+            { file: "ils_cat1_5", label: "ILS CAT I procedure 5" },
+            { file: "ils_cat1_6", label: "ILS CAT I procedure 6" },
+            { file: "40_ils_cat1_callouts_1", label: "ILS CAT I callouts 1" },
+            { file: "40_ils_cat1_callouts_2", label: "ILS CAT I callouts 2" },
+            { file: "40_ils_cat1_callouts_3", label: "ILS CAT I callouts 3" }
+          ],
+          panelState: [],
+          gotchas: [
+            "On correct lateral and vertical path",
+            "Speed: VREF to VREF+20 (no more than +20)",
+            "Correct configuration: gear down, landing flaps set",
+            "Thrust: appropriate for configuration",
+            "If NOT stabilized by 1000 ft (IMC) or 500 ft (VMC): PM calls 'Unstable, go around.'",
+            "Deviation callouts: 'Airspeed.' / 'Sink rate.' / 'Localizer.' / 'Glideslope.'",
+            "AIII must be used below RVR 1800; if unavailable, AII/IMC may be used down to RVR 1200",
+            "Callout not required after PF says 'Continuing.'"
+          ],
+          timing: "",
+          aomRef: "AOM Ch10: ILS CAT I/II/III Actions & Callouts; AOM Ch9: Non-Precision / RNAV approach procedures",
+          relatedFlashcards: ["Autoflight", "Flight Instruments", "Navigation", "GPWS", "HUD"],
+          standards: [
+            "Stabilized by 1000 ft AFL (IMC) or 500 ft AFL (VMC)",
+            "On correct lateral and vertical path",
+            "Speed: VREF to VREF+20 (no more than +20 knots)",
+            "Configuration: gear down, landing flaps set",
+            "Thrust: appropriate for configuration",
+            "If NOT stabilized by 1000 ft (IMC) / 500 ft (VMC): GO AROUND",
+            "Deviation callouts required if speed, sink rate, or flight path deviate from normal parameters"
+          ],
+          callouts: [
+            { who: "PF", says: "LOC capture.", when: "After VOR/LOC annunciates on FMA" },
+            { who: "PF", says: "Gear down.", when: "Approaching 1-dot G/S or NLT 2000 ft AFL" },
+            { who: "PF", says: "Flaps 15.", when: "After gear down" },
+            { who: "PM", says: "Speed verified.", when: "After verifying airspeed for flap setting" },
+            { who: "PF", says: "Glideslope capture. Set missed approach altitude.", when: "After G/S captures" },
+            { who: "PF", says: "Flaps ___, below the line.", when: "Prior to 1000 ft AFL — final flap extension" },
+            { who: "PM", says: "Speed verified.", when: "After verifying airspeed for final flap setting" },
+            { who: "PM", says: "1000.", when: "Passing 1000 ft AFL (auto callout)" },
+            { who: "PM", says: "Stable.", when: "At 1000 ft AFL — confirming stabilized approach" },
+            { who: "PM", says: "500.", when: "Passing 500 ft AFL (auto callout)" },
+            { who: "PM", says: "Stable, target, sink ___.", when: "At 500 ft AFL — speed relative to target, sink rate" },
+            { who: "PM", says: "Plus hundred.", when: "100 ft above DA(H) (auto callout)" },
+            { who: "PM", says: "Minimums.", when: "At DA(H) (auto callout)" },
+            { who: "PM", says: "No contact.", when: "If approach lights and runway environment NOT in sight" },
+            { who: "PM", says: "Approach lights.", when: "If only approach lights in sight" },
+            { who: "PM", says: "Runway.", when: "If runway environment in sight" },
+            { who: "PF", says: "Continuing.", when: "If runway environment in sight — continuing to land" }
+          ],
+          calloutSequence: [
+            // ── Cleared for Approach ──
+            { type: "milestone", text: "Cleared for Approach" },
+            { who: "PF", type: "action", text: "Select/Request APP" },
+            // ── LOC Capture ──
+            { type: "milestone", text: "LOC Capture" },
+            { who: "PF", type: "callout", text: "LOC capture." },
+            { who: "PF", type: "action", text: "Verify VOR/LOC on FMA" },
+            // ── Approaching 1-dot G/S (NLT 2000' AFL) ──
+            { type: "milestone", text: "Approaching 1-dot G/S (NLT 2000' AFL)" },
+            { who: "PF", type: "callout", text: "Gear down." },
+            { who: "PM", type: "action", text: "Check airspeed, select gear down" },
+            { who: "PF", type: "callout", text: "Flaps 15." },
+            { who: "PF", type: "action", text: "Arm SPEEDBRAKE" },
+            { who: "PM", type: "callout", text: "Speed verified." },
+            { who: "PM", type: "action", text: "Select flaps 15, set speed if requested" },
+            // ── G/S Capture ──
+            { type: "milestone", text: "G/S Capture" },
+            { who: "PF", type: "callout", text: "Glideslope capture. Set missed approach altitude." },
+            { who: "PM", type: "action", text: "Set missed approach altitude on MCP" },
+            // ── Final Approach Verification Altitude Fix ──
+            { type: "milestone", text: "Final Approach Verification Altitude Fix" },
+            { who: "PF", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PM", type: "action", text: "Verify Final Approach Verification Altitude" },
+            // ── Prior to 1000' AFL ──
+            { type: "milestone", text: "Prior to 1000' AFL" },
+            { who: "PF", type: "callout", text: "Flaps ___, below the line." },
+            { who: "PM", type: "callout", text: "Speed verified." },
+            { who: "PM", type: "action", text: "Select requested flaps, complete Before Landing CL below the line" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs closed out" },
+            // ── 1000' AFL ──
+            { type: "milestone", text: "1000' AFL" },
+            { who: "PM", type: "callout", text: "1000." },
+            { who: "PM", type: "callout", text: "Stable." },
+            // ── 500' AFL ──
+            { type: "milestone", text: "500' AFL" },
+            { who: "PM", type: "callout", text: "500." },
+            { who: "PM", type: "callout", text: "Stable, target, sink ___." },
+            // ── 100' Above DA(H) ──
+            { type: "milestone", text: "100' Above DA(H)" },
+            { who: "PM", type: "callout", text: "Plus hundred." },
+            { who: "PM", type: "action", text: "Divide time between instruments and scanning outside" },
+            // ── At DA(H) ──
+            { type: "milestone", text: "At DA(H)" },
+            { who: "PM", type: "callout", text: "Minimums." },
+            { who: "PM", type: "callout", text: "No contact. (if nothing in sight — go around)" },
+            { who: "PM", type: "callout", text: "Approach lights. (if only approach lights in sight)" },
+            { who: "PM", type: "callout", text: "Runway. (if runway environment in sight)" },
+            { who: "PF", type: "callout", text: "Continuing. (if runway in sight)" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 15 — LANDING
+    // ========================================================
+    {
+      id: "landing",
+      number: 15,
+      title: "Landing",
+      category: "approach",
+      steps: [
+        {
+          id: "normal_landing",
+          type: "callout",
+          who: "PF/PM",
+          title: "Normal Landing",
+          trigger: "After decision to land",
+          description: "Touchdown through rollout deceleration. PM verifies speedbrake deployment and calls out any anomalies, monitors reverse thrust, and makes speed calls at 80 and 60 knots. PF applies reverse as needed and transitions to manual braking by 60 knots.",
+          items: [
+            { text: "PF: Verify thrust levers are closed", critical: false },
+            { text: "Both: Verify SPEEDBRAKE lever is FULL UP", critical: true },
+            { text: "PM: Confirm speedbrakes deployed or call no speedbrakes", critical: true },
+            { text: "Both: Monitor autobrakes, if selected", critical: false },
+            { text: "PF: Raise reverse thrust levers to interlocks, apply reverse as needed", critical: false },
+            { text: "PM: Monitor reverse thrust — call out single/no reverse if applicable", critical: false },
+            { text: "PM: 80 knot and 60 knot speed calls", critical: true },
+            { text: "PF: By 60 kts — reduce to idle reverse, transition to manual braking", critical: false }
+          ],
+          images: [
+            { file: "landing_1", label: "Landing procedure 1" },
+            { file: "landing_2", label: "Landing procedure 2" },
+            { file: "landing_3", label: "Landing procedure 3" },
+            { file: "50_normal_landing_1", label: "Normal landing reference 1" },
+            { file: "50_normal_landing_2", label: "Normal landing reference 2" },
+            { file: "50_normal_landing_3", label: "Normal landing reference 3" }
+          ],
+          panelState: [],
+          gotchas: [
+            "CAUTION: Low energy state with thrust levers at idle can cause hard landing or tailstrike",
+            "If speedbrakes fail to deploy: PM calls 'No speedbrakes.' — CA manually deploys SPEEDBRAKE lever",
+            "If CA fails to deploy speedbrakes: FO manually deploys SPEEDBRAKE lever",
+            "WARNING: After reverse thrust initiated, a full stop landing must be made",
+            "If either engine fails to enter reverse: use caution applying reverse on remaining engine",
+            "PF: By 60 kts, reduce reverse to idle; transition to manual braking at taxi speed",
+            "If AUTO BRAKE DISARM light illuminates: PM calls 'Autobrakes off.'",
+            "FO landing: CA states 'My aircraft.' and FO responds 'Your aircraft.'"
+          ],
+          timing: "",
+          aomRef: "AOM Ch12: Normal Landing / FO Landing procedures",
+          relatedFlashcards: ["Engines", "Flight Controls", "Landing Gear", "Performance"],
+          standards: [
+            "Touchdown: firm but smooth — do not float excessively",
+            "Reverse thrust: deploy promptly after main gear touchdown",
+            "PM verifies: speedbrake deployed (auto or manual), reversers deployed",
+            "PM calls deceleration method: 'Autobrakes' or status update",
+            "At 60 kts: reduce reverse to idle, transition to manual braking",
+            "Do not use reverse thrust below 60 kts (FOD risk)",
+            "Total landing distance = air distance + ground distance — pilot controls both"
+          ],
+          callouts: [
+            { who: "PM", says: "Deployed.", when: "After touchdown — confirming speedbrakes (ground spoilers) deployed" },
+            { who: "PM", says: "No speedbrakes.", when: "If speedbrakes do not deploy or fail to remain deployed" },
+            { who: "PM", says: "Single reverse.", when: "If there is no REV indication on one engine or indication stays amber" },
+            { who: "PM", says: "No reverse.", when: "If neither engine enters reverse" },
+            { who: "PM", says: "80.", when: "Passing 80 knots during rollout" },
+            { who: "PM", says: "60.", when: "Passing 60 knots during rollout" },
+            { who: "PF", says: "Manual braking.", when: "When transitioning from autobrakes to manual braking" },
+            { who: "PM", says: "Autobrakes off.", when: "If AUTO BRAKE DISARM light illuminates" }
+          ],
+          calloutSequence: [
+            // ── Touchdown ──
+            { type: "milestone", text: "Touchdown" },
+            { who: "PF", type: "action", text: "Verify thrust levers are closed" },
+            { who: "PF", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "callout", text: "Deployed." },
+            { who: "PM", type: "callout", text: "No speedbrakes. (if speedbrakes do not deploy)" },
+            { who: "PF", type: "action", text: "Manually deploy SPEEDBRAKE lever (if speedbrakes do not deploy)" },
+            { who: "PF", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PM", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PF", type: "action", text: "Raise reverse thrust levers to interlocks" },
+            { who: "PF", type: "action", text: "Apply reverse thrust as needed" },
+            // ── Reverse Thrust Check ──
+            { type: "milestone", text: "Reverse Thrust Check" },
+            { who: "PM", type: "callout", text: "Single reverse. (if one engine fails to enter reverse)" },
+            { who: "PM", type: "callout", text: "No reverse. (if neither engine enters reverse)" },
+            // ── 80 Knots ──
+            { type: "milestone", text: "80 Knots" },
+            { who: "PM", type: "callout", text: "80." },
+            // ── 60 Knots ──
+            { type: "milestone", text: "60 Knots" },
+            { who: "PM", type: "callout", text: "60." },
+            { who: "PF", type: "action", text: "Reduce reverse to idle, move reverse levers full down" },
+            // ── Approaching Taxi Speed ──
+            { type: "milestone", text: "Approaching Taxi Speed" },
+            { who: "PF", type: "action", text: "Transition to manual braking" },
+            { who: "PF", type: "callout", text: "Manual braking." },
+            { who: "PM", type: "callout", text: "Autobrakes off. (if AUTO BRAKE DISARM light illuminates)" },
+            { who: "PM", type: "action", text: "Verify REV indication extinguished" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 16 — GO-AROUND (if needed)
+    // ========================================================
+    {
+      id: "go_around",
+      number: 16,
+      title: "Go-Around",
+      category: "approach",
+      steps: [
+        {
+          id: "normal_go_around",
+          type: "callout",
+          who: "PF/PM",
+          title: "Normal Go-Around",
+          trigger: "Decision to go around at or before minimums",
+          description: "Executing a go-around from the decision point. PF presses TOGA, pitches up, and calls for flap retraction. PM sets flaps, verifies thrust and pitch mode, confirms positive rate, and raises the gear. The crew then flies the published missed approach procedure.",
+          items: [
+            { text: "PF: Press TO/GA switch, call go around and initial flap setting", critical: true },
+            { text: "PF: Rotate to go-around pitch attitude", critical: true },
+            { text: "PM: Set flaps as requested, verify pitch FMA TO/GA, verify desired thrust set", critical: true },
+            { text: "PM: Verify positive rate of climb on altimeter", critical: true },
+            { text: "PF: Verify positive rate of climb, call gear up", critical: true },
+            { text: "PF: Execute published missed approach or proceed as instructed by ATC", critical: false },
+            { text: "PF: Above 400 ft RA — verify/call for appropriate roll mode, retract flaps on schedule", critical: false }
+          ],
+          images: [
+            { file: "goaround_1", label: "Go-around procedure 1" },
+            { file: "goaround_2", label: "Go-around procedure 2" },
+            { file: "goaround_3", label: "Go-around procedure 3" },
+            { file: "60_go_around_1", label: "Go-around reference 1" },
+            { file: "60_go_around_2", label: "Go-around reference 2" }
+          ],
+          panelState: [],
+          gotchas: [
+            "TOGA press: sets go-around thrust, activates FD go-around mode",
+            "Flaps 15 first (if full flaps), then clean up on schedule",
+            "Positive rate confirmed on VSI before calling Gear Up",
+            "FD commands initial pitch — follow it, do not over-rotate",
+            "PM responsible for flap retraction schedule and ATC comm",
+            "If engine failure during go-around: see engine-out go-around procedure"
+          ],
+          timing: "",
+          aomRef: "AOM Ch11: Go-Around / Engine-Out Go-Around",
+          relatedFlashcards: ["Autoflight", "Engines", "Flight Controls", "Landing Gear", "Performance"],
+          standards: [
+            "GO AROUND required if not stabilized by 1000 ft AFL (IMC) or 500 ft AFL (VMC)",
+            "Engine failure on final approach with insufficient thrust",
+            "Loss of Category III system capability below 1000 ft",
+            "Significant change in weather or runway conditions",
+            "Windshear or GPWS warning",
+            "ATC instruction to go around",
+            "Loss of required visual reference at DA(H) / MDA(H)",
+            "First TO/GA press: reduced go-around thrust (1000–2000 fpm climb)",
+            "Second TO/GA press: full go-around thrust (if needed)"
+          ],
+          callouts: [
+            { who: "PF", says: "Go around, TOGA.", when: "Initiating go-around — pressing TO/GA switch" },
+            { who: "PF", says: "Flaps 15.", when: "If landing from Flaps 30 or 40 approach" },
+            { who: "PF", says: "Flaps 1.", when: "If landing from Flaps 15 approach" },
+            { who: "PM", says: "Positive rate.", when: "After verifying positive rate of climb on altimeter" },
+            { who: "PF", says: "Gear up.", when: "After verifying positive rate of climb on altimeter" },
+            { who: "PF", says: "Set missed approach altitude.", when: "After gear up" },
+            { who: "PF", says: "Flaps ___.", when: "Above 400 ft RA — retract flaps on schedule" },
+            { who: "PF", says: "Flaps up, after takeoff checklist.", when: "Final flap retraction — requesting clean config and checklist" },
+            { who: "PF", says: "VNAV.", when: "After flap retraction — or 'LVL CHG, set speed.'" }
+          ],
+          calloutSequence: [
+            // ── Go-Around ──
+            { type: "milestone", text: "Go-Around" },
+            { who: "PF", type: "callout", text: "Go around, TOGA." },
+            { who: "PF", type: "action", text: "Push TO/GA switch" },
+            { who: "PF", type: "action", text: "Verify thrust increases" },
+            { who: "PF", type: "callout", text: "Flaps 15. (from Flaps 30/40)" },
+            { who: "PF", type: "callout", text: "Flaps 1. (from Flaps 15)" },
+            { who: "PF", type: "action", text: "Rotate to go-around pitch attitude" },
+            { who: "PM", type: "action", text: "Set Flaps as requested" },
+            { who: "PM", type: "action", text: "Verify pitch FMA TO/GA" },
+            { who: "PM", type: "action", text: "Verify desired thrust set" },
+            // ── Positive Rate of Climb ──
+            { type: "milestone", text: "Positive Rate of Climb" },
+            { who: "PM", type: "action", text: "Verify positive rate on altimeter" },
+            { who: "PM", type: "callout", text: "Positive rate." },
+            { who: "PF", type: "action", text: "Verify positive rate on altimeter" },
+            { who: "PF", type: "callout", text: "Gear up." },
+            { who: "PF", type: "action", text: "Execute published missed approach" },
+            { who: "PM", type: "action", text: "Position gear lever UP, monitor speed and attitude" },
+            { who: "PF", type: "callout", text: "Set missed approach altitude." },
+            { who: "PM", type: "action", text: "Reset missed approach altitude, advise ATC" },
+            // ── Above 400' RA ──
+            { type: "milestone", text: "Above 400' RA" },
+            { who: "PF", type: "action", text: "Verify or call for appropriate roll mode" },
+            { who: "PF", type: "action", text: "Check airspeed, retract flaps on schedule" },
+            { who: "PF", type: "callout", text: "Flaps ___." },
+            { who: "PM", type: "action", text: "Check airspeed, select proper flap setting" },
+            { who: "PF", type: "callout", text: "Flaps up, after takeoff checklist." },
+            { who: "PM", type: "action", text: "Select flaps up, monitor retraction" },
+            // ── After Flap Retraction ──
+            { type: "milestone", text: "After Flap Retraction" },
+            { who: "PF", type: "callout", text: "VNAV." },
+            { who: "PM", type: "action", text: "Select VNAV or LVL CHG, set speed" },
+            { who: "PM", type: "action", text: "Accomplish PM After Takeoff Flow and Checklist" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 17 — AFTER LANDING
+    // ========================================================
+    {
+      id: "after_landing",
+      number: 17,
+      title: "After Landing",
+      category: "arrival",
+      steps: [
+        {
+          id: "ca_after_landing_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA After Landing Flow",
+          trigger: "After aircraft has cleared the landing runway and CA calls \"Flaps ___\"",
+          description: "CA items after clearing the active runway. CA initiates flap retraction by calling for a flap setting, then stows the speedbrake to the down detent and sets exterior lights as required for taxi.",
+          items: [
+            { num: 1, name: "SPEED BRAKE", setting: "DOWN DETENT", critical: false },
+            { num: 2, name: "Exterior lights", setting: "As Required", critical: false }
+          ],
+          images: [
+            { file: "ca_alanding_diagram", label: "CA After Landing diagram" },
+            { file: "ca_alanding_exp", label: "CA After Landing expanded" },
+            { file: "10_ca_after_landing_flow", label: "CA After Landing flow page" }
+          ],
+          panelState: [],
+          gotchas: [
+            "CA initiates flap retraction call — FO does not retract without CA call"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Controls", "Aircraft Lighting"],
+          callouts: [
+            { who: "CA", says: "Flaps ___", when: "After aircraft has cleared the landing runway" }
+          ]
+        },
+        {
+          id: "fo_after_landing_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO After Landing Flow",
+          trigger: "After CA calls \"Flaps ___\"",
+          description: "FO cleanup after landing in response to the CA flap retraction call. Retracts flaps to up, resets stabilizer trim to 5 units for taxi, turns off autobrake, flight directors, and weather radar, and sets lights and anti-ice as required.",
+          items: [
+            { num: 1, name: "FLAPS", setting: "UP / No Lights", critical: false },
+            { num: 2, name: "STABILIZER TRIM", setting: "5 Units", critical: false },
+            { num: 3, name: "AUTO BRAKE", setting: "OFF", critical: false },
+            { num: 4, name: "FLIGHT DIRECTORS", setting: "OFF", critical: false },
+            { num: 5, name: "WX RADAR", setting: "OFF", critical: false },
+            { num: 6, name: "Exterior lights", setting: "As Required", critical: false },
+            { num: 7, name: "ANTI-ICE switches", setting: "As Required", critical: false }
+          ],
+          images: [
+            { file: "fo_alanding_diagram", label: "FO After Landing diagram" },
+            { file: "fo_alanding_exp", label: "FO After Landing expanded" },
+            { file: "11_fo_after_landing_flow", label: "FO After Landing flow page" }
+          ],
+          panelState: [],
+          gotchas: [
+            "STAB TRIM to 5 units — resets for next flight (standard taxi trim)",
+            "WX RADAR OFF: prevents ground personnel radiation exposure",
+            "FDs OFF: prevents stale FD commands confusing next approach setup"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Flight Controls", "Weather Radar", "Autoflight", "Ice and Rain Protection", "Aircraft Lighting"]
+        },
+        {
+          id: "approaching_parking",
+          type: "callout",
+          who: "CA/FO",
+          title: "Approaching Parking Area",
+          trigger: "After ensuring the parking area is clear",
+          description: "Approaching the gate area. APU may be started approximately 2 minutes before parking. If single-engine taxi was used, the appropriate pack is turned off to maintain cabin airflow. Both pilots verify the parking area is clear before entering.",
+          items: [
+            { text: "~2 min before gate: APU Start (if desired)", critical: false },
+            { text: "Single engine taxi-in: CA calls shutdown after engine cooldown", critical: false },
+            { text: "If engine 1 shutdown: FO selects Right Pack OFF (more FD airflow)", critical: false },
+            { text: "If engine 2 shutdown: FO selects Left Pack OFF (more cabin airflow)", critical: false }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [],
+          timing: "~2 min before gate: APU start (if desired for gate power). Single engine taxi-in: CA calls shutdown after engine cooldown.",
+          aomRef: "",
+          relatedFlashcards: ["APU", "Air Conditioning", "Engines"],
+          callouts: [
+            { who: "CA", says: "Clear Left", when: "After ensuring parking area is clear" },
+            { who: "FO", says: "Clear Right", when: "Response to CA" },
+            { who: "CA", says: "Shutdown engine no. ___", when: "After engine cooldown, two engine taxi no longer required (single engine taxi-in)" }
+          ]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 18 — SHUTDOWN / SECURE
+    // ========================================================
+    {
+      id: "shutdown_secure",
+      number: 18,
+      title: "Shutdown / Secure",
+      category: "arrival",
+      steps: [
+        {
+          id: "ca_shutdown_flow",
+          type: "flow",
+          who: "CA",
+          title: "CA Shutdown Flow",
+          trigger: "After aircraft is parked with parking brake set — CA calls \"Shutdown Engine no. 1 (and/or 2)\"",
+          description: "CA parking and shutdown items after the aircraft is at the gate. Sets parking brake, manages electrical power, turns off IRS and fuel pumps as required, stows the HUD, completes the Aircraft Maintenance Log, and configures APU or external power.",
+          items: [
+            { num: 1, name: "PARKING BRAKE", setting: "SET", critical: false },
+            { num: 2, name: "FASTEN BELTS", setting: "OFF", critical: false },
+            { num: 3, name: "ELECTRICAL", setting: "ON", critical: false },
+            { num: 4, name: "IRS Mode Selectors", setting: "OFF", critical: false },
+            { num: 5, name: "FUEL PUMPS", setting: "As Required", critical: false },
+            { num: 6, name: "HUD", setting: "Stow", critical: false },
+            { num: 7, name: "Flightdeck Lights", setting: "As Required", critical: false },
+            { num: 8, name: "AML", setting: "Complete", critical: false },
+            { num: 9, name: "APU / External Power", setting: "As Required", critical: false }
+          ],
+          images: [
+            { file: "ca_shutdown_diagram", label: "CA Shutdown flow diagram" },
+            { file: "ca_shutdown_exp_1", label: "CA Shutdown expanded 1" },
+            { file: "ca_shutdown_exp_2", label: "CA Shutdown expanded 2" },
+            { file: "12_ca_shutdown_flow", label: "CA Shutdown flow page" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Electrical", "Fuel", "HUD", "Navigation", "APU"]
+        },
+        {
+          id: "fo_shutdown_flow",
+          type: "flow",
+          who: "FO",
+          title: "FO Shutdown Flow",
+          trigger: "After CA calls engine shutdown",
+          description: "FO shutdown tasks after engine shutdown. Moves start levers to cutoff, sets transponder to standby, configures air conditioning for ground ops, turns off window/probe heat and anti-ice, shuts down hydraulic pumps, and records fluid quantities.",
+          items: [
+            { num: 1, name: "ENGINE START levers", setting: "CUTOFF", critical: false },
+            { num: 2, name: "Transponder", setting: "STBY", critical: false },
+            { num: 3, name: "Air Conditioning & Bleeds", setting: "Set", critical: false },
+            { num: 4, name: "WINDOW HEAT", setting: "OFF", critical: false },
+            { num: 5, name: "PROBE HEAT", setting: "AUTO", critical: false },
+            { num: 6, name: "ANTI-ICE", setting: "OFF", critical: false },
+            { num: 7, name: "ELEC HYD PUMPS", setting: "OFF", critical: false },
+            { num: 8, name: "EMER EXIT LIGHTS", setting: "OFF", critical: false },
+            { num: 9, name: "ENGINE START SWITCHES", setting: "AUTO", critical: false },
+            { num: 10, name: "Oxygen / Engine Oil / Hydraulic Fluid Quantities", setting: "Check", critical: false },
+            { num: 11, name: "Arrival Report", setting: "Send", critical: false },
+            { num: 12, name: "Flightdeck Lights", setting: "As Required", critical: false }
+          ],
+          images: [
+            { file: "fo_shutdown_diagram", label: "FO Shutdown flow diagram" },
+            { file: "fo_shutdown_exp_1", label: "FO Shutdown expanded 1" },
+            { file: "fo_shutdown_exp_2", label: "FO Shutdown expanded 2" },
+            { file: "13_fo_shutdown_flow", label: "FO Shutdown flow page" }
+          ],
+          panelState: [],
+          gotchas: [
+            "PROBE HEAT goes back to AUTO (not OFF) — allows auto operation",
+            "ENGINE START switches to AUTO (not OFF)",
+            "EMER EXIT LIGHTS to OFF (were armed during flight)",
+            "Record O2 qty, oil qty, hyd fluid — for maintenance/next crew",
+            "Arrival Report: send via ACARS before leaving flight deck"
+          ],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: ["Engines", "ATC/TCAS", "Air Conditioning", "Ice and Rain Protection", "Hydraulics", "Emergency Equipment", "Oxygen", "ACARS"]
+        },
+        {
+          id: "shutdown_checklist",
+          type: "checklist",
+          who: "CA/FO",
+          title: "Shutdown Checklist",
+          trigger: "After shutdown flows complete",
+          description: "Formal challenge-and-response checklist confirming all shutdown flow items are complete. Covers fuel pumps, probe heat, hydraulic pumps, and flaps. CA initiates and FO completes.",
+          items: [],
+          images: [
+            { file: "secure_cl_1", label: "Shutdown/Secure checklist page 1" },
+            { file: "secure_cl_2", label: "Shutdown/Secure checklist page 2" }
+          ],
+          panelState: [],
+          gotchas: [],
+          timing: "",
+          aomRef: "",
+          relatedFlashcards: [],
+          checklistFormat: "full",
+          initiator: "CA",
+          initiatorSays: "Shutdown Checklist",
+          completionCall: "Shutdown Checklist Complete",
+          completionWho: "FO",
+          challengeResponse: [
+            { challenge: "Fuel Pumps", response: "As required", who: "CA" },
+            { challenge: "Probe Heat", response: "Auto", who: "FO" },
+            { challenge: "Hydraulic Pumps", response: "Off", who: "FO" },
+            { challenge: "Flaps", response: "Up, no lights", who: "FO" }
+          ],
+          callouts: [
+            { who: "CA", says: "Shutdown Checklist", when: "After shutdown flows complete" },
+            { who: "FO", says: "Shutdown Checklist Complete", when: "Upon completion" }
+          ]
+        },
+        {
+          id: "secure_flow",
+          type: "flow",
+          who: "CA/FO",
+          title: "Secure Flow",
+          trigger: "When >2 hours between arrival and departure, or as required. Do NOT complete until all passengers have deplaned.",
+          description: "Securing the aircraft for extended ground time when more than 2 hours between flights. Shuts down packs, recirc fans, fuel pumps, and APU in sequence. Battery goes off last, but only after waiting for APU cooldown to protect the APU turbine.",
+          items: [
+            { num: 1, name: "Contact Maintenance", setting: "As Required", critical: false },
+            { num: 2, name: "CAB/UTIL", setting: "As Required", critical: false, note: "[3GY-3VM] leave CAB/UTIL switch ON to enable cabin lighting" },
+            { num: 3, name: "IFE/PASS", setting: "OFF", critical: false },
+            { num: 4, name: "PACKS", setting: "OFF", critical: false },
+            { num: 5, name: "L and R RECIRC FAN", setting: "OFF", critical: false },
+            { num: 6, name: "FUEL PUMPS", setting: "OFF", critical: false },
+            { num: 7, name: "APU", setting: "OFF", critical: false, note: "Delay ~2 min [3AA-3PX] or ~5 min [3RA-3VM] after APU GEN OFF BUS light extinguishes before BAT OFF" },
+            { num: 8, name: "(Wait for APU GEN OFF BUS light to extinguish + delay)", setting: "", critical: false },
+            { num: 9, name: "BATTERY", setting: "OFF", critical: false }
+          ],
+          images: [
+            { file: "secure_exp_1", label: "Secure flow expanded 1" },
+            { file: "secure_exp_2", label: "Secure flow expanded 2" },
+            { file: "secure_cl_1", label: "Secure checklist page 1" },
+            { file: "secure_cl_2", label: "Secure checklist page 2" }
+          ],
+          panelState: [],
+          gotchas: [
+            "Do NOT secure until ALL passengers have deplaned",
+            "[3GY-3VM] Leave CAB/UTIL switch ON for cabin lighting",
+            "APU cooldown: wait for GEN OFF BUS light to extinguish",
+            "Then wait 2 min (NG) or 5 min (MAX) before BAT OFF",
+            "If external power connected: GRD PWR OFF, then GROUND SERVICE ON",
+            "Only do Secure if >2 hours to next departure"
+          ],
+          timing: "Perform when >2 hours between arrival and departure, or as required.",
+          aomRef: "",
+          relatedFlashcards: ["APU", "Electrical", "Air Conditioning", "Fuel"]
+        }
+      ]
+    },
+    // ============================================================
+    // PHASE 19: MEMORY ITEMS
+    // Memory items below are VERBATIM from memory_items.md
+    // DO NOT paraphrase — these must be memorized word-for-word
+    // ============================================================
+    {
+      id: "memory_items",
+      number: 19,
+      title: "Memory Items",
+      category: "emergency",
+      steps: [
+        {
+          id: "mem_cabin_alt",
+          type: "flow",
+          who: "CA/FO",
+          title: "Cabin Altitude Warning or Rapid Depressurization",
+          trigger: "MEMORY ITEM — No reference material",
+          description: "The only two steps you must perform from memory before reaching for the QRC. Get oxygen flowing and establish crew communication immediately — seconds count at high altitude.",
+          items: [
+            { num: 1, name: "Don oxygen masks and set regulators", setting: "to 100%", critical: true },
+            { num: 2, name: "Establish crew communications", setting: "", critical: true }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Then refer to QRC for remaining items",
+            "This is a 2-step memory item — speed is critical",
+            "Masks ON before troubleshooting anything"
+          ],
+          timing: "Immediate action required — seconds count at high altitude",
+          aomRef: "QRC: Cabin Altitude Warning / Rapid Depressurization",
+          relatedFlashcards: ["Pressurization", "Oxygen"]
+        },
+        {
+          id: "mem_apu_fire",
+          type: "flow",
+          who: "CA/FO",
+          title: "APU Fire",
+          trigger: "MEMORY ITEM — No reference material",
+          description: "Two-step memory procedure for APU fire. Confirm the correct fire switch before pulling — then pull, rotate to the stop, and hold for 1 second to discharge the bottle.",
+          items: [
+            { num: 1, name: "APU Fire switch", setting: "Confirm — Pull, rotate to the stop, and hold for 1 second", critical: true },
+            { num: 2, name: "APU switch", setting: "OFF", critical: true }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "CONFIRM the correct fire switch before pulling",
+            "Pull, ROTATE to the stop, and HOLD for 1 second — discharges the bottle",
+            "APU switch OFF after fire handle actioned"
+          ],
+          timing: "",
+          aomRef: "QRC: APU Fire",
+          relatedFlashcards: ["APU", "Fire Protection"]
+        },
+        {
+          id: "mem_airspeed_unreliable",
+          type: "flow",
+          who: "CA/FO",
+          title: "Airspeed Unreliable",
+          trigger: "MEMORY ITEM — No reference material",
+          description: "Disconnect all automation first, then fly known pitch and power settings. The critical numbers: flaps extended = 10° pitch / 80% N1, flaps up = 4° pitch / 75% N1.",
+          items: [
+            { num: 1, name: "Autopilot (if engaged)", setting: "Disengage", critical: true },
+            { num: 2, name: "Autothrottle (if engaged)", setting: "Disengage", critical: true },
+            { num: 3, name: "F/D switches (both)", setting: "OFF", critical: true },
+            { num: 4, name: "Set pitch attitude and thrust", setting: "", critical: true, subitems: [
+              { name: "Flaps extended", setting: "10° pitch / 80% N1" },
+              { name: "Flaps up", setting: "4° pitch / 75% N1" }
+            ]}
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Then refer to QRC for remaining items",
+            "Critical numbers: Flaps extended = 10° pitch / 80% N1",
+            "Critical numbers: Flaps up = 4° pitch / 75% N1",
+            "Disconnect ALL automation first, then fly pitch and power"
+          ],
+          timing: "",
+          aomRef: "QRC: Airspeed Unreliable",
+          relatedFlashcards: ["Flight Instruments", "Autoflight"]
+        },
+        {
+          id: "mem_runaway_stab",
+          type: "flow",
+          who: "CA/FO",
+          title: "Runaway Stabilizer",
+          trigger: "MEMORY ITEM — No reference material",
+          description: "The longest memory item with critical branch logic. Control column FIRST — maintain aircraft control throughout. Key decision point: does the runaway stop after AP disconnect, or continue?",
+          items: [
+            { num: 1, name: "Control column", setting: "Hold firmly", critical: true },
+            { num: 2, name: "Autopilot (if engaged)", setting: "Disengage", critical: true },
+            { num: 3, name: "Autothrottle (if engaged)", setting: "Disengage", critical: true },
+            { num: 4, name: "Control column and thrust levers", setting: "Control aircraft pitch attitude and airspeed", critical: true },
+            { num: 5, name: "Main Electric Stabilizer trim", setting: "Reduce control column forces", critical: true },
+            { num: 6, name: "If runaway STOPS after AP disengaged", setting: "Do not re-engage the autopilot or autothrottle", critical: true },
+            { num: 7, name: "If runaway CONTINUES after AP disengaged", setting: "STAB TRIM cutout switches (both) — CUTOUT", critical: true },
+            { num: 8, name: "If runaway CONTINUES", setting: "Stabilizer trim wheel — Grasp and hold", critical: true }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "Branch logic: runaway STOPS after AP disconnect vs. CONTINUES",
+            "If it stops: do NOT re-engage autopilot or autothrottle",
+            "If it continues: STAB TRIM CUTOUT switches both to CUTOUT",
+            "If it STILL continues: physically grasp and hold the trim wheel",
+            "Control column FIRST — maintain aircraft control throughout"
+          ],
+          timing: "Practice daily until you can recite all 4 memory items in under 90 seconds total",
+          aomRef: "QRC: Runaway Stabilizer",
+          relatedFlashcards: ["Flight Controls", "Autoflight"]
+        }
+      ]
+    }
+  ]
+};
