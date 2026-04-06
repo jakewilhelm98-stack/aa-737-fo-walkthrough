@@ -37,32 +37,184 @@ const FLIGHT_DATA = {
       category: "ground",
       steps: [
         {
-          id: "power_up_flow",
+          id: "power_up_procedure",
           type: "flow",
           who: "CA/FO",
-          title: "Electrical Power-Up",
-          trigger: "Arriving at cold & dark airplane",
-          description: "Establishing electrical power to a cold-and-dark aircraft. The BAT switch powers essential busses and standby instruments, while setting the IRS selectors to NAV begins inertial alignment, which takes roughly 10 minutes and is the longest warm-up item on the ground.",
+          title: "Electrical Power Up Procedure",
+          trigger: "Arriving at cold & dark airplane — safely configures aircraft for application of electrical power and air conditioning",
+          description: "The common-path items (1–6) are always done first to safely configure the airplane before any power is applied. Then branch on what power source is available: external power, APU (with ext pwr or battery start), or neither.",
           items: [
-            { num: 1, name: "BAT switch", setting: "ON (or connect external power)", critical: false, subitems: [] },
-            { num: 2, name: "IRS Mode Selectors", setting: "NAV (start alignment)", critical: false, subitems: [] },
-            { num: 3, name: "Establish electrical power", setting: "to aircraft", critical: false, subitems: [] }
+            { num: 1, name: "BAT switch", setting: "Guarded", critical: true, subitems: [], note: "3RA-3VM: If external power is NOT used for APU start, wait ≥30 sec between closing BAT switch guard and starting the APU (allows DPC self-test to complete)." },
+            { num: 2, name: "STANDBY POWER switch", setting: "Guarded", critical: false, subitems: [] },
+            { num: 3, name: "ALTERNATE FLAPS switch", setting: "Guarded", critical: false, subitems: [] },
+            { num: 4, name: "L and R WIPER selectors", setting: "PARK", critical: false, subitems: [] },
+            { num: 5, name: "ELEC1 and ELEC2 HYD PUMPS switches", setting: "OFF", critical: false, subitems: [] },
+            { num: 6, name: "LANDING GEAR lever", setting: "DN", critical: false, subitems: [
+              { name: "3 Green — Illuminated", isNote: true },
+              { name: "3 Red — Extinguished", isNote: true }
+            ]}
           ],
           images: [],
           panelState: [
-            "BAT switch: ON",
-            "IRS Mode Selectors: NAV (alignment begins)",
-            "Standby instruments and IRS powered"
+            "BAT switch: Guarded (down, guard closed)",
+            "STANDBY POWER switch: Guarded",
+            "ALTERNATE FLAPS switch: Guarded",
+            "L/R WIPER selectors: PARK",
+            "ELEC1/ELEC2 HYD PUMPS: OFF",
+            "LANDING GEAR lever: DN, 3 Green illuminated, 3 Red extinguished"
           ],
           gotchas: [
-            "IRS alignment is latitude-dependent — longer near equator, shorter near poles",
-            "If external power available, use it to save APU cycles",
-            "BAT switch ON first — gives standby instruments and IRS power",
-            "Do NOT move aircraft until IRS alignment is complete"
+            "This is the common-path setup — always done first regardless of power source",
+            "Guards DOWN mean switches are protected in their normal position, not that the switch underneath is OFF",
+            "30-second wait after BAT guard close applies ONLY if doing a battery/APU start without ext power (DPC self-test)",
+            "If any red gear light stays on after DN selection, stop and troubleshoot before proceeding"
           ],
-          timing: "IRS takes ~10 min to align. Start ASAP.",
-          aomRef: "",
-          relatedFlashcards: ["Electrical", "Navigation", "Flight Instruments"]
+          timing: "~1 min for common-path items 1–6",
+          aomRef: "AOM 3.2.1 Electrical Power Up Procedure (steps 1–6)",
+          relatedFlashcards: ["Electrical", "Landing Gear"]
+        },
+        {
+          id: "power_up_ext_power",
+          type: "flow",
+          who: "CA/FO",
+          title: "Branch A — External Power Available",
+          trigger: "GRD POWER AVAILABLE light illuminated",
+          description: "Preferred configuration. Use ground power whenever available to reduce APU usage (AOM 3.2.2 priority).",
+          items: [
+            { num: 7, name: "GRD POWER AVAILABLE light", setting: "Illuminated", critical: false, subitems: [] },
+            { num: "7a", name: "GRD PWR switch", setting: "ON", critical: true, subitems: [
+              { name: "SOURCE OFF lights — Extinguished", isNote: true },
+              { name: "TRANSFER BUS OFF lights — Extinguished", isNote: true },
+              { name: "STANDBY PWR OFF light — Extinguished", isNote: true }
+            ]},
+            { num: "7b", name: "General Preflight Flow OR Origination Flow", setting: "Accomplish as applicable", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "GRD POWER AVAILABLE: illuminated blue",
+            "GRD PWR switch: ON",
+            "SOURCE OFF, TRANSFER BUS OFF, STANDBY PWR OFF lights: all extinguished",
+            "Aircraft now powered from external ground power"
+          ],
+          gotchas: [
+            "If SOURCE OFF stays lit, ground power is out of limits — call ramp",
+            "If TRANSFER BUS OFF stays lit, a transfer relay did not close",
+            "If STANDBY PWR OFF stays lit, verify STANDBY POWER switch position",
+            "Origination flow only on first flight of the day or after unobserved maintenance; otherwise General Preflight"
+          ],
+          timing: "~30 sec to verify lights",
+          aomRef: "AOM 3.2.1 Electrical Power Up — External Power branch",
+          relatedFlashcards: ["Electrical"]
+        },
+        {
+          id: "power_up_apu_no_extpwr",
+          type: "flow",
+          who: "CA/FO",
+          title: "Branch B — External Power NOT Available (APU Start)",
+          trigger: "No ground power available but APU electrics are available",
+          description: "When external power is unavailable and APU power is needed. This path tests the fire loops BEFORE starting the APU, then brings the APU online and establishes bleed-air/conditioning.",
+          items: [
+            { num: 7, name: "ENG 1, ENG 2, and APU FIRE switches", setting: "IN", critical: true, subitems: [] },
+            { num: 8, name: "Ground Personnel", setting: "Alert", critical: true, subitems: [
+              { name: "Fire warning light flashes and horn sounds on APU ground control panel during test — ground crews may mistake it for a real APU fire", isNote: true }
+            ]},
+            { num: 9, name: "Overheat and Fire Protection Panel", setting: "Check", critical: true, subitems: [
+              { name: "Procedure: 21g.1.1 Fire and Overheat System Test", isNote: true },
+              { name: "If one loop inoperative: 21g.1.2 Fire and Overheat System Test w/ Inop Loop", isNote: true }
+            ]},
+            { num: 10, name: "APU", setting: "Start", critical: true, subitems: [
+              { name: "See 21c.1.1 APU Start", isNote: true }
+            ]},
+            { num: 11, name: "Electrical Power / Air Conditioning", setting: "Establish", critical: true, subitems: [
+              { name: "See 3.2.2 Establishing Electrical Power/Air Conditioning", isNote: true }
+            ]},
+            { num: 12, name: "3AA-3MX Wheel Well Fire Detection System", setting: "Test", critical: false, subitems: [
+              { name: "Test switch: Hold to OVHT/FIRE", isNote: true },
+              { name: "Fire Warning Bell — Sounds", isNote: true },
+              { name: "Master FIRE WARN lights — Illuminated", isNote: true },
+              { name: "MASTER CAUTION lights — Illuminated", isNote: true },
+              { name: "OVHT/DET annunciator — On", isNote: true },
+              { name: "Fire Warning BELL CUTOUT switch: Push", isNote: true },
+              { name: "Master FIRE WARN lights — Extinguished", isNote: true },
+              { name: "Fire Warning Bell — Cancels", isNote: true },
+              { name: "WHEEL WELL Fire Warning light — Illuminated", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "All three FIRE switches IN (pushed down)",
+            "Ground crew notified before fire test",
+            "APU running, GEN BUS OFF lights extinguished after switch to APU gens",
+            "Packs and bleeds configured per 3.2.2"
+          ],
+          gotchas: [
+            "ALWAYS alert ground personnel before the fire test — the APU ground panel horn will fire",
+            "Remember the 30-sec DPC self-test wait from step 1 BEFORE starting the APU",
+            "Wheel well fire test is only for 3AA-3MX airframes",
+            "3RA-3VM battery-start procedure lives in the maintenance manual and requires mx personnel present"
+          ],
+          timing: "~3–5 min including APU start and stabilization",
+          aomRef: "AOM 3.2.1 Electrical Power Up — APU branch (steps 7–12)",
+          relatedFlashcards: ["Electrical", "APU", "Fire Protection"]
+        },
+        {
+          id: "power_up_battery_start",
+          type: "flow",
+          who: "CA/FO",
+          title: "Branch C — No Ext Power AND No APU Electrics",
+          trigger: "Neither external power nor APU electrics available — battery start required",
+          description: "Fallback when neither ground power nor APU electrics are available. Uses battery to start the APU with bleed or ground air assist. Airframe-specific procedure.",
+          items: [
+            { num: 1, name: "3AA-3PX airframes", setting: "Battery Start with APU Bleed or Ground Air", critical: true, subitems: [
+              { name: "See 21f.1.3 3AA-3PX Battery Start (With APU Bleed or Ground Air Available)", isNote: true }
+            ]},
+            { num: 2, name: "3RA-3VM airframes", setting: "Maintenance Manual procedure", critical: true, subitems: [
+              { name: "Battery Start procedure lives in the maintenance manual and REQUIRES maintenance personnel to be present", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "Battery carrying entire ship load — minimize time",
+            "APU start initiated from battery power"
+          ],
+          gotchas: [
+            "Know your airframe — 3AA-3PX vs 3RA-3VM procedures differ",
+            "3RA-3VM crews cannot self-perform battery start — call mx",
+            "Battery-only loads drain the battery quickly; minimize time before APU is online",
+            "Still owe the 30-second DPC self-test wait after closing the BAT switch guard"
+          ],
+          timing: "Variable — depends on airframe and mx availability",
+          aomRef: "AOM 3.2.1 Electrical Power Up — Battery Start branches",
+          relatedFlashcards: ["Electrical", "APU"]
+        },
+        {
+          id: "power_up_establishing",
+          type: "flow",
+          who: "CA/FO",
+          title: "Establishing Electrical Power / Air Conditioning — Priorities",
+          trigger: "After power source selected — set priorities for power & conditioning",
+          description: "With all variables considered (ground/aircraft equipment, inside/outside air temp, ground/departure time, etc.), use the following priorities when applying electrical power and air conditioning.",
+          items: [
+            { num: 1, name: "Electrical", setting: "External power when available (reduces APU usage)", critical: false, subitems: [] },
+            { num: 2, name: "Air Conditioning", setting: "Preconditioned Air (PCA) when available", critical: false, subitems: [
+              { name: "Use APU when PCA is inoperative and/or conditioned air is needed for pax comfort", isNote: true },
+              { name: "Do NOT use air conditioning packs if preconditioned air is connected", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "Ext power selected over APU when available",
+            "PCA connected when available; packs OFF while PCA is in use"
+          ],
+          gotchas: [
+            "Hard rule: packs OFF whenever PCA is connected — running packs against PCA damages pack valves and wastes fuel",
+            "Use APU only when you actually need it (no ext pwr, or PCA inop and pax comfort required)",
+            "Hot day, long turn, no PCA → APU is legit. Cool day, ext pwr on, short turn → no APU",
+            "IRS alignment still needs ~10 min regardless of power source — start it as soon as power is on the transfer buses"
+          ],
+          timing: "Decision-level, ongoing through ground ops",
+          aomRef: "AOM 3.2.2 Establishing Electrical Power/Air Conditioning",
+          relatedFlashcards: ["Electrical", "Air Conditioning", "APU"]
         }
       ]
     },
