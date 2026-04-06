@@ -188,6 +188,104 @@ const FLIGHT_DATA = {
           relatedFlashcards: ["Electrical", "APU"]
         },
         {
+          id: "fire_overheat_test",
+          type: "flow",
+          who: "CA/FO",
+          title: "Fire and Overheat System Test (21g.1.1)",
+          trigger: "Called for by step 9 of APU branch — test the fire/overheat system before flight",
+          description: "Verifies both detection loops, the fault monitoring circuitry, fire warning annunciations, and the extinguisher squib continuity. Done as part of the APU-branch power-up sequence (and any origination/first-flight check).",
+          items: [
+            { num: 1, name: "OVHT DET switches", setting: "NORMAL", critical: false, subitems: [] },
+            { num: 2, name: "TEST switch", setting: "Hold to FAULT/INOP", critical: true, subitems: [
+              { name: "MASTER CAUTION lights — Illuminated", isNote: true },
+              { name: "OVHT/DET annunciator — Illuminated", isNote: true },
+              { name: "FAULT light — Illuminated (if not, fault monitoring system is INOP)", isNote: true },
+              { name: "APU DET INOP light — Illuminated", isNote: true },
+              { name: "CAUTION: Do NOT operate the APU if the APU DET INOP light fails to illuminate", isNote: true }
+            ]},
+            { num: 3, name: "TEST switch", setting: "Hold to OVHT/FIRE", critical: true, subitems: [
+              { name: "Fire Warning Bell — Sounds", isNote: true },
+              { name: "Master FIRE WARN lights — Illuminated", isNote: true },
+              { name: "MASTER CAUTION lights — Illuminated", isNote: true },
+              { name: "OVHT/DET annunciator — Illuminated", isNote: true }
+            ]},
+            { num: 4, name: "Master FIRE WARN light", setting: "Push", critical: true, subitems: [
+              { name: "Master FIRE WARN lights — Extinguished", isNote: true },
+              { name: "Fire Warning Bell — Cancels", isNote: true },
+              { name: "ENG 1, APU, and ENG 2 FIRE switch lights — Illuminated", isNote: true },
+              { name: "3MY-3VM: ENG 1 and ENG 2 Start Lever lights — Illuminated", isNote: true },
+              { name: "ENG 1 and ENG 2 OVERHEAT lights — Illuminated", isNote: true },
+              { name: "WHEEL WELL fire warning light — Illuminated", isNote: true },
+              { name: "Note (3AA-3MX): Wheel well light may or may not illuminate on DC-only power; retest wheel well after AC power is established for accuracy", isNote: true }
+            ]},
+            { num: 5, name: "EXT TEST switch", setting: "Check", critical: true, subitems: [
+              { name: "TEST switch: Position to 1 and hold — Extinguisher Test lights illuminate (3 green)", isNote: true },
+              { name: "TEST switch: Release — Extinguisher Test lights extinguish", isNote: true },
+              { name: "Repeat for test position 2", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "OVHT DET switches: NORMAL",
+            "FAULT light working (proves fault monitor)",
+            "APU DET INOP light working (required before APU ops)",
+            "Fire bell + Master FIRE WARN + OVHT/DET all annunciate on OVHT/FIRE test",
+            "Both EXT TEST positions light all 3 green squib lights"
+          ],
+          gotchas: [
+            "HARD RULE: Do not operate the APU if the APU DET INOP light does not illuminate during the FAULT/INOP test",
+            "If the FAULT light doesn't illuminate, the fault monitoring system itself is INOP — you'll lose annunciation of a real loop failure",
+            "3AA-3MX wheel well light is unreliable on DC-only power — plan to retest after ground/APU AC power is up",
+            "Push the Master FIRE WARN light to reset — don't release the TEST switch early",
+            "EXT TEST positions 1 and 2 test separate squib circuits — both must be checked"
+          ],
+          timing: "~1–2 min",
+          aomRef: "AOM 21g.1.1 Fire and Overheat System Test",
+          relatedFlashcards: ["Fire Protection", "APU"]
+        },
+        {
+          id: "fire_overheat_inop_loop",
+          type: "flow",
+          who: "CA/FO",
+          title: "Fire/Overheat Test — Inoperative Loop (21g.1.2)",
+          trigger: "21g.1.1 test failed — need to isolate the bad loop",
+          description: "Procedure used to determine which specific loop is inoperative so the good loop can be selected for flight. Run each loop independently (A, then B) and interpret the annunciations per airframe.",
+          items: [
+            { num: 1, name: "OVHT DET switches", setting: "A", critical: true, subitems: [] },
+            { num: 2, name: "TEST switch", setting: "OVHT / FIRE", critical: true, subitems: [
+              { name: "3AA-3MX: FAULT extg + both ENG OVHT lights + fire switches illum → Loop A GOOD", isNote: true },
+              { name: "3AA-3MX: FAULT illum + any ENG OVHT / fire switch stays extg → fault in Loop A of that engine", isNote: true },
+              { name: "3MY-3VM: FAULT extg + both ENG OVHT + start lever lights + fire switches illum → Loop A GOOD", isNote: true },
+              { name: "3MY-3VM: FAULT illum + any ENG OVHT / start lever / fire switch stays extg → fault in Loop A of that engine", isNote: true }
+            ]},
+            { num: 3, name: "OVHT DET switches", setting: "B", critical: true, subitems: [] },
+            { num: 4, name: "TEST switch", setting: "OVHT / FIRE", critical: true, subitems: [
+              { name: "Same interpretation rules apply for Loop B per airframe variant", isNote: true }
+            ]},
+            { num: 5, name: "OVHT DET switches", setting: "As required", critical: true, subitems: [
+              { name: "Select the GOOD loop for each engine", isNote: true },
+              { name: "If both loops test good, set NORMAL", isNote: true }
+            ]},
+            { num: 6, name: "TEST switch", setting: "OVHT / FIRE", critical: true, subitems: [
+              { name: "If the final test is successful, leave the fire panel in this configuration for flight", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "OVHT DET switches set to selected good loop(s)",
+            "Fire panel left in verified configuration for flight"
+          ],
+          gotchas: [
+            "This test is per engine per loop — a fault may exist in only one engine on one loop",
+            "Airframe matters: 3MY-3VM also watches start lever lights as an indication",
+            "After isolating the bad loop, don't forget the final OVHT/FIRE confirmation test",
+            "If both loops fail on the same engine, the fire/overheat detection for that engine is inoperative — consult MEL"
+          ],
+          timing: "~2–3 min if a loop is suspected inop",
+          aomRef: "AOM 21g.1.2 Fire and Overheat System Test with an Inoperative Loop",
+          relatedFlashcards: ["Fire Protection"]
+        },
+        {
           id: "power_up_establishing",
           type: "flow",
           who: "CA/FO",
