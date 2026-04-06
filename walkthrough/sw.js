@@ -1,4 +1,4 @@
-const CACHE_NAME = 'aa737-walkthrough-v5';
+const CACHE_NAME = 'aa737-walkthrough-v6';
 const ASSETS = [
   './',
   './index.html',

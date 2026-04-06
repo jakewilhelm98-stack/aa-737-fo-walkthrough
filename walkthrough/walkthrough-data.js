@@ -42,9 +42,13 @@ const FLIGHT_DATA = {
           who: "CA/FO",
           title: "Electrical Power Up Procedure",
           trigger: "Arriving at cold & dark airplane — safely configures aircraft for application of electrical power and air conditioning",
-          description: "The common-path items (1–6) are always done first to safely configure the airplane before any power is applied. Then branch on what power source is available: external power, APU (with ext pwr or battery start), or neither.",
+          description: "The FIRST procedure accomplished on a cold/dark aircraft — ALWAYS before the Origination or General Preflight flow. The common-path items (1–6) are always done first to safely configure the airplane; step 1 physically flips the BAT switch ON and closes its guard (this is where the battery is actually turned on). Then branch on what power source is available: external power, APU (with ext pwr or battery start), or neither.",
           items: [
-            { num: 1, name: "BAT switch", setting: "Guarded", critical: true, subitems: [], note: "3RA-3VM: If external power is NOT used for APU start, wait ≥30 sec between closing BAT switch guard and starting the APU (allows DPC self-test to complete)." },
+            { num: 1, name: "BAT switch", setting: "ON, guard closed (\"Guarded\")", critical: true, subitems: [
+              { name: "Lift guard → flip BAT switch ON → close guard over it. This is the FIRST physical action on a cold/dark aircraft.", isNote: true },
+              { name: "Energizes hot battery bus and standby bus, powering standby instruments and enabling APU start / ground power acceptance.", isNote: true },
+              { name: "3RA-3VM: If external power is NOT used for APU start, wait ≥30 sec between closing the BAT switch guard and starting the APU (allows DPC self-test to complete).", isNote: true }
+            ]},
             { num: 2, name: "STANDBY POWER switch", setting: "Guarded", critical: false, subitems: [] },
             { num: 3, name: "ALTERNATE FLAPS switch", setting: "Guarded", critical: false, subitems: [] },
             { num: 4, name: "L and R WIPER selectors", setting: "PARK", critical: false, subitems: [] },
@@ -56,7 +60,7 @@ const FLIGHT_DATA = {
           ],
           images: [],
           panelState: [
-            "BAT switch: Guarded (down, guard closed)",
+            "BAT switch: ON, guard closed (hot battery bus + standby bus live)",
             "STANDBY POWER switch: Guarded",
             "ALTERNATE FLAPS switch: Guarded",
             "L/R WIPER selectors: PARK",
