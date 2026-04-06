@@ -18,7 +18,7 @@ const FLIGHT_DATA = {
   meta: {
     title: "AA 737 FO Flight Walkthrough",
     subtitle: "Gate to Gate — Every Flow, Checklist & Callout in Sequence",
-    totalPhases: 19,
+    totalPhases: 25,
     version: "1.0.0"
   },
 
@@ -2362,6 +2362,1122 @@ const FLIGHT_DATA = {
           timing: "Practice daily until you can recite all 4 memory items in under 90 seconds total",
           aomRef: "QRC: Runaway Stabilizer",
           relatedFlashcards: ["Flight Controls", "Autoflight"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 20 — SPECIAL TAKEOFFS (AOM Ch 6)
+    // ========================================================
+    {
+      id: "special_takeoffs",
+      number: 20,
+      title: "Special Takeoffs",
+      category: "takeoff",
+      steps: [
+        {
+          id: "hud_low_vis_takeoff",
+          type: "flow",
+          who: "CA",
+          title: "HUD Low Visibility Takeoff",
+          trigger: "RVR less than 500 (150 m) on runway approved for 300 RVR (75 m) takeoff",
+          description: "Required when visibility falls below 500 RVR on runways supported by 300 RVR takeoff. Captain flies the takeoff using HUD ground roll guidance to track centerline. FO stays on instruments throughout the roll and calls 'Centerline' if ground path diverges from the localizer.",
+          items: [
+            { num: 1, name: "MCP heading and courses", setting: "Set runway heading (Jeppesen airport diagram)", critical: true, subitems: [] },
+            { num: 2, name: "CDU HUD MENU page", setting: "Set", critical: true, subitems: [
+              { name: "Mode: NP (BAE2020) or PRI (HGS-4000/6000)", isNote: true },
+              { name: "RWY LENGTH: verify (correct for intersection / TPS / NOTAM)", isNote: true },
+              { name: "RWY ELEV: verify (TDZE or field elevation)", isNote: true },
+              { name: "G/S ANGLE: verify", isNote: true }
+            ]},
+            { num: 3, name: "VHF NAV radios", setting: "Set ILS frequency (backcourse NOT authorized)", critical: true, subitems: [] },
+            { num: 4, name: "LOC ident / course", setting: "Check — must receive valid LOC for ground roll guidance", critical: true, subitems: [] },
+            { num: 5, name: "GND ROLL", setting: "ARMED (BAE2020) or GND ROLL CUE visible (HGS-4000/6000)", critical: true, subitems: [
+              { name: "If NO GND ROLL displayed → takeoff is NOT authorized", isNote: true }
+            ]},
+            { num: 6, name: "Localizer symbol & course arrow", setting: "Approximately aligned with runway centerline", critical: false, subitems: [] },
+            { num: 7, name: "Takeoff roll", setting: "Follow GND ROLL guidance, use rudder to keep localizer between landing gear", critical: true, subitems: [
+              { name: "If GND ROLL not active by 60 kt (BAE2020) / cue not present at 40 kt (HGS) → REJECT", isNote: true }
+            ]},
+            { num: 8, name: "At VR", setting: "Rotate to put boresight in TO/GA line gap (10° pitch line)", critical: true, subitems: [
+              { name: "Pitch above TO/GA line increases tailstrike risk", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "HUD: GND ROLL armed / GND ROLL CUE visible",
+            "MCP heading: runway heading",
+            "MCP courses: runway heading",
+            "VHF NAV 1 & 2: ILS frequency",
+            "FDs: ON"
+          ],
+          gotchas: [
+            "Static (not rolling) takeoff recommended — gets GND ROLL active sooner",
+            "Backcourse localizer guidance for takeoff is NOT authorized",
+            "Captain flies HUD; FO stays on instruments throughout takeoff roll",
+            "FO 'Centerline' call only on definite divergence — not normal bracketing",
+            "RWY REM is advisory only; do NOT base reject decision on it",
+            "Below 20 kt the GPV is unreliable — don't taxi slowly down the runway",
+            "Two of three transmissometers required (TDZ / Mid / Rollout) — all reporting are controlling"
+          ],
+          timing: "GND ROLL must be active by 60 kt (BAE2020) or cue present at 40 kt (HGS) — otherwise REJECT",
+          aomRef: "AOM 6.3 HUD Low Visibility Takeoffs",
+          relatedFlashcards: ["HUD/HGS", "Autoflight", "Flight Instruments"]
+        },
+        {
+          id: "rejected_takeoff",
+          type: "flow",
+          who: "CA",
+          title: "Rejected Takeoff (RTO)",
+          trigger: "Captain decides to reject takeoff — must be initiated NLT V1",
+          description: "Captain has sole authority to reject. The decision must be made prior to V1 so the maneuver is initiated no later than V1. Below 80 kt reject for almost anything. Between 80 kt and V1 the bar is much higher: fire/fire warning, engine failure, predictive windshear warning, or aircraft unsafe/unable to fly.",
+          items: [
+            { num: 1, name: "Captain calls", setting: "\"Reject, my aircraft.\" — assume control if FO was PF", critical: true, subitems: [] },
+            { num: 2, name: "Thrust levers", setting: "CLOSE — without delay", critical: true, subitems: [] },
+            { num: 3, name: "Autothrottle", setting: "DISENGAGE", critical: true, subitems: [] },
+            { num: 4, name: "Wheel brakes", setting: "MAXIMUM manual or verify RTO autobrake operation", critical: true, subitems: [
+              { name: "Below ~90 kt autobrake is NOT initiated and DISARM light does not illuminate", isNote: true }
+            ]},
+            { num: 5, name: "SPEEDBRAKE lever", setting: "Manually deploy (Captain) — FO calls \"Deployed\" or \"No Speedbrakes\"", critical: true, subitems: [
+              { name: "If captain fails to deploy, FO manually deploys", isNote: true }
+            ]},
+            { num: 6, name: "Reverse thrust", setting: "Apply maximum consistent with conditions — FO calls \"Single reverse\" or \"No reverse\" if needed", critical: true, subitems: [] },
+            { num: 7, name: "Maximum braking", setting: "Continue until certain aircraft can stop on runway", critical: true, subitems: [] },
+            { num: 8, name: "FO callouts", setting: "\"80\", \"60\", and any omissions / autobrakes off", critical: false, subitems: [] },
+            { num: 9, name: "Reverse thrust levers", setting: "Reverse idle detent before taxi speed, then full down after engines at reverse idle", critical: false, subitems: [] },
+            { num: 10, name: "Notify tower / crew", setting: "Communicate reject and intentions ASAP", critical: false, subitems: [] },
+            { num: 11, name: "When stopped — evaluate", setting: "Evacuation required → call Evacuation checklist. Otherwise PA: \"Remain seated, remain seated, remain seated\"", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Thrust levers: closed",
+            "Autothrottle: disengaged",
+            "Speedbrake: UP (manually deployed)",
+            "Reverse thrust: applied",
+            "Brakes: max (manual or RTO autobrake)"
+          ],
+          gotchas: [
+            "Below 80 kt: reject for master caution, system failure, unusual noise/vibration, tire failure, slow accel, T/O config warning, fire, engine failure, PWS caution/warning, unsafe to fly",
+            "80 kt → V1: reject ONLY for fire, engine failure, PWS warning, or unsafe to fly",
+            "Tire failure < 80 kt → REJECT. Tire failure > 80 kt → CONTINUE (braking effectiveness reduced)",
+            "Flightdeck window opening above 80 kt → do NOT reject; close airborne or return",
+            "Above V1: rejecting is NOT recommended unless aircraft incapable of flight",
+            "Reverse thrust is NOT credited in reject performance data — supplemental only",
+            "Heavy braking can blow tires, melt fuse plugs, damage flaps/gear/hydraulics — review brake cooling schedule",
+            "Do NOT set parking brake unless evacuation needed (hot brake hazard)"
+          ],
+          timing: "Decision must be made prior to V1 — maneuver initiated NLT V1",
+          aomRef: "AOM 6.4 Rejected Takeoff",
+          relatedFlashcards: ["Brakes", "Engines", "Warning Systems"]
+        },
+        {
+          id: "loss_of_thrust_v1",
+          type: "flow",
+          who: "PF",
+          title: "Loss of Thrust at or Above V1",
+          trigger: "Engine failure at or above V1",
+          description: "Above V1 the takeoff is continued. Maintain directional control with rudder, rotate to 12-13° at VR (slower rate ≈1.5-2.5°/sec, rotation takes 10-12 sec engine out vs 6-7 sec all engines), climb at V2 to V2+20 with bank limited to 15° until V2+15, then accomplish the engine-out cleanup at acceleration height.",
+          items: [
+            { num: 1, name: "First pilot to recognize", setting: "Call \"Engine Failure\" — do NOT identify the engine", critical: true, subitems: [] },
+            { num: 2, name: "Directional control", setting: "Rudder — stop the yaw (heading is best indicator of correct rudder)", critical: true, subitems: [] },
+            { num: 3, name: "At VR", setting: "PM calls \"Rotate\" — PF rotates smoothly toward 12°-13° pitch", critical: true, subitems: [
+              { name: "Rate ~1.5-2.5°/sec (slower than all-engine)", isNote: true },
+              { name: "Rapid or over-rotation may cause tailstrike", isNote: true }
+            ]},
+            { num: 4, name: "After liftoff", setting: "Climb at V2 to V2+20, bank limited to 15° until V2+15", critical: true, subitems: [] },
+            { num: 5, name: "Positive rate", setting: "PM calls \"Positive rate\" → PF \"Gear up\"", critical: true, subitems: [] },
+            { num: 6, name: "Above 400 ft RA", setting: "Verify or call for appropriate roll mode (HDG or LNAV)", critical: false, subitems: [
+              { name: "Fly extended runway centerline OR Engine-Out SID lateral path if published", isNote: true }
+            ]},
+            { num: 7, name: "At E/O acceleration altitude (TPS or ##-7E)", setting: "PF: \"VNAV\" (or \"LVL CHG, set speed\" if VNAV N/A)", critical: true, subitems: [
+              { name: "Reduce pitch and accelerate, retract flaps on schedule", isNote: true }
+            ]},
+            { num: 8, name: "At flaps up maneuvering speed (UP bug)", setting: "PF: \"MCT, ____ checklist\" — PM selects MCT and accomplishes appropriate non-normal", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Pitch: 12°-13° initial",
+            "Speed: V2 to V2+20",
+            "Bank: ≤15° until V2+15, then up to 30° at V2+15 with takeoff flaps",
+            "Roll mode: HDG SEL or LNAV after 400 ft RA",
+            "Thrust: takeoff (then MCT after cleanup)"
+          ],
+          gotchas: [
+            "If engine fails between V1 and liftoff: maintain directional control with smooth rudder proportionate to thrust decay",
+            "Centered control wheel ≈ in-trim — apply rudder in direction wheel is displaced",
+            "Standard thrust takeoff: max thrust on remaining engine NOT required by performance, but available if desired",
+            "EO SID is auto-selected as route mod if engine fails before flap retraction — may need to execute before 400 ft",
+            "Obstacle clearance only assured along extended runway centerline OR published EO SID path",
+            "MCT must be selected within 5 minutes of takeoff initiation",
+            "Min flap retraction altitude with engine out: 1000 ft AGL or E/O ACCEL ALT on TPS",
+            "Autopilot may be engaged at safe altitude above 400 ft RA with correct rudder/trim",
+            "GPWS alerts may still occur on the engine-out path — terrain has been assessed but alerting thresholds may trigger"
+          ],
+          timing: "Engine-out rotation takes 10-12 seconds (vs 6-7 all engines)",
+          aomRef: "AOM 6.5 Loss of Thrust at or Above V1",
+          relatedFlashcards: ["Engines", "Autoflight", "Flight Controls"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 21 — APPROACHES: ILS (AOM Ch 10)
+    // ========================================================
+    {
+      id: "approaches_ils",
+      number: 21,
+      title: "Approaches — ILS",
+      category: "approach",
+      steps: [
+        {
+          id: "stabilized_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Stabilized Approach Criteria",
+          trigger: "Every approach — gate is 1000 ft AFL (IMC), may delay to 500 ft AFL (VMC)",
+          description: "The single most important framework for any approach. Plan to be stable by 1000 ft AFL in both IMC and VMC. If unstable in IMC at 1000 ft, go around. In VMC, may delay compliance to 500 ft AFL as long as 'unstable' is called along with the deviation. Either pilot may direct a go-around.",
+          items: [
+            { num: 1, name: "By 1000 ft AFL (IMC and VMC)", setting: "Landing configuration (gear down, final landing flaps) AND descent rate ≤1000 fpm", critical: true, subitems: [] },
+            { num: 2, name: "By 1000 ft AFL IMC (or 500 ft AFL VMC)", setting: "On approach speed (target -5 / +10 kt), on flight path, stabilized (spooled) thrust", critical: true, subitems: [] },
+            { num: 3, name: "1000 ft AFL callout", setting: "PF: \"Stable\" OR \"Unstable, go around\" (IMC) OR \"Unstable, [deviation]\" (VMC delay)", critical: true, subitems: [] },
+            { num: 4, name: "500 ft AFL callout", setting: "PM auto: \"500\" → PF: \"Stable, target, sink ___\" or \"Stable, ±___, sink ___\"", critical: true, subitems: [] },
+            { num: 5, name: "If unstable at 500 ft", setting: "\"Unstable, go around\" — perform go-around", critical: true, subitems: [] },
+            { num: 6, name: "Descent rate limits", setting: "Below 2000 ft AFL: ≤2000 fpm. Below 1000 ft AFL or inside FAF: ≤1000 fpm", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Configuration: gear down, landing flaps",
+            "Speed: target -5 / +10 kt",
+            "Flight path: on path",
+            "Thrust: spooled / stabilized",
+            "Sink rate: ≤1000 fpm inside FAF / below 1000 ft AFL"
+          ],
+          gotchas: [
+            "Either pilot may direct a go-around — directed GA must be executed unless emergency overrides",
+            "Deviation callouts: \"Airspeed\" (<target-5 or >target+10), \"Sink rate\", \"Localizer\" (≥1/3 dot or diamond touches box), \"Glideslope\" (≥1/2 dot), \"Path\", \"Track\", \"VOR\" (>1 dot)",
+            "Decision to go around is good judgment, NOT poor performance",
+            "Distance rule of thumb: 3 NM per 1000 ft (3:1)",
+            "Decel rule of thumb: ~10 sec and 1 NM per 10 kt in level flight without speedbrakes",
+            "Briefed deviations from stabilized criteria are allowed for non-normals or unique procedures"
+          ],
+          timing: "1000 ft AFL is the gate (delay to 500 ft AFL only in VMC and only when called out)",
+          aomRef: "AOM 10.2 Stabilized Approach",
+          relatedFlashcards: ["Approach", "Autoflight"]
+        },
+        {
+          id: "ils_general",
+          type: "flow",
+          who: "PF/PM",
+          title: "ILS General — Setup & Captures",
+          trigger: "Any ILS approach — applies to CAT I, II, III, SA CAT I, SA CAT II",
+          description: "Common setup applicable to every ILS. Set MCP altitude to MAA, set MINS reference (BARO for CAT I/SA CAT I, RADIO for CAT II/III), and watch for false LOC captures and below-glideslope APP arming pitfalls.",
+          items: [
+            { num: 1, name: "MCP altitude selector", setting: "MAA", critical: true, subitems: [
+              { name: "Set MAA after G/S captured, NLT 1000 ft AFL", isNote: true }
+            ]},
+            { num: 2, name: "MINS reference selector", setting: "BARO (CAT I, SA CAT I) or RADIO (CAT II, CAT III)", critical: true, subitems: [
+              { name: "DA for CAT I, DH for SA CAT I and CAT II/III", isNote: true }
+            ]},
+            { num: 3, name: "VHF NAV 1 and 2", setting: "Set ILS frequency", critical: true, subitems: [] },
+            { num: 4, name: "MCP courses (both)", setting: "Set inbound", critical: true, subitems: [] },
+            { num: 5, name: "Flight Directors", setting: "ON", critical: false, subitems: [] },
+            { num: 6, name: "Watch for false LOC capture", setting: "Cross-reference ND MAP — if false, uncouple AFDS, HDG SEL to intercept, re-arm APP", critical: false, subitems: [] },
+            { num: 7, name: "Glideslope capture", setting: "Inhibited until LOC captured", critical: false, subitems: [
+              { name: "If APP armed below G/S not in altitude hold, aircraft may CLIMB to capture", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "MCP altitude: MAA",
+            "MINS selector: BARO (CAT I) / RADIO (CAT II-III)",
+            "VHF NAV 1 & 2: ILS freq",
+            "MCP courses: inbound (both)",
+            "FDs: ON"
+          ],
+          gotchas: [
+            "Engine-out ILS: do NOT use autothrottle. Trim for single engine before final. Intercept LOC at flaps 5 / flaps 5 speed; at ~1 dot G/S extend gear, flaps 15, set Vapp",
+            "Engine-out ILS approved: FD/single AP/raw data → CAT I; HUD → SA CAT I/II/III",
+            "Step-down constraints may NOT be assured following G/S outside the FAS",
+            "False LOC captures: identify on ND, uncouple, HDG SEL to intercept, re-arm APP"
+          ],
+          timing: "MAA must be set NLT 1000 ft AFL after G/S captured",
+          aomRef: "AOM 10.3 ILS General",
+          relatedFlashcards: ["Approach", "Autoflight", "Navigation"]
+        },
+        {
+          id: "ils_cat1",
+          type: "flow",
+          who: "PF/PM",
+          title: "ILS CAT I",
+          trigger: "Cleared for ILS approach — DA-based minimums",
+          description: "Standard ILS approach to a barometric DA. AP recommended; required off NLT 50 ft AGL. With less than 4000 RVR or 3/4 mi visibility autobrakes are required and AP must be off (autopilot is not authorized below 50 ft AGL on standard CAT I). Crosswind limit drops to 15 kt below 4000 RVR. SA CAT I (HUD-equipped, CAT II qualified crew) gets DH as low as 150 ft and RVR 1400.",
+          items: [
+            { num: 1, name: "Cleared for approach", setting: "PF: Select/request APP — PM arms APP", critical: true, subitems: [] },
+            { num: 2, name: "LOC capture", setting: "Verify VOR/LOC on FMA — PM: \"LOC capture\"", critical: true, subitems: [] },
+            { num: 3, name: "Approaching 1-dot G/S or NLT 2000 ft AFL", setting: "\"Gear down\" → \"Flaps 15, arm SPEEDBRAKE\" → speed verified", critical: true, subitems: [] },
+            { num: 4, name: "G/S capture", setting: "\"Glideslope capture. Set missed approach altitude.\" — set MAA on MCP", critical: true, subitems: [] },
+            { num: 5, name: "Final Approach Verification Altitude (FAVA)", setting: "Both pilots verify", critical: true, subitems: [] },
+            { num: 6, name: "Prior to 1000 ft AFL", setting: "\"Flaps ___, below the line\" — Before Landing checklist below the line", critical: true, subitems: [] },
+            { num: 7, name: "1000 ft AFL", setting: "PM auto: \"1000\" — PF: \"Stable\"", critical: true, subitems: [] },
+            { num: 8, name: "500 ft AFL", setting: "PM auto: \"500\" — PF: \"Stable, target, sink ___\"", critical: true, subitems: [] },
+            { num: 9, name: "100 ft above DA", setting: "PM auto: \"Plus hundred\" — PF divides time inside/outside", critical: true, subitems: [] },
+            { num: 10, name: "At DA", setting: "PM auto: \"Minimums\" → PF: \"No contact\" / \"Approach lights\" / \"Runway\" / \"Continuing\"", critical: true, subitems: [] },
+            { num: 11, name: "Below DA", setting: "Disengage AP NLT 50 ft AGL — maintain stabilized approach to touchdown", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "MCP: APP armed → LOC/GS captured → MAA set after GS capture",
+            "Gear: down by ~2000 ft AFL",
+            "Flaps: 15 → landing flaps prior to 1000 ft AFL",
+            "Speedbrake: ARMED",
+            "MINS: BARO DA",
+            "AP: off NLT 50 ft AGL"
+          ],
+          gotchas: [
+            "Less than 4000 RVR or 3/4 mi: autobrakes REQUIRED (if operative), AP must be OFF, crosswind max 15 kt",
+            "Tailwind max: 10 kt",
+            "Category D minimums",
+            "Go around prior to DA: any required equipment fails",
+            "Go around at DA: visual reference requirements not met",
+            "Go around below DA: visual reference loss preventing safe continuation, OR cannot land safely in TDZ",
+            "Anytime: LOC or G/S full deflection (≥2.5 dots, magenta diamond hollow)",
+            "SA CAT I requires HUD in AIII (or AII/IMC), CA flies, CAT II crew currency, 15 kt crosswind max, DH as low as 150 ft / RVR 1400"
+          ],
+          timing: "AP off NLT 50 ft AGL on standard CAT I",
+          aomRef: "AOM 10.4 ILS CAT I",
+          relatedFlashcards: ["Approach", "Autoflight", "Brakes"]
+        },
+        {
+          id: "ils_cat2_cat3",
+          type: "flow",
+          who: "CA",
+          title: "ILS CAT II / CAT III",
+          trigger: "Cleared for CAT II or CAT III ILS — RA-based DH",
+          description: "Captain assumes PF duties. Approach must be flown using HUD to touchdown. Actions and callouts are identical for CAT II and CAT III down to DH. AP is disconnected NLT 1000 ft AFL. AIII required below RVR 1800 (AII/IMC may be used down to RVR 1200 if AIII unavailable). Must have a usable LOC inside the runway threshold.",
+          items: [
+            { num: 1, name: "Captain", setting: "Assumes PF duties prior to approach", critical: true, subitems: [] },
+            { num: 2, name: "HUD MENU mode", setting: "AIII (AII or IMC if AIII unavailable, down to RVR 1200)", critical: true, subitems: [] },
+            { num: 3, name: "MINS", setting: "RADIO — DH as published (CAT II) or 50 ft DH (CAT III)", critical: true, subitems: [] },
+            { num: 4, name: "VHF NAV / IRS / Display Source / DCP transfer switches", setting: "All NORMAL / AUTO", critical: true, subitems: [] },
+            { num: 5, name: "Cleared for approach", setting: "Select/request APP", critical: true, subitems: [] },
+            { num: 6, name: "G/S capture", setting: "Set MAA NLT 1000 ft AFL", critical: true, subitems: [] },
+            { num: 7, name: "Final approach segment", setting: "Monitor HUD Annunciator Panel — \"Go around\" if any amber/red caution/warning while IMC", critical: true, subitems: [] },
+            { num: 8, name: "1000 ft AFL", setting: "PM: \"1000\" — PF: \"Stable\" — DISCONNECT autopilot", critical: true, subitems: [] },
+            { num: 9, name: "500 ft AFL", setting: "Verify AIII/AII active and FLARE armed (BAE2020) / AIII/IMC active and RO armed (HGS)", critical: true, subitems: [] },
+            { num: 10, name: "100 ft above DH", setting: "PM auto: \"Plus hundred\"", critical: true, subitems: [] },
+            { num: 11, name: "At DH", setting: "PM auto: \"Minimums\" → \"Continuing\" if visual, otherwise GO AROUND", critical: true, subitems: [] },
+            { num: 12, name: "Roll out", setting: "Monitor centerline lights — PM calls \"Centerline\" if not tracking LOC", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "HUD: AIII (or AII/IMC)",
+            "MINS: RADIO DH (50 ft for CAT III)",
+            "AP: DISCONNECTED NLT 1000 ft AFL",
+            "FLARE armed by 500 ft AFL (BAE2020)",
+            "RO armed by 500 ft AFL (HGS-4000/6000, AIII only)"
+          ],
+          gotchas: [
+            "Captain must fly the approach",
+            "HUD required to touchdown",
+            "AP disconnected NLT 1000 ft AFL — different from CAT I",
+            "Headwind max 25 kt, tailwind max 10 kt, crosswind max 15 kt",
+            "Autobrakes required (if operative) below 4000 RVR / 3/4 mi",
+            "Must have usable LOC inside runway threshold (CAT II/III runways)",
+            "Any HUD/HAP amber or red caution or warning on the FAS while IMC = mandatory go-around",
+            "LOC or G/S full deflection (≥2.5 dots, hollow diamond) anytime = go-around",
+            "Captain determines TDZ landing impossible = go-around"
+          ],
+          timing: "AP disconnect NLT 1000 ft AFL; FLARE/RO armed by 500 ft AFL",
+          aomRef: "AOM 10.5 ILS CAT II/III",
+          relatedFlashcards: ["Approach", "HUD/HGS", "Autoflight"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 22 — APPROACHES: NON-ILS / VISUAL / CIRCLING (AOM Ch 10)
+    // ========================================================
+    {
+      id: "approaches_non_ils",
+      number: 22,
+      title: "Approaches — Non-ILS, Visual, Circling",
+      category: "approach",
+      steps: [
+        {
+          id: "non_ils_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Non-ILS Approach (RNAV/RNP, LNAV/VNAV, LOC, VOR, NDB)",
+          trigger: "Cleared for non-ILS instrument approach",
+          description: "Covers RNAV(GPS), RNAV(RNP)/RNP(AR), LNAV/VNAV, LOC, VOR and NDB approaches. AP is required when ceiling <1000 ft AGL and/or vis <3 SM (1000-3), and for all RNP(AR) below RNP 0.3. VNAV PTH descent to DA, or V/S to DDA. RNAV(RNP)/RNP(AR) NOT authorized outside BARO-VNAV temperature limits.",
+          items: [
+            { num: 1, name: "Cleared for approach", setting: "Verify/select/request LNAV (or appropriate roll mode) and VNAV (verify VNAV PTH on FMA)", critical: true, subitems: [] },
+            { num: 2, name: "MCP minimums", setting: "Set when conditions permit", critical: false, subitems: [] },
+            { num: 3, name: "Approaching FAF / GP INTCPT", setting: "Verify VNAV PTH, VNAV ALT, or ALT HLD (FAF/GP INTCPT must be active waypoint)", critical: true, subitems: [] },
+            { num: 4, name: "Configure", setting: "\"Gear down\" → \"Flaps 15, arm SPEEDBRAKE\" — verify VNAV PTH after slowdown", critical: true, subitems: [] },
+            { num: 5, name: "Passing FAF / GP INTCPT", setting: "Crosscheck altimeters ±100 ft, verify FAVA, descend to mins", critical: true, subitems: [
+              { name: "VNAV PTH (if applicable) → DA/DDA", isNote: true },
+              { name: "V/S (if applicable) → DDA", isNote: true }
+            ]},
+            { num: 6, name: ">300 ft below missed approach altitude", setting: "Set MAA on MCP", critical: true, subitems: [] },
+            { num: 7, name: "Prior to 1000 ft AFL", setting: "\"Flaps ___, below the line\" — Before Landing checklist below the line", critical: true, subitems: [] },
+            { num: 8, name: "1000 / 500 / +100 / Mins callouts", setting: "Same as ILS — \"Stable\", \"Stable target sink\", \"Plus hundred\", \"Minimums\"", critical: true, subitems: [] },
+            { num: 9, name: "At DA/DDA", setting: "\"Approach lights\" / \"Runway\" / \"No contact\" — \"Continuing\" or go around", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Roll: LNAV (or appropriate)",
+            "Pitch: VNAV PTH → VNAV ALT/ALT HLD at minimums",
+            "Gear: down by FAF",
+            "Flaps: 15 → landing flaps prior to 1000 ft AFL",
+            "MINS: BARO DA or DDA"
+          ],
+          gotchas: [
+            "AP REQUIRED with ceiling <1000 ft AGL and/or vis <3 SM, AND on all RNP(AR) below RNP 0.3",
+            "RNAV(RNP)/RNP(AR) NOT authorized outside BARO-VNAV temperature limits — RNAV(GPS)/RNP fall back to LNAV DDA",
+            "GPS RAIM prediction required in IMC for RNP <0.3",
+            "Min RNAV(RNP)/RNP(AR) authorized: 0.1",
+            "Tailwind max 10 kt; below 4000 RVR / 3/4 mi: crosswind max 15 kt, autobrakes required",
+            "Non-ILS deviation callouts: \"Path\" (vertical), \"Track\" (cross-track), \"VOR\" (>1 dot bearing)",
+            "Use \"Track\" for VOR/LOC flown in LNAV",
+            "VNAV descent to DA: at DA begin climb immediately and continue along final approach to MAP — do NOT initiate published miss before MAP"
+          ],
+          timing: "Plus hundred / Minimums callouts apply to DA or DDA",
+          aomRef: "AOM 10.6 Non-ILS",
+          relatedFlashcards: ["Approach", "Autoflight", "Navigation"]
+        },
+        {
+          id: "visual_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Visual Approach",
+          trigger: "Cleared for visual approach (or RNAV Visual / FMS-CVFP Visual)",
+          description: "2.5°-3° final approach path. Configuration is fixed by the time you're on final — only small adjustments to glide path, speed, and trim. ~300 ft per NM gives a normal profile. Stable on speed by ~500 ft above touchdown. Flaps are NOT used as drag — speedbrakes first, then early gear extension if needed.",
+          items: [
+            { num: 1, name: "Initial — downwind", setting: "1500 ft above runway elev, 2 NM abeam, flaps 5 at flaps 5 maneuver speed", critical: false, subitems: [] },
+            { num: 2, name: "Before turn to base", setting: "Gear down, flaps 15, arm speedbrake, slow to flaps 15 maneuver speed (or Vapp + wind if landing flaps 15)", critical: true, subitems: [] },
+            { num: 3, name: "Base leg — \"Flaps ___, below the line\"", setting: "Adjust thrust, descend ~600-700 fpm, extend landing flaps before turning final", critical: true, subitems: [] },
+            { num: 4, name: "Below the line / Before Landing checklist", setting: "Complete prior to 1000 ft AFL", critical: true, subitems: [] },
+            { num: 5, name: "Turn to final", setting: "Roll out on extended runway centerline at appropriate Vapp", critical: true, subitems: [] },
+            { num: 6, name: "On final", setting: "~300 ft per NM, RoD 700-900 fpm on glide path, in trim", critical: true, subitems: [] },
+            { num: 7, name: "1000 ft AFL", setting: "PM auto: \"1000\" — PF: \"Stable\"", critical: true, subitems: [] },
+            { num: 8, name: "500 ft AFL", setting: "PM auto: \"500\" — PF: \"Stable, target, sink ___\" — stabilize by ~500 ft above TDZ", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Downwind: flaps 5, 1500 ft AFL, 2 NM abeam",
+            "Base: gear down, flaps 15, speedbrake armed",
+            "Final: landing flaps, ~300 ft/NM, 700-900 fpm",
+            "Stable by 500 ft above TDZ"
+          ],
+          gotchas: [
+            "Flaps are NOT drag devices — speedbrakes first, then early gear extension",
+            "RoD >1000 fpm should be avoided on final",
+            "Engine-out: ILS recommended over visual; rudder trim may be centered before landing so pedal pressure relaxes at idle touchdown",
+            "Visual illusions: up-slope = looks high; down-slope = looks low; rain/haze/dark = looks high; bright lights = closer; narrow runway changes perspective",
+            "RNAV Visual / FMS-CVFP must be retrievable from FMS database — crews NOT authorized to build them",
+            "RNAV Visual / FMS-CVFP normally have NO published missed approach — coordinate with ATC for altitude/heading",
+            "RWY may be selected on ARRIVALS page for visual approaches; FPA defaults to 3.00° (selectable). Does NOT meet VNAV instrument approach criteria"
+          ],
+          timing: "Stable by 500 ft above touchdown",
+          aomRef: "AOM 10.7 Visual",
+          relatedFlashcards: ["Approach", "Landing"]
+        },
+        {
+          id: "circling_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Circling Maneuver",
+          trigger: "Instrument approach that cannot be flown straight-in (≥30° offset or excessive descent rate)",
+          description: "After completing the published instrument approach to circling MDA, maneuver visually to align with another runway. Aircraft must remain clear of clouds; ceiling ≥1000 ft (or charted) and visibility ≥3 SM (or charted). MDA = 1000 ft AFL or charted minima, whichever higher. Stay at or above MDA until the TDZ is in sight and a normal descent and turn will put you in the proper TDZ.",
+          items: [
+            { num: 1, name: "HUD MENU", setting: "MODE NP (BAE2020) or PRI (HGS) — verify G/S angle, RWY length, RWY elev", critical: false, subitems: [] },
+            { num: 2, name: "FMC approach", setting: "Select straight-in or circle-to-land from current nav DB", critical: true, subitems: [] },
+            { num: 3, name: "BARO MINS", setting: "1000 ft AFL or charted MDA (whichever higher), rounded UP to nearest 100 ft", critical: true, subitems: [] },
+            { num: 4, name: "On intercept heading", setting: "LNAV (or appropriate), VNAV PTH selected/verified, MCP altitude → minimums", critical: true, subitems: [] },
+            { num: 5, name: "At/before FAF", setting: "Use VNAV/LVL CHG/V/S prior to FAF; VNAV or V/S after the FAF", critical: false, subitems: [] },
+            { num: 6, name: "Min config for maneuvering", setting: "Gear down, flaps 15, speedbrake armed (flaps 30 at VREF30 + additives if needed)", critical: true, subitems: [] },
+            { num: 7, name: "At circling MDA", setting: "Verify VNAV ALT or ALT HLD — set MAA on MCP — select HDG SEL", critical: true, subitems: [] },
+            { num: 8, name: "If visual", setting: "Maneuver shortest path to base or extended downwind, considering weather", critical: true, subitems: [] },
+            { num: 9, name: "Prior to leaving MDA", setting: "Landing configuration complete, Before Landing checklist complete, AP disengaged", critical: true, subitems: [] },
+            { num: 10, name: "If not visual", setting: "Execute missed approach", critical: true, subitems: [] },
+            { num: 11, name: "Missed approach", setting: "Climbing turn in shortest direction TOWARD landing runway, then established on missed approach course", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "BARO MINS: max(1000 ft AFL, charted) rounded up to 100 ft",
+            "MCP altitude: minimums (then MAA at MDA)",
+            "Roll: LNAV → HDG SEL at MDA",
+            "Pitch: VNAV PTH → ALT HLD at MDA",
+            "Configuration: gear down, flaps 15 minimum (30 for tighter maneuvering)",
+            "Map scale: 10 NM or less (PF)"
+          ],
+          gotchas: [
+            "Aircraft MUST remain clear of clouds — ceiling ≥1000 ft, vis ≥3 SM (or charted, whichever higher)",
+            "Watch for chart notes restricting circling (e.g. \"Circling north of extended runway centerline NA\")",
+            "Side-step to a parallel runway with published minima is NOT a circling approach",
+            "Max 1000 fpm after FAF (normally)",
+            "Stay at/above MDA until TDZ in sight AND normal descent/turn will land in proper TDZ",
+            "Crosschecking ground-based navaids for stepdown fixes is NOT necessary",
+            "Loss of visual reference during circle: climbing turn TOWARD the landing runway, then fly the published miss",
+            "AP recommended; PF flight director must be ON",
+            "Non-NPS aircraft in LNAV: PM monitors XTK ERROR on RNP PROG page 4 (must not exceed approach RNP from IAF inbound)",
+            "ANP > RNP: refer to QRH > MISCELLANEOUS > Raw Data Instrument Approach"
+          ],
+          timing: "MDA descent allowed only when TDZ in sight and normal turn/descent will land in TDZ",
+          aomRef: "AOM 10.8 Circling Maneuver",
+          relatedFlashcards: ["Approach", "Autoflight", "Navigation"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 23 — GO-AROUNDS & REJECTED LANDING (AOM Ch 11)
+    // ========================================================
+    {
+      id: "go_arounds_rejected_landing",
+      number: 23,
+      title: "Go-Arounds & Rejected Landing",
+      category: "go-around",
+      steps: [
+        {
+          id: "normal_go_around",
+          type: "flow",
+          who: "PF/PM",
+          title: "Normal Go-Around",
+          trigger: "Go-around required — either pilot may direct it",
+          description: "Either pilot may make the go-around callout. The PF MUST execute the directed go-around unless an emergency overrides. From flaps 30/40 → flaps 15. From flaps 15 → flaps 1. Push TO/GA, verify thrust increase, rotate to GA pitch attitude. With positive rate: gear up. Comply with published miss or ATC.",
+          items: [
+            { num: 1, name: "Go-around called", setting: "PF: \"Go around, TOGA\" — push TO/GA switch", critical: true, subitems: [] },
+            { num: 2, name: "Flap call", setting: "From flaps 30/40 → \"Flaps 15\"; From flaps 15 → \"Flaps 1\"", critical: true, subitems: [] },
+            { num: 3, name: "Thrust", setting: "Verify thrust increases — verify pitch FMA TO/GA", critical: true, subitems: [] },
+            { num: 4, name: "Rotate", setting: "Smoothly to ~15° nose up GA pitch attitude", critical: true, subitems: [] },
+            { num: 5, name: "Positive rate", setting: "PM: \"Positive rate\" → PF: \"Gear up\"", critical: true, subitems: [] },
+            { num: 6, name: "Set missed approach altitude", setting: "PF: \"Set missed approach altitude\" → PM resets MCP alt", critical: true, subitems: [] },
+            { num: 7, name: "Above 400 ft RA", setting: "Verify or call for appropriate roll mode (HDG SEL or LNAV) — LNAV auto-engages above 400 ft RA", critical: true, subitems: [] },
+            { num: 8, name: "Flap retraction on schedule", setting: "PF calls flap settings as airspeed allows; speed window remains closed (flap maneuver speeds)", critical: true, subitems: [] },
+            { num: 9, name: "After flaps up", setting: "PF: \"Flaps up, after takeoff checklist\" → \"VNAV\" or \"LVL CHG, set speed\"", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "TO/GA: pushed → A/T in GA mode (or N1 above 2000 ft RA)",
+            "Pitch: ~15° nose up",
+            "Flaps: 30/40 → 15, or 15 → 1",
+            "Gear: UP after positive rate",
+            "Roll: HDG SEL / LNAV after 400 ft RA",
+            "MCP altitude: missed approach altitude"
+          ],
+          gotchas: [
+            "Either pilot may call go-around — directed GA must be flown unless emergency overrides",
+            "Go-around REQUIRED if transfer of control occurs below 500 ft AFL (except incapacitation if safer to land)",
+            "First TO/GA push below 2000 ft RA: A/T → GA mode, advances to REDUCED GA N1 for 1000-2000 fpm climb. Second push for full GA",
+            "First TO/GA push at/above 2000 ft RA with G/S engaged or flaps down: A/T → N1 mode at full GA limit",
+            "After standard thrust takeoff (assumed temp), if cruise altitude ~15,000 ft NOT achieved, A/T may not advance to full GA — disconnect and set manually",
+            "Throttle burst / firewalling NOT recommended unless safety in question",
+            "When using flaps 1 for go-around: limit bank angle to 15° below VREF15+15 or min maneuver speed (whichever lower)",
+            "Do NOT initiate turns prior to MAP",
+            "Discontinued approach (using AP, not full GA): deselect ILS freq, set altitude/V/S/heading, select HDG or LNAV"
+          ],
+          timing: "TO/GA pitch ~15°; flap retraction at flap maneuver speeds",
+          aomRef: "AOM 11.1 Normal Go-Around",
+          relatedFlashcards: ["Go-Around", "Autoflight", "Approach"]
+        },
+        {
+          id: "engine_out_go_around",
+          type: "flow",
+          who: "PF/PM",
+          title: "Engine-Out Go-Around",
+          trigger: "Go-around required with engine inoperative",
+          description: "Push TO/GA and advance thrust lever(s) — verify thrust increase. Rotate toward 13° pitch and select flaps 1. Control yaw with rudder and trim (some pedal pressure may be needed even with full trim). Lateral path: extended runway centerline OR ##-7E EO SID departure path. Maintain Vapp until at least 1000 ft AFL before accelerating.",
+          items: [
+            { num: 1, name: "Go-around called", setting: "PF: \"Go around, TOGA\" — push TO/GA, advance thrust lever(s) to GA thrust", critical: true, subitems: [] },
+            { num: 2, name: "Flap call", setting: "\"Flaps 1\"", critical: true, subitems: [] },
+            { num: 3, name: "Rotate", setting: "Toward 13° pitch attitude", critical: true, subitems: [] },
+            { num: 4, name: "Yaw control", setting: "Rudder + trim — some pedal pressure may remain even at full trim", critical: true, subitems: [] },
+            { num: 5, name: "Positive rate / Gear up", setting: "PM: \"Positive rate\" → PF: \"Gear up\"", critical: true, subitems: [] },
+            { num: 6, name: "Set missed approach altitude", setting: "MCP", critical: true, subitems: [] },
+            { num: 7, name: "Above 400 ft RA (or per EO SID miss)", setting: "Verify roll mode — fly extended centerline or ##-7E EO failure departure path", critical: true, subitems: [] },
+            { num: 8, name: "At/above 1000 ft AFL (or per ##-7E)", setting: "PF: \"LVL CHG, set speed\" → set to flap retraction speed", critical: true, subitems: [] },
+            { num: 9, name: "At flap retraction speed", setting: "\"Flaps up\"", critical: true, subitems: [] },
+            { num: 10, name: "At flaps up maneuvering speed (UP bug)", setting: "PF: \"MCT, ____ checklist\" — PM selects MCT, accomplishes appropriate non-normal", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Pitch: ~13°",
+            "Flaps: 1",
+            "Bank: ≤15° until clean",
+            "Speed: Vapp until 1000 ft AFL minimum",
+            "Roll mode: extended centerline or EO SID path",
+            "Thrust: GA → MCT after cleanup"
+          ],
+          gotchas: [
+            "Speed bug stays at Vapp until 1000 ft AFE minimum",
+            "Maintain flaps 15, VREF30/40 + wind correction (5 kt min), bank ≤15° until maneuvering complete and safe altitude reached",
+            "EO SID is selected as a route modification (RTE 2 LEGS, first EO SID waypoint, ACTIVATE, EXEC, LNAV)",
+            "May need to execute EO SID before reaching 400 ft with engine inoperative",
+            "Terrain/obstacle clearance ONLY assured along published EO SID lateral path",
+            "Min flap retraction altitude for normal takeoff doesn't normally apply to missed approach — but consider obstacles",
+            "If engine fails DURING go-around, perform Engine-Out Go-Around procedures and verify max GA thrust"
+          ],
+          timing: "Maintain Vapp until ≥1000 ft AFE before accelerating; MCT within 5 min",
+          aomRef: "AOM 11.2 Engine-Out Go-Around",
+          relatedFlashcards: ["Go-Around", "Engines", "Autoflight"]
+        },
+        {
+          id: "rejected_landing",
+          type: "flow",
+          who: "PF/PM",
+          title: "Rejected Landing",
+          trigger: "Go-around initiated near or after touchdown — before reverse thrust selection",
+          description: "Two cases. (1) Before touchdown and touchdown occurs: continue normal go-around procedures — FD GA mode continues guidance throughout. The takeoff config warning may sound momentarily if flaps not yet at 15. (2) After touchdown but before reversers: smoothly advance thrust to GA, maintain landing flap config, verify speedbrakes retracted and autobrakes disarmed, rotate at VREF, then continue normal go-around. ⚠ Once reverse thrust is initiated, a full stop landing MUST be made.",
+          items: [
+            { num: 1, name: "Call", setting: "PF: \"Go around\"", critical: true, subitems: [] },
+            { num: 2, name: "Thrust levers", setting: "Smoothly advance to go-around thrust", critical: true, subitems: [] },
+            { num: 3, name: "Configuration", setting: "MAINTAIN landing flap configuration (do NOT reconfigure)", critical: true, subitems: [] },
+            { num: 4, name: "Speedbrakes", setting: "Verify RETRACTED", critical: true, subitems: [] },
+            { num: 5, name: "Autobrakes", setting: "Verify DISARM", critical: true, subitems: [] },
+            { num: 6, name: "At VREF", setting: "PM: \"Rotate\" — PF smoothly rotates toward 15° pitch", critical: true, subitems: [
+              { name: "FD pitch command not used for rotation; column forces during rotation can vary", isNote: true }
+            ]},
+            { num: 7, name: "When safely airborne", setting: "Verify positive rate → select TO/GA to attain FD GA mode → continue Normal Go-Around", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Thrust: GA",
+            "Flaps: maintain landing config",
+            "Speedbrakes: retracted",
+            "Autobrakes: disarmed",
+            "Pitch: 15° at VREF"
+          ],
+          gotchas: [
+            "WARNING: After reverse thrust is initiated, a full stop landing MUST be made — if an engine stays in reverse, safe flight is not possible",
+            "Takeoff config warning horn may sound momentarily if flaps not retracted to 15 with thrust advancing",
+            "If A/T disconnects on touchdown, A/T not available again until airborne",
+            "FD GA mode continues to provide GA guidance throughout the maneuver"
+          ],
+          timing: "Immediate — must commit before reverser selection",
+          aomRef: "AOM 11.3 Rejected Landing",
+          relatedFlashcards: ["Go-Around", "Brakes", "Landing"]
+        },
+        {
+          id: "prm_breakouts",
+          type: "flow",
+          who: "PF/PM",
+          title: "PRM Breakouts (Climbing & Descending)",
+          trigger: "ATC: \"Traffic alert\" during PRM approach",
+          description: "Aggressive immediate maneuver away from a closely-spaced parallel runway approach when ATC issues a traffic alert. Disconnect AP/AT, immediately turn and climb (or descend, max 1000 fpm) as directed. Follow TCAS RA vertical guidance if received. If currently on approach with LOC/GS captured, cycle both flight directors OFF then ON.",
+          items: [
+            { num: 1, name: "Call", setting: "PF: \"Breakout\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage simultaneously", critical: true, subitems: [] },
+            { num: 3, name: "Heading", setting: "Immediately turn to ATC-assigned heading", critical: true, subitems: [] },
+            { num: 4, name: "Altitude — CLIMBING breakout", setting: "Immediately climb to ATC-assigned altitude", critical: true, subitems: [] },
+            { num: 5, name: "Altitude — DESCENDING breakout", setting: "Immediately descend to ATC-assigned altitude — NOT to exceed 1000 fpm", critical: true, subitems: [] },
+            { num: 6, name: "TCAS RA (if received)", setting: "Follow RA vertical guidance (overrides ATC vertical, comply with ATC lateral)", critical: true, subitems: [] },
+            { num: 7, name: "If LOC/GS captured", setting: "Both flight directors OFF, then ON", critical: true, subitems: [] },
+            { num: 8, name: "Set up MCP", setting: "Heading on MCP, HDG SEL; altitude on MCP, LVL CHG or V/S", critical: true, subitems: [] },
+            { num: 9, name: "Set speed", setting: "PF: \"Set speed ___\"", critical: false, subitems: [] },
+            { num: 10, name: "Leveled off & on heading", setting: "Re-establish automation, reconfigure as desired", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP/AT: disengaged",
+            "Heading: as assigned (HDG SEL)",
+            "Altitude: as assigned (LVL CHG or V/S)",
+            "Descending breakout: max 1000 fpm",
+            "FDs cycled if were on LOC/GS"
+          ],
+          gotchas: [
+            "If controller vertical guidance conflicts with TCAS RA, follow the RA vertically and comply with ATC laterally",
+            "Descending breakout capped at 1000 fpm",
+            "Cycle BOTH flight directors OFF/ON if LOC/GS was captured (clears the captured mode cleanly)"
+          ],
+          timing: "Immediate — speed of execution is the entire point of the maneuver",
+          aomRef: "AOM 11.4 PRM Breakouts",
+          relatedFlashcards: ["Go-Around", "Approach", "TCAS"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 24 — LANDING TECHNIQUES (AOM Ch 12)
+    // ========================================================
+    {
+      id: "landing_techniques",
+      number: 24,
+      title: "Landing — Crosswind & Irregularities",
+      category: "landing",
+      steps: [
+        {
+          id: "crosswind_landing",
+          type: "flow",
+          who: "PF",
+          title: "Crosswind Landing",
+          trigger: "Landing with significant crosswind component",
+          description: "Three accepted methods. (1) De-crab during flare: keep wings level on final, kick out crab in flare with downwind rudder, control roll with into-wind aileron. (2) Touchdown in crab: zero sideslip, recommended on very slippery runways but not on dry with strong crosswind. (3) Sideslip (wing-low): align with centerline using opposite rudder and lower upwind wing. Combinations may be needed in strong crosswinds.",
+          items: [
+            { num: 1, name: "Method 1 — De-crab in flare", setting: "Wings level on final with crab; in flare apply downwind rudder + into-wind aileron; touch down with crossed controls, both gear simultaneously", critical: true, subitems: [] },
+            { num: 2, name: "Method 2 — Touchdown in crab", setting: "Allowed up to landing crosswind limit; on dry runway aircraft tracks toward upwind edge — apply immediate upwind aileron + rudder", critical: true, subitems: [
+              { name: "Recommended on very slippery runways (faster spoiler/autobrake operation, reduced workload)", isNote: true },
+              { name: "NOT recommended dry runway with strong crosswind (lateral deviation grows with crab angle)", isNote: true }
+            ]},
+            { num: 3, name: "Method 3 — Sideslip (wing low)", setting: "Crab inbound, before flare align with centerline using opposite rudder + lower upwind wing into a steady sideslip", critical: true, subitems: [
+              { name: "Upwind wheels touch first, then downwind", isNote: true },
+              { name: "Avoid overbanking — engine nacelle / outboard flap (NG) / winglet (MAX) can contact runway", isNote: true }
+            ]},
+            { num: 4, name: "If crab maintained on approach", setting: "Offset flightdeck on UPWIND side of centerline so main gear touches in the center", critical: false, subitems: [] },
+            { num: 5, name: "Sideslip-only NOT recommended above:", setting: "Flaps 15: >15 kt XW; Flaps 30: >18 kt XW; Flaps 40: >21 kt XW", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Method 1: wings level → crossed controls in flare",
+            "Method 2: crab maintained through touchdown, immediate upwind aileron after",
+            "Method 3: steady sideslip established before touchdown, upwind gear first"
+          ],
+          gotchas: [
+            "Sideslip-only crosswind component limits ensure ground clearance and control margin",
+            "May need to combine sideslip with residual crab in strong crosswinds — increase downwind rudder as upwind gear touches",
+            "Turbulence with crosswinds makes maintaining cross-control coordination through the flare difficult",
+            "On dry runway, touchdown-in-crab causes lateral deviation proportional to crab angle — one of the bigger surprises if not expecting it",
+            "After touchdown in any method: positive upwind aileron + rudder for directional control"
+          ],
+          timing: "Method choice depends on wind, runway condition, and personal technique",
+          aomRef: "AOM 12.2 Crosswind Landing",
+          relatedFlashcards: ["Landing", "Flight Controls"]
+        },
+        {
+          id: "bounced_landing",
+          type: "flow",
+          who: "PF",
+          title: "Bounced Landing Recovery",
+          trigger: "Aircraft bounces during landing",
+          description: "If bounce is shallow: hold/re-establish landing attitude, add thrust as needed to control rate of descent (thrust not always required for shallow bounce/skip). If bounce is high and hard: GO AROUND. Manually advance thrust to GA, verify speedbrakes retract. Do NOT retract flaps or gear until positive rate established — a second touchdown may occur during the go-around.",
+          items: [
+            { num: 1, name: "Shallow bounce / skip", setting: "Hold or re-establish normal landing attitude; add thrust as needed to control RoD (not always required)", critical: true, subitems: [] },
+            { num: 2, name: "High, hard bounce", setting: "INITIATE GO-AROUND", critical: true, subitems: [] },
+            { num: 3, name: "Thrust", setting: "Manually advance thrust levers to go-around thrust", critical: true, subitems: [] },
+            { num: 4, name: "Speedbrakes", setting: "Verify RETRACTED", critical: true, subitems: [] },
+            { num: 5, name: "Flaps and gear", setting: "Do NOT retract until positive rate of climb established (second touchdown may occur)", critical: true, subitems: [] },
+            { num: 6, name: "When safely airborne", setting: "Continue with Go-Around and Missed Approach procedure", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Thrust: GA (manual)",
+            "Speedbrakes: verify retracted",
+            "Flaps/gear: NO change until positive rate"
+          ],
+          gotchas: [
+            "If higher-than-idle thrust is held through initial touchdown, automatic speedbrake deployment may be DISABLED even with armed",
+            "If thrust is then reduced to idle during the bounce, automatic speedbrake deploys — loss of lift + nose-up pitching = tail strike or hard landing on next touchdown",
+            "Speedbrakes may NOT retract immediately after a shallow short bounce — increasing nose attitude with extended speedbrakes can cause tail strike",
+            "Hard landing report: AML entry required, captain is final authority — specify nose-only / main-only / both, and bounced if applicable",
+            "Bounced landing definition: both main gears contact ground, both leave the ground, prior to landing"
+          ],
+          timing: "Decision must be immediate — high hard bounce = go around",
+          aomRef: "AOM 12.3 Landing Irregularities",
+          relatedFlashcards: ["Landing", "Go-Around"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 25 — INFLIGHT MANEUVERS (AOM Ch 17)
+    // ========================================================
+    {
+      id: "inflight_maneuvers",
+      number: 25,
+      title: "Inflight Maneuvers",
+      category: "emergency",
+      steps: [
+        {
+          id: "stall_recovery",
+          type: "flow",
+          who: "PF/PM",
+          title: "Approach to Stall / Stall Recovery",
+          trigger: "First indication of stall — buffet OR stickshaker",
+          description: "Recover from any approach to stall as if a real stall has occurred. Reduction of angle of attack is the SINGLE MOST IMPORTANT action. Do NOT use flight director commands during recovery. Same procedure for impending stall and full stall.",
+          items: [
+            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Control column", setting: "Hold firmly", critical: true, subitems: [] },
+            { num: 3, name: "Autopilot & Autothrottle", setting: "DISENGAGE both", critical: true, subitems: [] },
+            { num: 4, name: "Reduce AoA", setting: "Smoothly apply nose-down elevator until buffet/stickshaker stops — nose-down stab trim if needed", critical: true, subitems: [
+              { name: "Excessive trim or rudder can aggravate the condition or cause loss of control / high structural loads", isNote: true },
+              { name: "High thrust + low airspeed: elevator may not have authority — REDUCING thrust may help (underwing engines pitch up with thrust)", isNote: true }
+            ]},
+            { num: 5, name: "Roll wings level", setting: "Shortest direction — only after AoA reduced", critical: true, subitems: [] },
+            { num: 6, name: "Thrust", setting: "Advance thrust levers as needed", critical: true, subitems: [] },
+            { num: 7, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
+            { num: 8, name: "Configuration", setting: "Do NOT change gear/flap config — EXCEPTION: at liftoff with flaps up, call for flaps 1", critical: true, subitems: [] },
+            { num: 9, name: "Complete the recovery", setting: "Check airspeed, adjust thrust, establish pitch, return to flight path, re-engage AP/AT if desired", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP: disengaged",
+            "AT: disengaged",
+            "Speedbrakes: retracted",
+            "Thrust: as needed (sometimes REDUCE first)",
+            "FD: do NOT follow during recovery"
+          ],
+          gotchas: [
+            "Reduction of angle of attack is the MOST important action — full forward column may be required",
+            "Do NOT use flight director commands during recovery (FD not designed for stall escape)",
+            "Stickshaker may NOT precede initial buffet — recover at the FIRST indication",
+            "An aircraft can stall at ANY attitude or airspeed — attitude has no bearing on aerodynamic stall",
+            "Stall recognized by: stickshaker, heavy buffet, lack of pitch authority, lack of roll control, inability to arrest descent",
+            "High altitude (>20,000 ft): aircraft becomes thrust limited — must trade altitude for airspeed, expect greater altitude loss",
+            "Do NOT retract flaps during recovery — retracting from landing config near ground causes altitude loss",
+            "Speedbrakes UP increases buffet/stickshaker speed but has lesser effect on actual stall speed",
+            "Rudder is normally NOT needed for roll control — see 17.10 Recommendations",
+            "Autoslat extends to fully gapped near stickshaker (with flaps in certain settings)"
+          ],
+          timing: "Recover at first indication — stickshaker or initial buffet",
+          aomRef: "AOM 17.1 Approach to Stall or Stall Recovery",
+          relatedFlashcards: ["Aerodynamics", "Flight Controls", "Autoflight"]
+        },
+        {
+          id: "upset_nose_high",
+          type: "flow",
+          who: "PF/PM",
+          title: "Upset Recovery — Nose High",
+          trigger: "Pitch >25° nose up (or inappropriate airspeed for conditions)",
+          description: "Recover from stall first if stalled. Then disconnect AP/AT, apply nose-down elevator, nose-down trim if needed, REDUCE thrust (underwing engines pitch up with thrust), and roll (up to 60° bank) to obtain a nose-down pitch rate. As airspeed increases, roll wings level approaching the horizon.",
+          items: [
+            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
+            { num: 3, name: "Nose-down elevator", setting: "As much as needed to obtain nose-down pitch rate", critical: true, subitems: [] },
+            { num: 4, name: "Nose-down stabilizer trim", setting: "Apply as needed (incremental)", critical: true, subitems: [
+              { name: "Stop trimming when g lessens or required column force lessens", isNote: true },
+              { name: "Excessive trim/rudder can aggravate the upset", isNote: true }
+            ]},
+            { num: 5, name: "Reduce thrust", setting: "Helps achieve nose-down pitch rate (underwing engines pitch up with thrust)", critical: true, subitems: [] },
+            { num: 6, name: "Roll to obtain nose-down pitch rate", setting: "Bank ~45°, up to maximum 60° — unload wing with continuous nose-down elevator", critical: true, subitems: [] },
+            { num: 7, name: "When airspeed sufficiently increasing — complete recovery", setting: "Approaching horizon → roll wings level → check airspeed and adjust thrust → establish pitch", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP/AT: disengaged",
+            "Elevator: nose down (up to full)",
+            "Stab trim: nose down (incremental)",
+            "Thrust: REDUCED",
+            "Bank: 45°-60° if needed for pitch reduction"
+          ],
+          gotchas: [
+            "Recover from stall FIRST if stalled — nose-down elevator until shaker stops, then upset recovery",
+            "If pitch control not stopping rate: roll to bank (~45°-60°) to start the nose down — \"convert pitch into turn\"",
+            "Unload wing with continuous nose-down elevator to keep AoA low → makes ailerons/spoilers effective",
+            "Rudder is the LAST resort if normal pitch and roll are ineffective — small amount only, in direction of desired roll",
+            "Too much rudder applied too quickly = loss of lateral/directional control",
+            "Higher than normal control forces may be needed — be prepared for firm continuous force",
+            "Use ADI as primary attitude reference — bank pointer always perpendicular to horizon, roll TOWARD the bank pointer for shortest direction",
+            "HUD/HGS displays upset recovery symbology in excessive pitch/roll"
+          ],
+          timing: "First indication of nose-high upset",
+          aomRef: "AOM 17.2 Upset Recovery (Nose High)",
+          relatedFlashcards: ["Aerodynamics", "Flight Controls"]
+        },
+        {
+          id: "upset_nose_low",
+          type: "flow",
+          who: "PF/PM",
+          title: "Upset Recovery — Nose Low",
+          trigger: "Pitch >10° nose down (or inappropriate airspeed for conditions)",
+          description: "Recover from stall first if stalled. Then disengage AP/AT, ROLL wings level (shortest direction — if bank >90°, unload and roll). When airspeed is sufficiently decreasing, apply nose-up elevator, nose-up trim if needed, adjust thrust and drag.",
+          items: [
+            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
+            { num: 3, name: "Recover from stall (if needed)", setting: "Nose-down elevator until shaker stops", critical: true, subitems: [] },
+            { num: 4, name: "Roll wings level — shortest direction", setting: "If bank >90°, UNLOAD then roll", critical: true, subitems: [] },
+            { num: 5, name: "Speedbrakes", setting: "Extend as needed for high airspeed", critical: false, subitems: [] },
+            { num: 6, name: "When airspeed sufficiently decreasing — complete recovery", setting: "Apply nose-up elevator → nose-up trim if needed → adjust thrust/drag", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP/AT: disengaged",
+            "Bank: rolled to wings level (shortest direction)",
+            "Speedbrakes: extended if airspeed high",
+            "Elevator: nose up only after rolling out and airspeed decreasing"
+          ],
+          gotchas: [
+            "Roll FIRST — do NOT pull up while still inverted past 90° bank",
+            "If bank >90°: unload (nose-down elevator) to reduce wing AoA and improve roll capability — apply full aileron/spoiler input",
+            "Do NOT increase g-force or use nose-up elevator/stab until approaching wings level",
+            "Speedbrake extension causes nose-UP pitching moment, drag increase, lift decrease for same AoA — useful at moderate pitch attitudes",
+            "Above VMO/MMO, nose-up pitch authority is reduced because of aerodynamic loads — may need nose-up trim",
+            "At extreme nose-low high airspeed: nose-up elevator AND nose-up trim may be required",
+            "Thrust reduction causes additional nose-down pitching moment",
+            "Altitude is rapidly being exchanged for airspeed — even high above terrain, airspeed can rapidly exceed design limits"
+          ],
+          timing: "First indication of nose-low upset",
+          aomRef: "AOM 17.2 Upset Recovery (Nose Low)",
+          relatedFlashcards: ["Aerodynamics", "Flight Controls"]
+        },
+        {
+          id: "windshear_escape",
+          type: "flow",
+          who: "PF/PM",
+          title: "Windshear Escape Maneuver",
+          trigger: "Windshear encounter, predictive WS WARNING, or unacceptable flight path/airspeed deviations",
+          description: "Push TO/GA, aggressively apply max thrust, disengage AP/AT, simultaneously roll wings level and rotate to 15° initial pitch. Retract speedbrakes. Follow FD TO/GA guidance without exceeding pitch limit indication. Do NOT change gear/flap configuration and do NOT attempt to regain lost airspeed until windshear is no longer a factor.",
+          items: [
+            { num: 1, name: "Call", setting: "PF: \"Escape\" → \"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot", setting: "Disengage", critical: true, subitems: [] },
+            { num: 3, name: "TO/GA", setting: "Push either TO/GA switch", critical: true, subitems: [] },
+            { num: 4, name: "Thrust", setting: "Aggressively apply MAXIMUM thrust (full forward if EECs in normal mode; firewall if terrain contact imminent)", critical: true, subitems: [] },
+            { num: 5, name: "Autothrottle", setting: "Disengage", critical: true, subitems: [] },
+            { num: 6, name: "Roll wings level + rotate", setting: "Simultaneously, to 15° initial pitch", critical: true, subitems: [] },
+            { num: 7, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
+            { num: 8, name: "FD TO/GA guidance", setting: "Follow if available — do NOT exceed pitch limit indication (PLI)", critical: true, subitems: [] },
+            { num: 9, name: "Do NOT", setting: "Change gear/flap config OR attempt to regain lost airspeed until windshear no longer a factor", critical: true, subitems: [] },
+            { num: 10, name: "After escape successful", setting: "Resume normal flight, retract gear/flaps, issue PIREP to ATC", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Thrust: MAX (full forward)",
+            "AP: disengaged",
+            "AT: disengaged",
+            "Pitch: 15° initial → up to PLI / intermittent shaker",
+            "Speedbrakes: retracted",
+            "Gear/flaps: UNCHANGED"
+          ],
+          gotchas: [
+            "Aft column force INCREASES as airspeed decreases",
+            "Intermittent stickshaker / initial buffet is the UPPER pitch limit — flight at intermittent shaker may be required for terrain separation",
+            "Use smooth steady controls — avoid pitch overshoot and stall",
+            "Maintain wings level to MAXIMIZE climb gradient unless turn required for obstacle clearance",
+            "ALERTS: Caution \"Monitor radar display\" → continue if able to avoid; Warning \"Windshear ahead\" → normal GA OR escape maneuver; Warning \"Windshear, windshear, windshear\" → escape maneuver",
+            "On takeoff: prior to V1 reject. At/above V1: continue and at VR rotate to 15° NLT 2000 ft remaining",
+            "On approach with PWS warning: normal GA OR escape; with reactive WS warning: escape",
+            "Recommended takeoff mitigation: max thrust, longest runway, flaps 5/15 (NG) or 5/10/15 (MAX), VR up to perf-limited weight VR, do NOT delay rotation past 2000 ft remaining",
+            "Recommended landing mitigation: longest runway, ILS/VASI for path, flaps 30 consistent with field length, stable by 1000 ft AGL, minimize thrust reductions",
+            "Microburst alert: do NOT take off or land — average windshear lasts only 10-15 minutes",
+            "Cannot takeoff or fly final approach when ATC reports a runway-specific Microburst Alert (FOM)",
+            "Severe windshear = airspeed change >15 kt"
+          ],
+          timing: "Average windshear lasts 10-15 minutes — delay or divert",
+          aomRef: "AOM 17.3 Windshear",
+          relatedFlashcards: ["Weather", "Engines", "Flight Controls"]
+        },
+        {
+          id: "egpws_warning",
+          type: "flow",
+          who: "PF/PM",
+          title: "EGPWS Warning (Pull Up)",
+          trigger: "\"PULL UP\", \"TERRAIN TERRAIN PULL UP\", \"OBSTACLE OBSTACLE PULL UP\", or unacceptable flight toward terrain",
+          description: "Aggressive pull-up escape maneuver. Disengage AP/AT, max thrust, simultaneously roll wings level and rotate to 20° initial pitch. Retract speedbrakes. If terrain remains a threat, continue rotation up to PLI/stickshaker/initial buffet. Do NOT alter gear/flap configuration until terrain clearance assured. Cautions get a configuration/path correction or go-around — not the escape maneuver.",
+          items: [
+            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage simultaneously", critical: true, subitems: [] },
+            { num: 3, name: "Thrust", setting: "Aggressively apply MAXIMUM thrust", critical: true, subitems: [] },
+            { num: 4, name: "Pitch", setting: "Simultaneously roll wings level and rotate to 20° initial pitch attitude", critical: true, subitems: [] },
+            { num: 5, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
+            { num: 6, name: "If terrain remains threat", setting: "Continue rotation up to PLI / stickshaker / initial buffet", critical: true, subitems: [] },
+            { num: 7, name: "Configuration", setting: "Do NOT alter gear/flap config until terrain clearance assured", critical: true, subitems: [] },
+            { num: 8, name: "When clear of terrain", setting: "Slowly decrease pitch, accelerate, retract gear/flaps as required, climb to safe altitude, resume normal flight", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP/AT: disengaged",
+            "Thrust: MAX",
+            "Pitch: 20° → up to PLI / shaker if needed",
+            "Speedbrakes: retracted",
+            "Gear/flaps: UNCHANGED until clear"
+          ],
+          gotchas: [
+            "Initial pitch is 20° (NOT 15° like windshear)",
+            "Do NOT use flight director commands during the escape maneuver",
+            "Cautions (AIRSPEED LOW, CAUTION TERRAIN/OBSTACLE, SINK RATE, TERRAIN, DON'T SINK, TOO LOW FLAPS/GEAR/TERRAIN, GLIDESLOPE, BANK ANGLE): correct flight path/configuration/airspeed; if on approach and can't meet stable criteria → go around",
+            "Below glideslope deviation alert can be cancelled/inhibited for: LOC/backcourse, circling from ILS, deliberate below G/S, unreliable G/S signal",
+            "Look-ahead terrain warning in climb/cruise/descent that can be VERIFIED above MSA can be considered unreliable",
+            "Daylight VMC + positive visual verification of no obstacle/terrain hazard: terrain/obstacle CAUTION may be regarded as cautionary, approach may be continued",
+            "Aft column force increases as airspeed decreases — intermittent shaker = upper pitch limit",
+            "Smooth steady controls — avoid overshoot and stall"
+          ],
+          timing: "Immediate — escape until clear of terrain",
+          aomRef: "AOM 17.4 EGPWS",
+          relatedFlashcards: ["Warning Systems", "Flight Controls", "Engines"]
+        },
+        {
+          id: "tcas_ta",
+          type: "flow",
+          who: "PF/PM",
+          title: "TCAS — Traffic Advisory (TA)",
+          trigger: "TCAS TA aural and traffic display",
+          description: "Do NOT maneuver based on a TA alone. Both pilots look for the traffic using the display as a guide and call out conflicts. If traffic is sighted and a maneuver is necessary, maneuver visually.",
+          items: [
+            { num: 1, name: "Both pilots", setting: "Look for traffic using TA display as a guide", critical: true, subitems: [] },
+            { num: 2, name: "Call out", setting: "Any conflicting traffic", critical: true, subitems: [] },
+            { num: 3, name: "If traffic sighted and maneuver needed", setting: "Maneuver visually if needed", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "TCAS: TA active",
+            "Traffic display: in view"
+          ],
+          gotchas: [
+            "Maneuvers based SOLELY on a TA can result in reduced separation and are NOT recommended",
+            "If transponder altitude reporting is OFF, TCAS is disabled"
+          ],
+          timing: "Immediate visual acquisition",
+          aomRef: "AOM 17.5.1 TA Actions & Callouts",
+          relatedFlashcards: ["TCAS", "Warning Systems"]
+        },
+        {
+          id: "tcas_ra",
+          type: "flow",
+          who: "PF/PM",
+          title: "TCAS — Resolution Advisory (RA)",
+          trigger: "TCAS RA — \"Climb / Descend / Adjust vertical speed / Maintain vertical speed\"",
+          description: "Pilot must respond IMMEDIATELY to RA displays — even if conflicts with ATC. Disengage AP/AT, smoothly adjust pitch and thrust to satisfy the RA. Follow planned lateral path unless visual contact requires otherwise. SPECIAL CASE: a Climb RA in landing configuration uses an explicit go-around-style procedure (max thrust, flaps 15, gear up).",
+          items: [
+            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
+            { num: 3, name: "Pitch & thrust", setting: "Smoothly adjust to satisfy the RA command", critical: true, subitems: [] },
+            { num: 4, name: "Lateral path", setting: "Follow planned lateral path unless visual with conflict requires otherwise", critical: true, subitems: [] },
+            { num: 5, name: "PM", setting: "Attempt visual contact, call out conflicting traffic", critical: false, subitems: [] },
+            { num: 6, name: "Climb RA in landing configuration", setting: "AP/AT disengage → advance thrust to MAX → \"Flaps 15\" → \"Positive Rate\" → \"Gear Up\" → satisfy RA", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP/AT: disengaged",
+            "Pitch/thrust: as needed for RA",
+            "Lateral: unchanged unless visual conflict",
+            "Climb RA in landing config: thrust MAX, flaps 15, gear up"
+          ],
+          gotchas: [
+            "WARNING: A DESCEND (fly down) RA below 1000 ft AGL must NOT be followed",
+            "Once an RA is issued, do NOT change vertical speed except to comply — TCAS-to-TCAS coordination may be in progress",
+            "If controller vertical guidance conflicts with RA: follow RA vertically, comply with controller laterally",
+            "Maneuver only as much as needed to satisfy the RA",
+            "Do NOT use FD pitch commands until clear of conflict",
+            "Visually acquired traffic may NOT be the same traffic causing the RA — visual perception can be misleading, especially at night",
+            "If stickshaker/initial buffet during maneuver: do stall recovery immediately",
+            "If high speed buffet: relax pitch but continue the maneuver",
+            "Other warnings (windshear, GPWS) take precedence over RAs",
+            "Complying with RAs may briefly exceed altitude or placard limits — return to assigned promptly when clear",
+            "After RA: communicate with ATC ASAP after responding; advise when returning to clearance",
+            "HUD displays preventive (no action) and corrective (positive evasion) advisories"
+          ],
+          timing: "IMMEDIATE — even if conflicts with ATC clearance",
+          aomRef: "AOM 17.5.2 RA Actions & Callouts",
+          relatedFlashcards: ["TCAS", "Warning Systems", "Autoflight"]
+        },
+        {
+          id: "emergency_descent",
+          type: "flow",
+          who: "PF/PM",
+          title: "Emergency Descent",
+          trigger: "Rapid loss of cabin pressure or other condition requiring rapid descent",
+          description: "PF: \"Emergency descent\", \"My aircraft\". Set MCP to lower altitude (10,000 ft or MSA, whichever higher), select LVL CHG, close thrust levers, deploy speedbrakes to flight detent, set MMO/VMO. PM applies the QRC, selects START switches CONT, makes the PA, notifies ATC, and calls out 2000 and 1000 above level off.",
+          items: [
+            { num: 1, name: "Call", setting: "PF: \"Emergency descent\" → \"My aircraft\"", critical: true, subitems: [] },
+            { num: 2, name: "Altitude", setting: "Set lower altitude on MCP — descend to 10,000 ft or MSA (whichever higher)", critical: true, subitems: [] },
+            { num: 3, name: "LVL CHG", setting: "Select", critical: true, subitems: [] },
+            { num: 4, name: "Thrust levers (both)", setting: "CLOSE — reduce thrust to minimum (or as needed for anti-ice)", critical: true, subitems: [] },
+            { num: 5, name: "Speedbrakes", setting: "FLIGHT DETENT", critical: true, subitems: [] },
+            { num: 6, name: "Speed", setting: "Set MMO/VMO (limit if structural integrity in doubt — avoid high maneuvering loads)", critical: true, subitems: [] },
+            { num: 7, name: "Heading", setting: "Turn (HDG SEL) to clear airway/track, or proceed straight ahead", critical: false, subitems: [] },
+            { num: 8, name: "PM duties", setting: "Apply QRC, START switches CONT, PA \"Emergency descent — Use oxygen — Fasten seat belts\", FASTEN BELTS ON, notify ATC, request altimeter, check safe altitude (MEA/MOCA/MORA/MSA)", critical: true, subitems: [] },
+            { num: 9, name: "When cabin <10,000 ft", setting: "Notify flight attendants", critical: false, subitems: [] },
+            { num: 10, name: "2000 ft above level off", setting: "PM: \"2000 feet above level off\"", critical: false, subitems: [] },
+            { num: 11, name: "1000 ft above level off", setting: "PM: \"1000 feet above level off\" — speedbrakes RETRACT", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "MCP altitude: lower (10,000 ft or MSA)",
+            "Pitch mode: LVL CHG",
+            "Thrust: idle",
+            "Speedbrakes: flight detent",
+            "Speed: MMO/VMO",
+            "Gear: normally UP"
+          ],
+          gotchas: [
+            "Rapid descents are NORMALLY made gear UP",
+            "If structural integrity in doubt: limit airspeed to current or less, avoid high maneuvering loads — gear extended descent may be more satisfactory",
+            "Use of LVL CHG with autopilot is RECOMMENDED — V/S mode is NOT recommended",
+            "Brief overspeeds at VMO/MMO with AP engaged are normal due to wind/temp — AP should correct, do NOT disengage unless clearly unacceptable",
+            "Document any overspeed in AML",
+            "Initial level off altitude: max(10,000 ft, MEA/MOCA on airway, MORA off airway, highest MSA in terminal, depressurization cloud altitudes, IEA if applicable)",
+            "Severe turbulence: reduce to turbulent air penetration speed",
+            "Anti-ice + thrust as required if entering icing",
+            "Manual flight: ~10° nose down initial; about 10 kt before target speed slowly raise pitch; keep in trim",
+            "Speedbrake retraction near VMO/MMO can momentarily overspeed — retract slowly to allow AP pitch adjustment",
+            "After level off: do NOT remove crew oxygen masks if cabin >10,000 ft; recheck pressurization, evaluate, get new ATC clearance"
+          ],
+          timing: "Place oxygen mask on / establish comm at FIRST indication of pressurization loss",
+          aomRef: "AOM 17.6 Emergency Descent",
+          relatedFlashcards: ["Pressurization", "Oxygen", "Autoflight"]
+        },
+        {
+          id: "driftdown",
+          type: "flow",
+          who: "PF/PM",
+          title: "Driftdown / One Engine Cruise",
+          trigger: "Engine fails at cruise — current altitude not maintainable, minimum descent rate desired",
+          description: "Disconnect autothrottle, set MCT on operating engine, set engine-out driftdown speed in IAS/MACH window, set max engine-out altitude in MCP altitude. After aircraft decelerates to driftdown speed, select LVL CHG. PM notifies ATC and refers to QRH > ENGINES, APU > Driftdown and One Engine Cruise.",
+          items: [
+            { num: 1, name: "Autothrottle", setting: "DISENGAGE", critical: true, subitems: [] },
+            { num: 2, name: "Operating engine thrust lever", setting: "Set MCT", critical: true, subitems: [] },
+            { num: 3, name: "MCP IAS/MACH", setting: "Set engine-out driftdown speed (.79/335 KIAS over water on Long Overwater Flights)", critical: true, subitems: [] },
+            { num: 4, name: "MCP altitude", setting: "Set max engine-out altitude", critical: true, subitems: [] },
+            { num: 5, name: "After decel to driftdown speed", setting: "Select LVL CHG", critical: true, subitems: [] },
+            { num: 6, name: "PM", setting: "Notify ATC, request altimeter, refer to QRH ENGINES/APU > Driftdown and One Engine Cruise", critical: true, subitems: [] },
+            { num: 7, name: "After bottom of driftdown — terrain a concern", setting: "Continue MCT, cruise/climb at driftdown speed", critical: true, subitems: [] },
+            { num: 8, name: "After bottom of driftdown — terrain NOT a concern", setting: "Use One Engine LRC chart, level at desired alt, set thrust for level cruise (not exceeding MCT), cruise at One Engine LRC", critical: true, subitems: [] },
+            { num: 9, name: "Long Overwater portion", setting: "Use One Engine High Speed Cruise chart, MCT, 335 KIAS", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AT: disengaged",
+            "Operating engine: MCT (manually set)",
+            "MCP IAS/MACH: ENG OUT driftdown speed",
+            "MCP altitude: max ENG OUT alt",
+            "Pitch mode: LVL CHG after decel"
+          ],
+          gotchas: [
+            "ENG OUT driftdown speed and max altitude come from FMC CRZ page → ENG OUT prompt → failed engine prompt → ENG OUT CRZ",
+            "Maintaining engine-out target speed and MCT will level off ABOVE the original max altitude — updated max is on ENG OUT CRZ page",
+            "If at/below max ENG OUT altitude when failure occurs: select ENG OUT CRZ, maintain ENG OUT speed with manual thrust",
+            "Severe engine damage: cowl/internal damage may prevent maintaining FMC max alt — fly target speed, MCT, descend until alt is maintainable. EEC may permit additional thrust below 15,000 ft / 0.45 Mach via forward mechanical stop",
+            "Do NOT exceed MCT after level off",
+            "Long Overwater Flights: diversion speed must remain within 60 min (.79/335 KIAS) of suitable airport — applies to NY Oceanic FIR, Western Atlantic, Gulf of Mexico"
+          ],
+          timing: "Driftdown begins when current altitude cannot be maintained",
+          aomRef: "AOM 17.7 Driftdown and One Engine Cruise",
+          relatedFlashcards: ["Engines", "Autoflight", "Performance"]
+        },
+        {
+          id: "overspeed",
+          type: "flow",
+          who: "PF",
+          title: "Overspeed (VMO/MMO Exceedance)",
+          trigger: "Inadvertent VMO/MMO exceedance",
+          description: "Leave the autopilot ENGAGED and use speedbrakes as needed UNLESS the AP is clearly not correcting. If manual inputs are required, disengage the AP smoothly (be aware of abrupt pitch change). Do NOT reduce thrust to idle at high altitude — slow engine accel back will overcontrol. Document any exceedance in AML.",
+          items: [
+            { num: 1, name: "Leave autopilot engaged", setting: "Unless clearly not correcting", critical: true, subitems: [] },
+            { num: 2, name: "Speedbrakes", setting: "Deploy partial slowly until noticeable airspeed reduction", critical: true, subitems: [] },
+            { num: 3, name: "When below VMO/MMO", setting: "Retract speedbrakes at the SAME rate they were deployed", critical: true, subitems: [] },
+            { num: 4, name: "If manual inputs required", setting: "Disengage AP — be aware abrupt pitch change may result", critical: true, subitems: [] },
+            { num: 5, name: "VNAV/LVL CHG not correcting", setting: "Switch to V/S temporarily — adjust V/S slightly to increase pitch attitude", critical: false, subitems: [] },
+            { num: 6, name: "Below VMO/MMO", setting: "Re-select VNAV or LVL CHG", critical: false, subitems: [] },
+            { num: 7, name: "AML entry", setting: "Note max IAS (or Mach above FL260), altitude, and configuration", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "AP: ENGAGED (preferred)",
+            "Speedbrakes: partial → full as needed",
+            "Pitch mode: VNAV/LVL CHG → V/S if needed → back when below limit"
+          ],
+          gotchas: [
+            "Do NOT reduce thrust to idle at high altitude — slow engine accel back leads to overcontrolling or altitude loss",
+            "Short-term excursions of 10-15 kt (≈.04-.06 Mach at altitude) are common in turbulence",
+            "Mountain wave activity: be PROACTIVE",
+            "Autothrottle has more aggressive control near VMO/MMO but cannot prevent all short-term overspeeds",
+            "During descents at/near VMO/MMO: most overspeeds occur after VNAV path capture from above or level-off when speedbrakes were required to maintain path — DELAY speedbrake retraction until after VNAV path or altitude capture is complete",
+            "Crews routinely climbing/descending in windshear may consider 5-10 kt reduction in climb/descent speeds (minimal fuel/time impact)",
+            "Anytime VMO/MMO is exceeded → AML entry required (max IAS or Mach >FL260, altitude, configuration)"
+          ],
+          timing: "Document every exceedance in AML",
+          aomRef: "AOM 17.9 Overspeed",
+          relatedFlashcards: ["Autoflight", "Limitations", "Flight Instruments"]
         }
       ]
     }
