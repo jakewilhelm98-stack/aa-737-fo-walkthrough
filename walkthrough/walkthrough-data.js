@@ -18,7 +18,7 @@ const FLIGHT_DATA = {
   meta: {
     title: "AA 737 FO Flight Walkthrough",
     subtitle: "Gate to Gate — Every Flow, Checklist & Callout in Sequence",
-    totalPhases: 25,
+    totalPhases: 26,
     version: "1.0.0"
   },
 
@@ -354,14 +354,20 @@ const FLIGHT_DATA = {
             // --- Right Panel (every flight) ---
             { num: 9, name: "BROADBAND SYSTEM switch", setting: "Guarded", critical: false, subitems: [] },
             { num: 10, name: "FLIGHT RECORDER Switch", setting: "Guarded", critical: false, subitems: [] },
-            { num: 11, name: "MACH AIRSPEED WARNING test switches", setting: "Test", critical: true, subitems: [] },
-            { num: 12, name: "STALL WARNING TEST switches", setting: "Test", critical: true, subitems: [] },
+            { num: 11, name: "MACH AIRSPEED WARNING test switches", setting: "Test", critical: true, subitems: [
+              { name: "→ Full procedure: Phase 26 → Mach/Airspeed Warning Test (AOM 3f.1)", isNote: true }
+            ]},
+            { num: 12, name: "STALL WARNING TEST switches", setting: "Test", critical: true, subitems: [
+              { name: "→ Full procedure: Phase 26 → Stall Warning Test (AOM 3f.1) — needs AC busses powered ≥4 min", isNote: true }
+            ]},
             { num: 13, name: "Eng Oil / Hydraulic Fluid Quantities", setting: "Check", critical: false, subitems: [] },
             { num: 14, name: "Parking Brake", setting: "Set", critical: false, subitems: [] },
             { num: 15, name: "Manual Gear Extension Access Door", setting: "Closed", critical: false, subitems: [] },
             { num: 16, name: "Yellow Book", setting: "Onboard", critical: false, subitems: [] },
             { num: 17, name: "SERVICE INTERPHONE switch", setting: "OFF", critical: false, subitems: [] },
-            { num: 18, name: "Flight Deck Access System", setting: "Check", critical: false, subitems: [] }
+            { num: 18, name: "Flight Deck Access System", setting: "Check", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → Flight Deck Access System Test", isNote: true }
+            ]}
           ],
           images: [
             { file: "orig_trigger", label: "Origination flow trigger" },
@@ -464,7 +470,7 @@ const FLIGHT_DATA = {
               { name: "Drive Lights", setting: "Illum" },
               { name: "GEN OFF BUS", setting: "Illum" }
             ]},
-            { num: 6, name: "FIRE TESTS", setting: "", critical: true, note: "If no Elec Pwr Up Previously" },
+            { num: 6, name: "FIRE TESTS", setting: "", critical: true, note: "If no Elec Pwr Up Previously — Full procedure: Phase 26 → Fire & Overheat System Test (AOM 21g.1.1)" },
             { num: 7, name: "APU", setting: "Start", critical: false },
             { num: 8, name: "LAV SMOKE", setting: "Ext", critical: false },
             { num: 9, name: "Equip Cooling/Exhaust", setting: "Norm", critical: false },
@@ -474,13 +480,17 @@ const FLIGHT_DATA = {
             { num: 13, name: "Window Heat", setting: "ON", critical: false, subitems: [
               { name: "OVHT lights OFF in 5 seconds", isNote: true }
             ]},
-            { num: 14, name: "A/B Probe HT", setting: "Illum/AUTO", critical: false },
+            { num: 14, name: "A/B Probe HT", setting: "Illum/AUTO", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → TAT / Probe Heat Verification (AOM 3f.2)", isNote: true }
+            ]},
             { num: 15, name: "Anti-ice Wing", setting: "Illum/OFF", critical: false },
             { num: 16, name: "Eng Anti-ice", setting: "Ext Illum/OFF", critical: false },
             { num: 17, name: "Hyd Panel", setting: "SET", critical: false, subitems: [
               { name: "ENG 1/2 Pumps", setting: "ON" }
             ]},
-            { num: 18, name: "Cockpit Voice", setting: "Test", critical: false },
+            { num: 18, name: "Cockpit Voice", setting: "Test", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → Cockpit Voice Recorder Test (AOM 21d.1.2) — airframe-specific", isNote: true }
+            ]},
             { num: 19, name: "A/C Panel", setting: "SET", critical: false, subitems: [
               { name: "Trim Air", setting: "ON" },
               { name: "RAM AIR FULL OPEN LT", setting: "Illum" },
@@ -522,7 +532,9 @@ const FLIGHT_DATA = {
             { num: 29, name: "Displays", setting: "SET", critical: false },
             { num: 30, name: "CONFIG/CABIN ALT", setting: "Ext.", critical: false },
             { num: 31, name: "Disengage Test", setting: "Test", critical: false, note: "HOLD 1/2: Steady Amber/Red" },
-            { num: 32, name: "Lights", setting: "Test", critical: false },
+            { num: 32, name: "Lights", setting: "Test", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → Lights Test (Master LIGHTS TEST & DIM) — fire warning lights NOT included", isNote: true }
+            ]},
             { num: 33, name: "Instruments", setting: "Check", critical: false },
             // --- FORWARD PANEL ---
             { num: 34, name: "ISPD", setting: "SET", critical: false },
@@ -532,7 +544,8 @@ const FLIGHT_DATA = {
             { num: 38, name: "FO DU PANEL", setting: "Set", critical: false },
             { num: 39, name: "FO Instruments", setting: "Check", critical: false },
             { num: 40, name: "Ground Prox", setting: "Check", critical: false, subitems: [
-              { name: "Guarded/Ext", isNote: true }
+              { name: "Guarded/Ext", isNote: true },
+              { name: "→ Full procedure: Phase 26 → EGPWS / Ground Prox System Test (AOM 21p.1.2) — needs IRS aligned", isNote: true }
             ]},
             { num: 41, name: "AUTOBRAKE/ANTI-SKID", setting: "Check", critical: false },
             // --- PEDESTAL ---
@@ -542,7 +555,7 @@ const FLIGHT_DATA = {
             { num: 45, name: "TLs", setting: "Closed", critical: false },
             { num: 46, name: "Park Brake", setting: "Set", critical: false },
             { num: 47, name: "ENG Start", setting: "Cutoff", critical: false },
-            { num: 48, name: "FIRE TESTS", setting: "", critical: true, note: "If not previously completed" },
+            { num: 48, name: "FIRE TESTS", setting: "", critical: true, note: "If not previously completed — Full procedure: Phase 26 → Fire & Overheat System Test (AOM 21g.1.1)" },
             { num: 49, name: "STAB TRIM CUTOUT", setting: "NORM", critical: false },
             { num: 50, name: "CARGO FIRE", setting: "TEST", critical: true, subitems: [
               { name: "Belts/lights → Ext → Green Test", isNote: true }
@@ -556,10 +569,12 @@ const FLIGHT_DATA = {
             { num: 53, name: "XPDR", setting: "SET", critical: false },
             { num: 54, name: "TA/RA", setting: "SELECT", critical: false },
             { num: 55, name: "WX/RAD", setting: "TEST/OFF", critical: false, subitems: [
-              { name: "AOM 21p.1.6 — Test", isNote: true }
+              { name: "AOM 21p.1.6 — Test", isNote: true },
+              { name: "→ Full procedure: Phase 26 → Weather Radar & Predictive Windshear (PWS) Test", isNote: true }
             ]},
             { num: 56, name: "T/O Config Switch", setting: "Test", critical: false, subitems: [
-              { name: "AOM 21p.1.7 — Test", isNote: true }
+              { name: "AOM 21p.1.7 — Test", isNote: true },
+              { name: "→ Full procedure: Phase 26 → T/O CONFIG Preflight Test", isNote: true }
             ]},
             { num: 57, name: "Stab Trim", setting: "Guarded", critical: false }
           ],
@@ -962,7 +977,9 @@ const FLIGHT_DATA = {
           items: [
             { num: 1, name: "ANTI-ICE switch(es)", setting: "Verify", critical: false },
             { num: 2, name: "Air Conditioning & Bleeds", setting: "Set", critical: false },
-            { num: 3, name: "Recall Check", setting: "Complete", critical: false },
+            { num: 3, name: "Recall Check", setting: "Complete", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → Recall Check (Master Caution Recall) — AOM 21p.2.1", isNote: true }
+            ]},
             { num: 4, name: "Secondary Engine Indications", setting: "Clear", critical: false },
             { num: 5, name: "APU", setting: "As Required", critical: false },
             { num: 6, name: "Flight Control Check", setting: "Joint (CA & FO)", critical: false }
@@ -1121,7 +1138,9 @@ const FLIGHT_DATA = {
             { num: 2, name: "FLAPS", setting: "Set and Green Light", critical: false },
             { num: 3, name: "Takeoff Data and Bugs", setting: "Check", critical: false },
             { num: 4, name: "Air Conditioning & Bleeds", setting: "AUTO and Set", critical: false },
-            { num: 5, name: "T/O CONFIG switch", setting: "Press (if installed)", critical: false }
+            { num: 5, name: "T/O CONFIG switch", setting: "Press (if installed)", critical: false, subitems: [
+              { name: "→ Full procedure: Phase 26 → T/O CONFIG Preflight Test (AOM 21p.1.7)", isNote: true }
+            ]}
           ],
           images: [
             { file: "fo_btakeoff_trigger", label: "FO Before Takeoff trigger" },
@@ -3732,6 +3751,456 @@ const FLIGHT_DATA = {
           timing: "Document every exceedance in AML",
           aomRef: "AOM 17.9 Overspeed",
           relatedFlashcards: ["Autoflight", "Limitations", "Flight Instruments"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 26 — SYSTEMS TESTS (consolidated reference)
+    // ========================================================
+    // All preflight system tests in one place. Each test lists exactly
+    // WHEN it is normally accomplished, and the full procedure verbatim
+    // from the AOM. Tests are also called out in their host flows
+    // (Origination, General Preflight, Before Takeoff, etc.).
+    {
+      id: "systems_tests",
+      number: 26,
+      title: "Systems Tests",
+      category: "reference",
+      steps: [
+        {
+          id: "test_fire_overheat",
+          type: "test",
+          who: "CA/FO",
+          title: "Fire & Overheat System Test",
+          trigger: "WHEN — Electrical Power Up Procedure step 9 (APU branch). Also any first-flight or after-mx check.",
+          description: "Verifies both detection loops, the fault monitoring circuitry, fire warning annunciations, and extinguisher squib continuity. Done as part of the APU-branch power-up sequence.",
+          items: [
+            { num: 1, name: "OVHT DET switches", setting: "NORMAL", critical: false, subitems: [] },
+            { num: 2, name: "TEST switch", setting: "Hold to FAULT/INOP", critical: true, subitems: [
+              { name: "MASTER CAUTION lights — Illum", isNote: true },
+              { name: "OVHT/DET annunciator — Illum", isNote: true },
+              { name: "FAULT light — Illum (if not, fault monitoring system is INOP)", isNote: true },
+              { name: "APU DET INOP light — Illum", isNote: true },
+              { name: "CAUTION: Do NOT operate the APU if APU DET INOP light fails to illuminate", isNote: true }
+            ]},
+            { num: 3, name: "TEST switch", setting: "Hold to OVHT/FIRE", critical: true, subitems: [
+              { name: "Fire Warning Bell — Sounds", isNote: true },
+              { name: "Master FIRE WARN lights — Illum", isNote: true },
+              { name: "MASTER CAUTION lights — Illum", isNote: true },
+              { name: "OVHT/DET annunciator — Illum", isNote: true }
+            ]},
+            { num: 4, name: "Master FIRE WARN light", setting: "Push", critical: true, subitems: [
+              { name: "Master FIRE WARN lights — Extg", isNote: true },
+              { name: "Fire Warning Bell — Cancels", isNote: true },
+              { name: "ENG 1, APU, ENG 2 FIRE switch lights — Illum", isNote: true },
+              { name: "3MY-3VM: ENG 1/2 Start Lever lights — Illum", isNote: true },
+              { name: "ENG 1/2 OVERHEAT lights — Illum", isNote: true },
+              { name: "WHEEL WELL fire warning light — Illum", isNote: true },
+              { name: "3AA-3MX note: wheel well light may not illuminate on DC-only — retest after AC power", isNote: true }
+            ]},
+            { num: 5, name: "EXT TEST switch", setting: "Check", critical: true, subitems: [
+              { name: "Position to 1 and hold — Extinguisher Test lights illum (3 green)", isNote: true },
+              { name: "Release — lights extg", isNote: true },
+              { name: "Repeat for position 2", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["OVHT DET switches NORMAL", "All annunciations verified per steps 2–5"],
+          gotchas: [
+            "HARD RULE: Do not operate APU if APU DET INOP light does not illuminate during the FAULT/INOP test",
+            "If FAULT light does not illuminate, the fault monitoring system itself is INOP",
+            "3AA-3MX wheel well light unreliable on DC-only — retest after AC power is up",
+            "If a loop fails: run 21g.1.2 Inoperative Loop procedure to isolate"
+          ],
+          timing: "~1–2 min",
+          aomRef: "AOM 21g.1.1 Fire and Overheat System Test",
+          relatedFlashcards: ["Fire Protection", "APU"]
+        },
+        {
+          id: "test_wheel_well_fire",
+          type: "test",
+          who: "CA/FO",
+          title: "Wheel Well Fire Detection Test (3AA-3MX only)",
+          trigger: "WHEN — Electrical Power Up Procedure step 12 (APU branch). 3AA-3MX airframes only.",
+          description: "Wheel well fire loop verification. Best run after AC power is established because the warning light may not illuminate reliably on DC-only.",
+          items: [
+            { num: 1, name: "Test switch", setting: "Hold to OVHT/FIRE", critical: true, subitems: [
+              { name: "Fire Warning Bell — Sounds", isNote: true },
+              { name: "Master FIRE WARN lights — Illum", isNote: true },
+              { name: "MASTER CAUTION lights — Illum", isNote: true },
+              { name: "OVHT/DET annunciator — On", isNote: true }
+            ]},
+            { num: 2, name: "Fire Warning BELL CUTOUT switch", setting: "Push", critical: true, subitems: [
+              { name: "Master FIRE WARN lights — Extg", isNote: true },
+              { name: "Fire Warning Bell — Cancels", isNote: true },
+              { name: "WHEEL WELL Fire Warning light — Illum", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["WHEEL WELL warning light verified", "Bell cancelled via BELL CUTOUT"],
+          gotchas: [
+            "3AA-3MX only — 3RA-3VM does not have this test",
+            "Run after AC power is established for accurate wheel well light indication",
+            "Use BELL CUTOUT to silence (not Master FIRE WARN push) — WHEEL WELL light needs to stay illuminated to verify"
+          ],
+          timing: "~30 sec",
+          aomRef: "AOM 3.2.1 step 12 (Wheel Well Fire Detection System Test)",
+          relatedFlashcards: ["Fire Protection"]
+        },
+        {
+          id: "test_flight_deck_access",
+          type: "test",
+          who: "CA",
+          title: "Flight Deck Access System Test",
+          trigger: "WHEN — Origination Flow (first flight of the day or after unobserved mx) — final right-panel item.",
+          description: "Verifies the cockpit door auto-unlock, deny, and lock-fail functions. CA-side responsibility on the right panel during Origination.",
+          items: [
+            { num: 1, name: "FLIGHT DECK ACCESS SYSTEM switch", setting: "Guarded", critical: false, subitems: [] },
+            { num: 2, name: "Flight Deck Door", setting: "OPEN", critical: false, subitems: [] },
+            { num: 3, name: "FLT DK DOOR selector", setting: "AUTO", critical: false, subitems: [] },
+            { num: 4, name: "Emergency Access Code", setting: "Enter on keypad (3–8 digits)", critical: false, subitems: [] },
+            { num: 5, name: "ENT Key", setting: "Push", critical: true, subitems: [
+              { name: "Alert — Sounds", isNote: true },
+              { name: "AUTO UNLK light — Illum", isNote: true }
+            ]},
+            { num: 6, name: "FLT DK DOOR selector", setting: "DENY", critical: true, subitems: [
+              { name: "AUTO UNLK light — Extg", isNote: true }
+            ]},
+            { num: 7, name: "FLT DK DOOR selector", setting: "UNLKD", critical: false, subitems: [] },
+            { num: 8, name: "FLIGHT DECK ACCESS SYSTEM switch", setting: "OFF", critical: true, subitems: [
+              { name: "LOCK FAIL light — Illum", isNote: true }
+            ]},
+            { num: 9, name: "FLIGHT DECK ACCESS SYSTEM switch", setting: "Guarded", critical: true, subitems: [
+              { name: "LOCK FAIL light — Extg", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["Switch back to Guarded with LOCK FAIL extinguished — system normal"],
+          gotchas: [
+            "Door must be OPEN before starting the test",
+            "Origination only — not done every flight",
+            "If LOCK FAIL light won't extinguish after step 9, the door system is INOP — call mx",
+            "Coordinate with the FA/cabin so the alert tone doesn't startle them"
+          ],
+          timing: "~1 min",
+          aomRef: "AOM 3f.1 Origination Flow — Flight Deck Access System Check",
+          relatedFlashcards: ["Doors", "Communications"]
+        },
+        {
+          id: "test_tat_probe",
+          type: "test",
+          who: "FO",
+          title: "TAT / Probe Heat Verification",
+          trigger: "WHEN — General Preflight Flow (every flight) — Probe Heat panel item.",
+          description: "There is no dedicated 'TAT test' on the 737 — the TAT probe heat is verified as part of the A/B PROBE HEAT switch check. With probe heat in AUTO on the ground, the TEMP PROBE light (and other probe heat warning lights) should illuminate, confirming heater current is NOT flowing (AUTO inhibits ground heating). Assumes ground deicing/cold weather logic is satisfied.",
+          items: [
+            { num: 1, name: "A and B PROBE HEAT switches", setting: "AUTO", critical: false, subitems: [
+              { name: "CAPT and F/O PITOT lights — Illum", isNote: true },
+              { name: "L and R ELEV PITOT lights — Illum", isNote: true },
+              { name: "L and R ALPHA VANE lights — Illum", isNote: true },
+              { name: "TEMP PROBE light — Illum", isNote: true },
+              { name: "AUX PITOT light — Illum", isNote: true }
+            ]},
+            { num: 2, name: "If in icing conditions", setting: "A and B PROBE HEAT — ON", critical: true, subitems: [
+              { name: "Verify all probe heat lights are EXTINGUISHED (heaters now powered on the ground)", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "AUTO on ground: all probe-heat lights illum (heaters off, probes cold)",
+            "ON in icing: all probe-heat lights extg (heaters powered)"
+          ],
+          gotchas: [
+            "Lights ILLUM = heaters OFF (the lights are 'off when working' indicators)",
+            "AUTO is normal — system controls heat based on engine running state",
+            "Manual ON only when icing conditions exist on the ground (deicing, snow, freezing fog)",
+            "If a single light stays illum after switching to ON, that probe heater is failed — refer to MEL"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 3f.2 General Preflight Flow — A and B PROBE HEAT switches",
+          relatedFlashcards: ["Anti-Ice & Rain", "Flight Instruments"]
+        },
+        {
+          id: "test_cvr",
+          type: "test",
+          who: "FO",
+          title: "Cockpit Voice Recorder Test",
+          trigger: "WHEN — General Preflight Flow (every flight) — after Hydraulic Panel set.",
+          description: "Quick CVR functional check. Procedure differs by airframe variant.",
+          items: [
+            { num: "3AA-3DL", name: "TEST switch", setting: "Push and hold", critical: false, subitems: [
+              { name: "After slight delay, monitor indicator rises into the GREEN band", isNote: true },
+              { name: "A tone may be heard through a headset plugged into the headset jack", isNote: true },
+              { name: "Indicator stays in green and tone continues until switch is released", isNote: true }
+            ]},
+            { num: "3DM-3VM", name: "TEST switch", setting: "Push (1 sec then release)", critical: false, subitems: [
+              { name: "STATUS light illuminates ONCE within 6 seconds", isNote: true },
+              { name: "A tone may be heard through a headset plugged into the headset jack", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["3AA-3DL: monitor in green band while held", "3DM-3VM: STATUS flash within 6 sec"],
+          gotchas: [
+            "Know your airframe — the indication is different",
+            "CVR records continuously when AC power is on — keep flightdeck conversation professional",
+            "Failed test = CVR INOP, AML entry, MEL applies"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 21d.1.2 Cockpit Voice Recorder Test",
+          relatedFlashcards: ["Communications"]
+        },
+        {
+          id: "test_mach_airspeed_warn",
+          type: "test",
+          who: "FO",
+          title: "Mach/Airspeed Warning Test",
+          trigger: "WHEN — Origination Flow (first flight of the day or after unobserved mx) — right panel.",
+          description: "Verifies the overspeed clacker on both warning channels.",
+          items: [
+            { num: 1, name: "MACH AIRSPEED WARNING test switches", setting: "Push TEST button one at a time", critical: true, subitems: [
+              { name: "Clacker — Sounds for each switch tested", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["Clacker sounds on both test switches"],
+          gotchas: [
+            "Test BOTH switches — they verify independent warning channels",
+            "Clacker silences when you release the test button",
+            "If clacker doesn't sound on one channel, that warning channel is INOP"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 3f.1 Origination Flow — MACH AIRSPEED WARNING Test switches",
+          relatedFlashcards: ["Warning Systems", "Limitations"]
+        },
+        {
+          id: "test_stall_warning",
+          type: "test",
+          who: "FO",
+          title: "Stall Warning Test",
+          trigger: "WHEN — Origination Flow (first flight of the day or after unobserved mx) — right panel, immediately after Mach/Airspeed Warning Test.",
+          description: "Verifies stick shaker on each control column. Requires AC transfer busses powered for at least 4 minutes (gives the SMYD time to align).",
+          items: [
+            { num: 1, name: "STALL WARNING TEST switches", setting: "Push TEST button and hold one at a time", critical: true, subitems: [
+              { name: "REQUIRES AC transfer busses powered ≥4 minutes", isNote: true },
+              { name: "Control Columns — Each vibrates", isNote: true }
+            ]},
+            { num: 2, name: "If hyd power is OFF and test fails (LE flap droop causes asymmetric signal)", setting: "Pressurize hyd and retract", critical: false, subitems: [
+              { name: "Obtain clearance to pressurize the hydraulic system", isNote: true },
+              { name: "B HYD ELEC Pump — ON", isNote: true },
+              { name: "Flaps — Retract", isNote: true },
+              { name: "After flaps retracted, repeat the test", isNote: true },
+              { name: "After test complete, B HYD ELEC Pump — OFF", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["Both control columns vibrate when each test switch is held"],
+          gotchas: [
+            "4-minute AC bus warm-up requirement is real — if you test too early it may fail spuriously",
+            "LE flap droop with hyd off can cause one channel to fail — re-test with B HYD ELEC ON and flaps retracted",
+            "Test each side independently — both shakers must work",
+            "Don't forget to turn B HYD ELEC pump back OFF after the re-test"
+          ],
+          timing: "~30 sec (longer if hyd-pressurize re-test needed)",
+          aomRef: "AOM 3f.1 Origination Flow — STALL WARNING TEST switches",
+          relatedFlashcards: ["Warning Systems", "Flight Controls"]
+        },
+        {
+          id: "test_lights",
+          type: "test",
+          who: "FO",
+          title: "Lights Test (Master LIGHTS TEST & DIM)",
+          trigger: "WHEN — General Preflight Flow (every flight) — after Captain's Disengage Light TEST switch.",
+          description: "Master flightdeck lights/annunciator test. Lights all the bulbs on the overhead, glareshield, and forward panels at once. Fire warning lights are NOT included in this test.",
+          items: [
+            { num: 1, name: "Master LIGHTS TEST and DIM switch", setting: "TEST", critical: true, subitems: [
+              { name: "Note: The fire warning lights are NOT checked during this test", isNote: true },
+              { name: "All Other Lights — Illum / Flashing", isNote: true },
+              { name: "All System Annunciator Panel Lights — Illum", isNote: true },
+              { name: "Use individual test switches or push-to-test features for any light that does NOT illuminate during this test", isNote: true }
+            ]},
+            { num: 2, name: "Master LIGHTS TEST and DIM switch", setting: "As needed", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: ["All annunciator/system panel bulbs verified", "Switch returned to BRT/DIM as needed"],
+          gotchas: [
+            "Fire warning lights need a SEPARATE test (Fire/Overheat System Test) — they don't light here",
+            "Any bulb that fails: use individual push-to-test features to confirm whether the bulb or the system is faulty",
+            "STAB OUT OF TRIM should be EXTINGUISHED after this test — check the next flow line",
+            "Bright cockpit at night? Set DIM after test"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 3f.2 General Preflight Flow — Lights TEST",
+          relatedFlashcards: ["Warning Systems", "Lighting"]
+        },
+        {
+          id: "test_egpws",
+          type: "test",
+          who: "FO",
+          title: "EGPWS / Ground Prox System Test",
+          trigger: "WHEN — Required after IRS alignment is complete; typically run during the General Preflight Flow once IRS NAV is steady.",
+          description: "Verifies EGPWS warning aurals, terrain display, and inhibition logic. Test is INHIBITED in flight.",
+          items: [
+            { num: 1, name: "IRS alignment", setting: "Complete", critical: true, subitems: [] },
+            { num: 2, name: "EGPWS System Test switch", setting: "Press momentarily", critical: true, subitems: [
+              { name: "Verify switch guards down", isNote: true },
+              { name: "BELOW G/S light — Illum", isNote: true },
+              { name: "EGPWS INOP light — Illum", isNote: true },
+              { name: "PULL UP alert — Illum", isNote: true },
+              { name: "WINDSHEAR alert — Illum", isNote: true },
+              { name: "ND shows: TERR FAIL, TERR TEST, terrain test pattern, TERRAIN caution message", isNote: true },
+              { name: "Aurals: 'GLIDE SLOPE', 'PULL UP', 'WINDSHEAR WINDSHEAR WINDSHEAR'", isNote: true },
+              { name: "Aurals: 'TERRAIN TERRAIN PULL UP', 'CAUTION TERRAIN', 'AIRSPEED LOW'", isNote: true },
+              { name: "3DM-3VM: 'OBSTACLE OBSTACLE PULL UP'", isNote: true },
+              { name: "3UN-3VM: RUNWAY INOP light + ORW/RAAS status aural ('RUNWAY AWARENESS OK - FEET' / 'NOT AVAILABLE' / 'INOP')", isNote: true }
+            ]},
+            { num: 3, name: "If switch held until aurals begin", setting: "Extended test", critical: false, subitems: [
+              { name: "Additional aurals tested: radio altitude alerts, bank angle, approach callouts, windshear, look-ahead terrain in flight", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["All EGPWS lights & aurals verified", "Terrain test pattern visible on ND"],
+          gotchas: [
+            "MUST wait until IRS alignment is complete — test fails or gives false results otherwise",
+            "Test INHIBITED in flight — only on the ground",
+            "Hold switch longer for the extended aural test (radio alt, bank angle, approach callouts)",
+            "Required after software updates and per AOM 21p.1.2 schedule"
+          ],
+          timing: "~30 sec (~1 min for extended)",
+          aomRef: "AOM 21p.1.2 EGPWS Test",
+          relatedFlashcards: ["Warning Systems", "Navigation"]
+        },
+        {
+          id: "test_wxr_pws",
+          type: "test",
+          who: "FO",
+          title: "Weather Radar & Predictive Windshear (PWS) Test",
+          trigger: "WHEN — General Preflight Flow — Weather Radar item. Required when flight is planned through areas where adverse weather may occur.",
+          description: "Two-part test: first the radar test pattern, then the PWS aural/visual alert verification. AVOID radar operation when personnel are in front of the nose radome.",
+          items: [
+            { num: "WXR.1", name: "EFIS Mode selector", setting: "MAP, MAP CTR, VOR, or APP", critical: false, subitems: [] },
+            { num: "WXR.2", name: "Weather Radar Mode", setting: "TEST", critical: false, subitems: [] },
+            { num: "WXR.3", name: "WXR switch (EFIS Control Panel)", setting: "ON", critical: true, subitems: [
+              { name: "Verify test pattern with all four colors: Green, Amber, Red, Magenta", isNote: true }
+            ]},
+            { num: "WXR.4", name: "WXR switch (EFIS Control Panel)", setting: "OFF", critical: false, subitems: [] },
+            { num: "PWS.1", name: "Weather Radar Mode", setting: "Deselect TEST", critical: false, subitems: [] },
+            { num: "PWS.2", name: "WXR Switch (EFIS Control Panel)", setting: "ON", critical: true, subitems: [
+              { name: "Note: In the short time WXR is ON and not in TEST, it WILL radiate", isNote: true }
+            ]},
+            { num: "PWS.3", name: "Weather Radar Mode", setting: "TEST", critical: true, subitems: [
+              { name: "Amber WINDSHEAR Caution annunciation", isNote: true },
+              { name: "'MONITOR RADAR DISPLAY' aural", isNote: true },
+              { name: "Amber PWS FAIL annunciation", isNote: true },
+              { name: "Red WINDSHEAR Warning annunciation on PFD and ND", isNote: true },
+              { name: "'GO AROUND WINDSHEAR AHEAD' aural", isNote: true },
+              { name: "'WINDSHEAR AHEAD, WINDSHEAR AHEAD' aural", isNote: true },
+              { name: "All alerts momentarily generated then extinguish", isNote: true }
+            ]},
+            { num: "PWS.4", name: "WXR switch (EFIS Control Panel)", setting: "OFF", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "WXR test pattern: green/amber/red/magenta verified",
+            "PWS warning + caution + fail flags all annunciated then cleared",
+            "WXR switch returned to OFF (or as needed for departure)"
+          ],
+          gotchas: [
+            "PERSONNEL CLEAR of nose radome before test — radar radiates briefly",
+            "3RA-3VM: PWS test occurs AUTOMATICALLY during the WXR test — no separate PWS sequence",
+            "Failure codes on left of ND: RT (xcvr), ANT (antenna), CONT (control panel), STAB (attitude input), CAL (calibration)",
+            "If conducted in the air, only test patterns/results display — no other lights or aurals",
+            "Required when planned through adverse wx — recommended every flight as good practice"
+          ],
+          timing: "~1 min",
+          aomRef: "AOM 21p.1.6 Weather Radar and Predictive Windshear System Test",
+          relatedFlashcards: ["Warning Systems", "Weather Radar", "Navigation"]
+        },
+        {
+          id: "test_to_config",
+          type: "test",
+          who: "CA",
+          title: "T/O CONFIG Preflight Test",
+          trigger: "WHEN — General Preflight Flow item AND again on the Captain's Before Takeoff Flow. Required before every flight.",
+          description: "Verifies the takeoff configuration warning system (flaps, stab, parking brake, spoilers) by forcing a warning condition.",
+          items: [
+            { num: 1, name: "T/O CONFIG switch", setting: "Press", critical: true, subitems: [
+              { name: "TAKEOFF CONFIG lights — Illuminated", isNote: true },
+              { name: "Takeoff Warning Horn — Sounds (intermittent)", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["TAKEOFF CONFIG lights illum", "Intermittent warning horn audible"],
+          gotchas: [
+            "If installed (most fleet) — see SEL 34 if absent",
+            "Done TWICE — once during General Preflight, once during Before Takeoff (CA)",
+            "Horn is INTERMITTENT — solid horn means a real config problem exists",
+            "After test, ensure TAKEOFF CONFIG light extinguishes before taxi",
+            "Reference 21p.1.7 for the formal procedure"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 21p.1.7 T/O CONFIG Preflight Test",
+          relatedFlashcards: ["Warning Systems", "Limitations"]
+        },
+        {
+          id: "test_recall",
+          type: "test",
+          who: "FO",
+          title: "Recall Check (Master Caution Recall)",
+          trigger: "WHEN — Pushback/Start flow, after 'I have a salute' callout and before the After Start Checklist (every flight).",
+          description: "Confirms no annunciator lights are stuck or hidden by the Master Caution Recall system — i.e., no single failures in dual-redundant systems.",
+          items: [
+            { num: 1, name: "Either System Annunciator Light Panel", setting: "Depress and hold", critical: true, subitems: [
+              { name: "Both MASTER CAUTION lights — Illum", isNote: true },
+              { name: "All lights illuminate in BOTH Annunciator Light Panels", isNote: true }
+            ]},
+            { num: 2, name: "System Annunciator Light Panel", setting: "Release", critical: true, subitems: [
+              { name: "If MASTER CAUTION lights remain ILLUM (with or without individual annunciators) → INVESTIGATE the cause", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "Both Master Caution lights illuminate while held",
+            "Both 6-pack annunciators fully lit while held",
+            "Everything extinguishes on release (if no faults)"
+          ],
+          gotchas: [
+            "Recall faults that RESET when MASTER CAUTION is pressed = single failure (dispatchable per MEL)",
+            "Recall faults that REMAIN illuminated = dual failure (NNC required)",
+            "Done after both engines started, before After Start Checklist",
+            "Both pilots verify any fault — coordinate before resetting",
+            "On the ground a single failure has no QRH NNC; contact mx, MEL allows one system placard"
+          ],
+          timing: "~10 sec",
+          aomRef: "AOM 21p.2.1 Recall and Master Caution System",
+          relatedFlashcards: ["Warning Systems"]
+        },
+        {
+          id: "test_tcas",
+          type: "test",
+          who: "FO",
+          title: "TCAS Test (bonus — same panel)",
+          trigger: "WHEN — Optional with the EGPWS test or as part of Transponder setup. Requires IRS aligned and in NAV.",
+          description: "Quick TCAS self-test from the transponder panel.",
+          items: [
+            { num: 1, name: "Transponder Switch", setting: "TEST", critical: true, subitems: [
+              { name: "Fail Light — Illum", isNote: true },
+              { name: "All code segments — Illum", isNote: true },
+              { name: "Verify no error codes", isNote: true },
+              { name: "Aural — 'TCAS SYSTEM TEST – OKAY'", isNote: true },
+              { name: "ND — 'TCAS TEST' displayed, then 'TCAS TEST OK' or 'TCAS TEST FAILED' (8 sec)", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: ["TCAS TEST OK on ND, aural confirmed"],
+          gotchas: [
+            "Requires IRS aligned and in NAV mode",
+            "'TCAS System Fail' aural = test failed, mx required",
+            "Test result remains on ND for 8 seconds then blanks"
+          ],
+          timing: "~15 sec",
+          aomRef: "AOM 21p.1.5 TCAS Test",
+          relatedFlashcards: ["Warning Systems", "Communications"]
         }
       ]
     }
