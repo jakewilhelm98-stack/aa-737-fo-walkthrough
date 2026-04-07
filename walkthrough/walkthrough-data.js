@@ -2984,7 +2984,43 @@ const FLIGHT_DATA = {
             { type: "milestone", text: "Runway environment in sight" },
             { who: "PF", type: "callout", text: "\"Runway.\"" },
             { who: "PF", type: "callout", text: "\"Continuing.\"" },
-            { who: "PF", type: "action", text: "Disengage autopilot no later than 50 feet AGL and maintain stabilized approach to touchdown" }
+            { who: "PF", type: "action", text: "Disengage autopilot no later than 50 feet AGL and maintain stabilized approach to touchdown" },
+
+            { type: "milestone", text: "Touchdown" },
+            { who: "PF", type: "action", text: "Verify the thrust levers are closed (CAUTION: low energy state with thrust at idle can cause hard landing or tailstrike)" },
+            { who: "PF", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "callout", text: "\"Deployed.\"" },
+            { who: "PM", type: "callout", text: "If speedbrakes do NOT deploy or fail to remain deployed: \"No speedbrakes.\"" },
+            { who: "PF", type: "action", text: "Captain: Manually deploy SPEEDBRAKE lever" },
+            { who: "PM", type: "action", text: "First Officer: If captain fails to deploy speedbrakes, manually deploy SPEEDBRAKE lever" },
+            { who: "PF", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PM", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PF", type: "action", text: "Raise reverse thrust levers to the interlocks, hold light pressure until release" },
+            { who: "PF", type: "action", text: "Apply reverse thrust as needed (WARNING: After reverse thrust has been initiated, a full stop landing must be made)" },
+            { who: "PM", type: "callout", text: "If no REV indication or stays amber: \"Single reverse.\" or \"No reverse.\"" },
+            { who: "PF", type: "action", text: "If either engine fails to enter reverse, use caution applying reverse on remaining engine" },
+
+            { type: "milestone", text: "80 knots" },
+            { who: "PM", type: "callout", text: "\"80.\"" },
+
+            { type: "milestone", text: "By 60 knots" },
+            { who: "PF", type: "action", text: "Reduce reverse thrust to be at IDLE reverse when reaching taxi speed" },
+
+            { type: "milestone", text: "60 knots" },
+            { who: "PM", type: "callout", text: "\"60.\"" },
+
+            { type: "milestone", text: "Approaching taxi speed" },
+            { who: "PF", type: "action", text: "After engines are at reverse idle, move the reverse thrust levers full down" },
+            { who: "PF", type: "action", text: "Transition to Manual Braking" },
+            { who: "PF", type: "callout", text: "When applying manual braking: \"Manual braking.\"" },
+            { who: "PF", type: "callout", text: "If the AUTO BRAKE DISARM light illuminates: \"Autobrakes off.\"" },
+            { who: "PM", type: "action", text: "Verify REV indication extinguished" },
+            { who: "PM", type: "action", text: "Call out any inadvertent selection of forward thrust as reverse thrust is canceled" },
+
+            { type: "milestone", text: "FO landing — Captain assumes control for taxi" },
+            { who: "PF", type: "callout", text: "Captain: \"My aircraft.\"" },
+            { who: "PM", type: "callout", text: "First Officer: \"Your aircraft.\"" }
           ],
           images: [],
           panelState: [
@@ -3102,7 +3138,38 @@ const FLIGHT_DATA = {
 
             { type: "milestone", text: "Roll out" },
             { who: "PF", type: "action", text: "Monitor runway centerline lights to assure runway alignment" },
-            { who: "PM", type: "callout", text: "\"Centerline.\" — if aircraft is NOT tracking the localizer" }
+            { who: "PM", type: "callout", text: "\"Centerline.\" — if aircraft is NOT tracking the localizer" },
+
+            { type: "milestone", text: "Touchdown" },
+            { who: "PF", type: "action", text: "Verify the thrust levers are closed (CAUTION: low energy state with thrust at idle can cause hard landing or tailstrike)" },
+            { who: "PF", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "callout", text: "\"Deployed.\"" },
+            { who: "PM", type: "callout", text: "If speedbrakes do NOT deploy or fail to remain deployed: \"No speedbrakes.\"" },
+            { who: "PF", type: "action", text: "If speedbrakes did not deploy: manually deploy SPEEDBRAKE lever" },
+            { who: "PF", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PM", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PF", type: "action", text: "Raise reverse thrust levers to the interlocks, hold light pressure until release" },
+            { who: "PF", type: "action", text: "Apply reverse thrust as needed (WARNING: After reverse thrust has been initiated, a full stop landing must be made)" },
+            { who: "PM", type: "callout", text: "If no REV indication or stays amber: \"Single reverse.\" or \"No reverse.\"" },
+            { who: "PF", type: "action", text: "If either engine fails to enter reverse, use caution applying reverse on remaining engine" },
+
+            { type: "milestone", text: "80 knots" },
+            { who: "PM", type: "callout", text: "\"80.\"" },
+
+            { type: "milestone", text: "By 60 knots" },
+            { who: "PF", type: "action", text: "Reduce reverse thrust to be at IDLE reverse when reaching taxi speed" },
+
+            { type: "milestone", text: "60 knots" },
+            { who: "PM", type: "callout", text: "\"60.\"" },
+
+            { type: "milestone", text: "Approaching taxi speed" },
+            { who: "PF", type: "action", text: "After engines are at reverse idle, move the reverse thrust levers full down" },
+            { who: "PF", type: "action", text: "Transition to Manual Braking" },
+            { who: "PF", type: "callout", text: "When applying manual braking: \"Manual braking.\"" },
+            { who: "PF", type: "callout", text: "If the AUTO BRAKE DISARM light illuminates: \"Autobrakes off.\"" },
+            { who: "PM", type: "action", text: "Verify REV indication extinguished" },
+            { who: "PM", type: "action", text: "Call out any inadvertent selection of forward thrust as reverse thrust is canceled" }
           ],
           images: [],
           panelState: [
@@ -3229,7 +3296,43 @@ const FLIGHT_DATA = {
             { type: "milestone", text: "Runway environment in sight" },
             { who: "PF", type: "callout", text: "\"Runway.\"" },
             { who: "PF", type: "callout", text: "\"Continuing.\"" },
-            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" }
+            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" },
+
+            { type: "milestone", text: "Touchdown" },
+            { who: "PF", type: "action", text: "Verify the thrust levers are closed (CAUTION: low energy state with thrust at idle can cause hard landing or tailstrike)" },
+            { who: "PF", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "callout", text: "\"Deployed.\"" },
+            { who: "PM", type: "callout", text: "If speedbrakes do NOT deploy or fail to remain deployed: \"No speedbrakes.\"" },
+            { who: "PF", type: "action", text: "Captain: Manually deploy SPEEDBRAKE lever" },
+            { who: "PM", type: "action", text: "First Officer: If captain fails to deploy speedbrakes, manually deploy SPEEDBRAKE lever" },
+            { who: "PF", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PM", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PF", type: "action", text: "Raise reverse thrust levers to the interlocks, hold light pressure until release" },
+            { who: "PF", type: "action", text: "Apply reverse thrust as needed (WARNING: After reverse thrust has been initiated, a full stop landing must be made)" },
+            { who: "PM", type: "callout", text: "If no REV indication or stays amber: \"Single reverse.\" or \"No reverse.\"" },
+            { who: "PF", type: "action", text: "If either engine fails to enter reverse, use caution applying reverse on remaining engine" },
+
+            { type: "milestone", text: "80 knots" },
+            { who: "PM", type: "callout", text: "\"80.\"" },
+
+            { type: "milestone", text: "By 60 knots" },
+            { who: "PF", type: "action", text: "Reduce reverse thrust to be at IDLE reverse when reaching taxi speed" },
+
+            { type: "milestone", text: "60 knots" },
+            { who: "PM", type: "callout", text: "\"60.\"" },
+
+            { type: "milestone", text: "Approaching taxi speed" },
+            { who: "PF", type: "action", text: "After engines are at reverse idle, move the reverse thrust levers full down" },
+            { who: "PF", type: "action", text: "Transition to Manual Braking" },
+            { who: "PF", type: "callout", text: "When applying manual braking: \"Manual braking.\"" },
+            { who: "PF", type: "callout", text: "If the AUTO BRAKE DISARM light illuminates: \"Autobrakes off.\"" },
+            { who: "PM", type: "action", text: "Verify REV indication extinguished" },
+            { who: "PM", type: "action", text: "Call out any inadvertent selection of forward thrust as reverse thrust is canceled" },
+
+            { type: "milestone", text: "FO landing — Captain assumes control for taxi" },
+            { who: "PF", type: "callout", text: "Captain: \"My aircraft.\"" },
+            { who: "PM", type: "callout", text: "First Officer: \"Your aircraft.\"" }
           ],
           images: [],
           panelState: [
@@ -3288,7 +3391,43 @@ const FLIGHT_DATA = {
             { who: "PF", type: "action", text: "Verify altitude, speed, and sink rate" },
             { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
             { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
-            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" }
+            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" },
+
+            { type: "milestone", text: "Touchdown" },
+            { who: "PF", type: "action", text: "Verify the thrust levers are closed (CAUTION: low energy state with thrust at idle can cause hard landing or tailstrike)" },
+            { who: "PF", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKE lever is FULL UP" },
+            { who: "PM", type: "callout", text: "\"Deployed.\"" },
+            { who: "PM", type: "callout", text: "If speedbrakes do NOT deploy or fail to remain deployed: \"No speedbrakes.\"" },
+            { who: "PF", type: "action", text: "Captain: Manually deploy SPEEDBRAKE lever" },
+            { who: "PM", type: "action", text: "First Officer: If captain fails to deploy speedbrakes, manually deploy SPEEDBRAKE lever" },
+            { who: "PF", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PM", type: "action", text: "Monitor autobrakes, if selected" },
+            { who: "PF", type: "action", text: "Raise reverse thrust levers to the interlocks, hold light pressure until release" },
+            { who: "PF", type: "action", text: "Apply reverse thrust as needed (WARNING: After reverse thrust has been initiated, a full stop landing must be made)" },
+            { who: "PM", type: "callout", text: "If no REV indication or stays amber: \"Single reverse.\" or \"No reverse.\"" },
+            { who: "PF", type: "action", text: "If either engine fails to enter reverse, use caution applying reverse on remaining engine" },
+
+            { type: "milestone", text: "80 knots" },
+            { who: "PM", type: "callout", text: "\"80.\"" },
+
+            { type: "milestone", text: "By 60 knots" },
+            { who: "PF", type: "action", text: "Reduce reverse thrust to be at IDLE reverse when reaching taxi speed" },
+
+            { type: "milestone", text: "60 knots" },
+            { who: "PM", type: "callout", text: "\"60.\"" },
+
+            { type: "milestone", text: "Approaching taxi speed" },
+            { who: "PF", type: "action", text: "After engines are at reverse idle, move the reverse thrust levers full down" },
+            { who: "PF", type: "action", text: "Transition to Manual Braking" },
+            { who: "PF", type: "callout", text: "When applying manual braking: \"Manual braking.\"" },
+            { who: "PF", type: "callout", text: "If the AUTO BRAKE DISARM light illuminates: \"Autobrakes off.\"" },
+            { who: "PM", type: "action", text: "Verify REV indication extinguished" },
+            { who: "PM", type: "action", text: "Call out any inadvertent selection of forward thrust as reverse thrust is canceled" },
+
+            { type: "milestone", text: "FO landing — Captain assumes control for taxi" },
+            { who: "PF", type: "callout", text: "Captain: \"My aircraft.\"" },
+            { who: "PM", type: "callout", text: "First Officer: \"Your aircraft.\"" }
           ],
           images: [],
           panelState: [
