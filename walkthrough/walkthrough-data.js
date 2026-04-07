@@ -2804,18 +2804,35 @@ const FLIGHT_DATA = {
       steps: [
         {
           id: "stabilized_approach",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Stabilized Approach Criteria",
+          title: "Stabilized Approach — Actions & Callouts",
           trigger: "Every approach — gate is 1000 ft AFL (IMC), may delay to 500 ft AFL (VMC)",
           description: "The single most important framework for any approach. Plan to be stable by 1000 ft AFL in both IMC and VMC. If unstable in IMC at 1000 ft, go around. In VMC, may delay compliance to 500 ft AFL as long as 'unstable' is called along with the deviation. Either pilot may direct a go-around.",
-          items: [
-            { num: 1, name: "By 1000 ft AFL (IMC and VMC)", setting: "Landing configuration (gear down, final landing flaps) AND descent rate ≤1000 fpm", critical: true, subitems: [] },
-            { num: 2, name: "By 1000 ft AFL IMC (or 500 ft AFL VMC)", setting: "On approach speed (target -5 / +10 kt), on flight path, stabilized (spooled) thrust", critical: true, subitems: [] },
-            { num: 3, name: "1000 ft AFL callout", setting: "PF: \"Stable\" OR \"Unstable, go around\" (IMC) OR \"Unstable, [deviation]\" (VMC delay)", critical: true, subitems: [] },
-            { num: 4, name: "500 ft AFL callout", setting: "PM auto: \"500\" → PF: \"Stable, target, sink ___\" or \"Stable, ±___, sink ___\"", critical: true, subitems: [] },
-            { num: 5, name: "If unstable at 500 ft", setting: "\"Unstable, go around\" — perform go-around", critical: true, subitems: [] },
-            { num: 6, name: "Descent rate limits", setting: "Below 2000 ft AFL: ≤2000 fpm. Below 1000 ft AFL or inside FAF: ≤1000 fpm", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "1000 feet AFL — Choose One" },
+
+            { type: "milestone", text: "Stable" },
+            { who: "PF", type: "callout", text: "\"Stable.\"" },
+
+            { type: "milestone", text: "Unstable in IMC" },
+            { who: "PF", type: "callout", text: "\"Unstable, go around.\"" },
+            { who: "PF", type: "action", text: "Perform go-around" },
+
+            { type: "milestone", text: "Unstable in VMC" },
+            { who: "PF", type: "action", text: "Compliance with speed, flight path and/or thrust may be delayed until 500 ft AFL as long as \"unstable\" is called out along with the deviation (e.g., \"Unstable, half dot high.\")" },
+            { who: "PF", type: "callout", text: "Otherwise: \"Unstable, go around.\"" },
+            { who: "PF", type: "action", text: "Perform go-around" },
+
+            { type: "milestone", text: "500 feet AFL — Choose One" },
+
+            { type: "milestone", text: "Stable" },
+            { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
+            { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
+
+            { type: "milestone", text: "Unstable" },
+            { who: "PF", type: "callout", text: "\"Unstable, go around.\"" },
+            { who: "PF", type: "action", text: "Perform go-around" }
           ],
           images: [],
           panelState: [
@@ -2879,23 +2896,95 @@ const FLIGHT_DATA = {
         },
         {
           id: "ils_cat1",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
           title: "ILS CAT I",
           trigger: "Cleared for ILS approach — DA-based minimums",
           description: "Standard ILS approach to a barometric DA. AP recommended; required off NLT 50 ft AGL. With less than 4000 RVR or 3/4 mi visibility autobrakes are required and AP must be off (autopilot is not authorized below 50 ft AGL on standard CAT I). Crosswind limit drops to 15 kt below 4000 RVR. SA CAT I (HUD-equipped, CAT II qualified crew) gets DH as low as 150 ft and RVR 1400.",
-          items: [
-            { num: 1, name: "Cleared for approach", setting: "PF: Select/request APP — PM arms APP", critical: true, subitems: [] },
-            { num: 2, name: "LOC capture", setting: "Verify VOR/LOC on FMA — PM: \"LOC capture\"", critical: true, subitems: [] },
-            { num: 3, name: "Approaching 1-dot G/S or NLT 2000 ft AFL", setting: "\"Gear down\" → \"Flaps 15, arm SPEEDBRAKE\" → speed verified", critical: true, subitems: [] },
-            { num: 4, name: "G/S capture", setting: "\"Glideslope capture. Set missed approach altitude.\" — set MAA on MCP", critical: true, subitems: [] },
-            { num: 5, name: "Final Approach Verification Altitude (FAVA)", setting: "Both pilots verify", critical: true, subitems: [] },
-            { num: 6, name: "Prior to 1000 ft AFL", setting: "\"Flaps ___, below the line\" — Before Landing checklist below the line", critical: true, subitems: [] },
-            { num: 7, name: "1000 ft AFL", setting: "PM auto: \"1000\" — PF: \"Stable\"", critical: true, subitems: [] },
-            { num: 8, name: "500 ft AFL", setting: "PM auto: \"500\" — PF: \"Stable, target, sink ___\"", critical: true, subitems: [] },
-            { num: 9, name: "100 ft above DA", setting: "PM auto: \"Plus hundred\" — PF divides time inside/outside", critical: true, subitems: [] },
-            { num: 10, name: "At DA", setting: "PM auto: \"Minimums\" → PF: \"No contact\" / \"Approach lights\" / \"Runway\" / \"Continuing\"", critical: true, subitems: [] },
-            { num: 11, name: "Below DA", setting: "Disengage AP NLT 50 ft AGL — maintain stabilized approach to touchdown", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Cleared for approach" },
+            { who: "PF", type: "action", text: "Select/Request APP" },
+            { who: "PF", type: "action", text: "If available, AIII must be used below RVR 1800. If AIII is not available, AII/IMC may be used down to RVR 1200." },
+            { who: "PM", type: "action", text: "Arm APP, if requested" },
+
+            { type: "milestone", text: "LOC capture" },
+            { who: "PF", type: "action", text: "Verify VOR/LOC annunciates on FMA" },
+            { who: "PM", type: "action", text: "Verify VOR/LOC annunciates on FMA" },
+            { who: "PM", type: "callout", text: "\"LOC capture.\"" },
+
+            { type: "milestone", text: "Approaching 1-dot G/S or NLT 2000 ft AFL (recommended)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Gear down.\"" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select gear down" },
+            { who: "PM", type: "action", text: "Set speed, if requested" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps 15.\"" },
+            { who: "PF", type: "action", text: "Arm SPEEDBRAKE" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select flaps 15" },
+            { who: "PM", type: "action", text: "Set speed, if requested" },
+
+            { type: "milestone", text: "G/S capture" },
+            { who: "PF", type: "callout", text: "\"Glideslope capture. Set missed approach altitude.\"" },
+            { who: "PF", type: "action", text: "Set/request missed approach altitude on MCP" },
+            { who: "PM", type: "action", text: "Set missed approach altitude on MCP, if requested" },
+
+            { type: "milestone", text: "Final approach verification altitude fix" },
+            { who: "PF", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PM", type: "action", text: "Verify Final Approach Verification Altitude" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (2 ENG)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps ___, below the line.\"" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select requested flaps, set speed if requested" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (1 ENG)" },
+            { who: "PF", type: "action", text: "Maintain flaps 15" },
+            { who: "PF", type: "callout", text: "\"Below the line.\"" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "1000 feet AFL" },
+            { who: "PM", type: "callout", text: "\"1000.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Verify altitude" },
+            { who: "PF", type: "callout", text: "\"Stable.\"" },
+
+            { type: "milestone", text: "500 feet AFL" },
+            { who: "PF", type: "action", text: "Verify altitude, speed, and sink rate" },
+            { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
+            { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
+
+            { type: "milestone", text: "100 feet above DA(H)" },
+            { who: "PM", type: "callout", text: "\"Plus hundred.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Verify altitude" },
+            { who: "PF", type: "action", text: "Divide time between monitoring instruments and scanning outside for runway environment" },
+
+            { type: "milestone", text: "At DA(H) — Choose One" },
+            { who: "PM", type: "callout", text: "\"Minimums.\" (auto callout)" },
+
+            { type: "milestone", text: "Approach lights and runway environment NOT in sight" },
+            { who: "PF", type: "callout", text: "\"No contact.\"" },
+            { who: "PF", type: "action", text: "Execute go-around maneuver" },
+            { who: "PM", type: "action", text: "Monitor go-around and perform PM duties" },
+
+            { type: "milestone", text: "Only approach lights in sight" },
+            { who: "PF", type: "callout", text: "\"Approach lights.\"" },
+
+            { type: "milestone", text: "Runway environment in sight" },
+            { who: "PF", type: "callout", text: "\"Runway.\"" },
+            { who: "PF", type: "callout", text: "\"Continuing.\"" },
+            { who: "PF", type: "action", text: "Disengage autopilot no later than 50 feet AGL and maintain stabilized approach to touchdown" }
           ],
           images: [],
           panelState: [
@@ -2922,24 +3011,98 @@ const FLIGHT_DATA = {
         },
         {
           id: "ils_cat2_cat3",
-          type: "flow",
-          who: "CA",
-          title: "ILS CAT II / CAT III",
-          trigger: "Cleared for CAT II or CAT III ILS — RA-based DH",
+          type: "callout",
+          who: "CA/FO",
+          title: "ILS SA CAT II & CAT II/III",
+          trigger: "Cleared for CAT II or CAT III ILS — RA-based DH (Captain is PF)",
           description: "Captain assumes PF duties. Approach must be flown using HUD to touchdown. Actions and callouts are identical for CAT II and CAT III down to DH. AP is disconnected NLT 1000 ft AFL. AIII required below RVR 1800 (AII/IMC may be used down to RVR 1200 if AIII unavailable). Must have a usable LOC inside the runway threshold.",
-          items: [
-            { num: 1, name: "Captain", setting: "Assumes PF duties prior to approach", critical: true, subitems: [] },
-            { num: 2, name: "HUD MENU mode", setting: "AIII (AII or IMC if AIII unavailable, down to RVR 1200)", critical: true, subitems: [] },
-            { num: 3, name: "MINS", setting: "RADIO — DH as published (CAT II) or 50 ft DH (CAT III)", critical: true, subitems: [] },
-            { num: 4, name: "VHF NAV / IRS / Display Source / DCP transfer switches", setting: "All NORMAL / AUTO", critical: true, subitems: [] },
-            { num: 5, name: "Cleared for approach", setting: "Select/request APP", critical: true, subitems: [] },
-            { num: 6, name: "G/S capture", setting: "Set MAA NLT 1000 ft AFL", critical: true, subitems: [] },
-            { num: 7, name: "Final approach segment", setting: "Monitor HUD Annunciator Panel — \"Go around\" if any amber/red caution/warning while IMC", critical: true, subitems: [] },
-            { num: 8, name: "1000 ft AFL", setting: "PM: \"1000\" — PF: \"Stable\" — DISCONNECT autopilot", critical: true, subitems: [] },
-            { num: 9, name: "500 ft AFL", setting: "Verify AIII/AII active and FLARE armed (BAE2020) / AIII/IMC active and RO armed (HGS)", critical: true, subitems: [] },
-            { num: 10, name: "100 ft above DH", setting: "PM auto: \"Plus hundred\"", critical: true, subitems: [] },
-            { num: 11, name: "At DH", setting: "PM auto: \"Minimums\" → \"Continuing\" if visual, otherwise GO AROUND", critical: true, subitems: [] },
-            { num: 12, name: "Roll out", setting: "Monitor centerline lights — PM calls \"Centerline\" if not tracking LOC", critical: false, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Cleared for approach (Captain = PF)" },
+            { who: "PF", type: "action", text: "Select/Request APP" },
+            { who: "PF", type: "action", text: "If available, AIII must be used below RVR 1800. If AIII not available, AII/IMC may be used down to RVR 1200." },
+            { who: "PM", type: "action", text: "Arm APP, if requested" },
+
+            { type: "milestone", text: "LOC capture" },
+            { who: "PF", type: "action", text: "Verify VOR/LOC annunciated on FMA" },
+            { who: "PM", type: "action", text: "Verify VOR/LOC annunciated on FMA" },
+            { who: "PM", type: "callout", text: "\"LOC capture.\"" },
+
+            { type: "milestone", text: "Approaching 1-dot G/S or NLT 2000 ft AFL (recommended)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Gear down.\"" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select gear down" },
+            { who: "PM", type: "action", text: "Set speed, if requested" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps 15.\"" },
+            { who: "PF", type: "action", text: "Arm SPEEDBRAKE" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select flaps 15, set speed if requested" },
+
+            { type: "milestone", text: "G/S capture" },
+            { who: "PF", type: "callout", text: "\"Glideslope capture. Set missed approach altitude.\"" },
+            { who: "PF", type: "action", text: "Set/request missed approach altitude on MCP" },
+            { who: "PM", type: "action", text: "Set missed approach altitude on MCP, if requested" },
+
+            { type: "milestone", text: "Final approach verification altitude fix" },
+            { who: "PF", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PF", type: "action", text: "Extend flaps, as desired" },
+            { who: "PM", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PM", type: "action", text: "Monitor HUD Annunciator Panel on final approach segment for amber/red caution or warning while IMC" },
+            { who: "PM", type: "action", text: "Remain on instruments throughout approach and roll out" },
+            { who: "PM", type: "callout", text: "\"Go around.\" — anytime amber/red caution/warning annunciates on HUD AP on final segment while IMC" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (2 ENG)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps ___, below the line.\"" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select requested flaps, set speed if requested" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (1 ENG)" },
+            { who: "PF", type: "action", text: "Maintain flaps 15" },
+            { who: "PF", type: "callout", text: "\"Below the line.\"" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "1000 feet AFL" },
+            { who: "PM", type: "callout", text: "\"1000.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Disconnect autopilot" },
+            { who: "PF", type: "action", text: "Verify altitude" },
+            { who: "PF", type: "callout", text: "\"Stable.\"" },
+
+            { type: "milestone", text: "500 feet AFL" },
+            { who: "PF", type: "action", text: "Verify altitude, speed, and sink rate" },
+            { who: "PF", type: "action", text: "BAE2020: Verify AIII/AII active and FLARE armed" },
+            { who: "PF", type: "action", text: "HGS-4000/6000: Verify AIII/IMC active and RO armed (AIII only)" },
+            { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
+            { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
+            { who: "PF", type: "callout", text: "\"Continuing.\"" },
+
+            { type: "milestone", text: "100 feet above DA(H)" },
+            { who: "PM", type: "callout", text: "\"Plus hundred.\" (auto callout)" },
+
+            { type: "milestone", text: "At DA(H) — Choose One" },
+            { who: "PM", type: "callout", text: "\"Minimums.\" (auto callout)" },
+
+            { type: "milestone", text: "DH — runway environment NOT in sight" },
+            { who: "PF", type: "action", text: "Execute go-around maneuver" },
+            { who: "PM", type: "action", text: "Monitor go-around and perform PM duties" },
+
+            { type: "milestone", text: "DH — runway environment in sight" },
+            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" },
+
+            { type: "milestone", text: "Roll out" },
+            { who: "PF", type: "action", text: "Monitor runway centerline lights to assure runway alignment" },
+            { who: "PM", type: "callout", text: "\"Centerline.\" — if aircraft is NOT tracking the localizer" }
           ],
           images: [],
           panelState: [
@@ -2978,24 +3141,95 @@ const FLIGHT_DATA = {
       steps: [
         {
           id: "non_ils_approach",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
           title: "Non-ILS Approach (RNAV/RNP, LNAV/VNAV, LOC, VOR, NDB)",
           trigger: "Cleared for non-ILS instrument approach",
-          description: "Covers RNAV(GPS), RNAV(RNP)/RNP(AR), LNAV/VNAV, LOC, VOR and NDB approaches. AP is required when ceiling <1000 ft AGL and/or vis <3 SM (1000-3), and for all RNP(AR) below RNP 0.3. VNAV PTH descent to DA, or V/S to DDA. RNAV(RNP)/RNP(AR) NOT authorized outside BARO-VNAV temperature limits.",
-          items: [
-            { num: 1, name: "Cleared for approach", setting: "Verify/select/request LNAV (or appropriate roll mode) and VNAV (verify VNAV PTH on FMA)", critical: true, subitems: [] },
-            { num: 2, name: "MCP minimums", setting: "Set when conditions permit", critical: false, subitems: [] },
-            { num: 3, name: "Approaching FAF / GP INTCPT", setting: "Verify VNAV PTH, VNAV ALT, or ALT HLD (FAF/GP INTCPT must be active waypoint)", critical: true, subitems: [] },
-            { num: 4, name: "Configure", setting: "\"Gear down\" → \"Flaps 15, arm SPEEDBRAKE\" — verify VNAV PTH after slowdown", critical: true, subitems: [] },
-            { num: 5, name: "Passing FAF / GP INTCPT", setting: "Crosscheck altimeters ±100 ft, verify FAVA, descend to mins", critical: true, subitems: [
-              { name: "VNAV PTH (if applicable) → DA/DDA", isNote: true },
-              { name: "V/S (if applicable) → DDA", isNote: true }
-            ]},
-            { num: 6, name: ">300 ft below missed approach altitude", setting: "Set MAA on MCP", critical: true, subitems: [] },
-            { num: 7, name: "Prior to 1000 ft AFL", setting: "\"Flaps ___, below the line\" — Before Landing checklist below the line", critical: true, subitems: [] },
-            { num: 8, name: "1000 / 500 / +100 / Mins callouts", setting: "Same as ILS — \"Stable\", \"Stable target sink\", \"Plus hundred\", \"Minimums\"", critical: true, subitems: [] },
-            { num: 9, name: "At DA/DDA", setting: "\"Approach lights\" / \"Runway\" / \"No contact\" — \"Continuing\" or go around", critical: true, subitems: [] }
+          description: "Covers RNAV(GPS), RNAV(RNP)/RNP(AR), LNAV/VNAV, LOC, VOR and NDB approaches. AP is required when ceiling <1000 ft AGL and/or vis <3 SM (1000-3), and for all RNP(AR) below RNP 0.3. VNAV PTH descent to DA, or V/S to DDA.",
+          calloutSequence: [
+            { type: "milestone", text: "Cleared for approach" },
+            { who: "PF", type: "action", text: "Verify, select, or request LNAV (or appropriate roll mode)" },
+            { who: "PF", type: "action", text: "Verify, select, or request VNAV (verify VNAV PTH in FMA)" },
+            { who: "PF", type: "action", text: "Request or set minimums on the MCP (if conditions permit)" },
+            { who: "PM", type: "action", text: "Select LNAV if requested" },
+            { who: "PM", type: "action", text: "Select VNAV if requested" },
+            { who: "PM", type: "action", text: "Set minimums on MCP if requested" },
+
+            { type: "milestone", text: "Approaching FAF / GP INTCPT" },
+            { who: "PF", type: "action", text: "Verify VNAV PTH, VNAV ALT or ALT HLD (FAF/GP INTCPT must be active waypoint)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Gear down.\"" },
+            { who: "PF", type: "action", text: "Verify, select or request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select gear down" },
+            { who: "PM", type: "action", text: "Set speed, if requested" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps 15.\"" },
+            { who: "PF", type: "action", text: "Arm SPEEDBRAKE" },
+            { who: "PF", type: "action", text: "Verify, select or request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select flaps 15, set speed if requested" },
+            { who: "PF", type: "action", text: "Verify, select, or request VNAV — verify VNAV PTH on FMA (if applicable)" },
+            { who: "PM", type: "action", text: "Select VNAV if requested — verify VNAV PTH on FMA (if applicable)" },
+
+            { type: "milestone", text: "Passing FAF / GP INTCPT" },
+            { who: "PF", type: "action", text: "Crosscheck altimeters ±100 feet" },
+            { who: "PF", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PM", type: "action", text: "Crosscheck altimeters ±100 feet" },
+            { who: "PM", type: "action", text: "Verify Final Approach Verification Altitude" },
+            { who: "PF", type: "action", text: "Descend to Minimums — VNAV PTH (if applicable) → DA/DDA, or V/S → DDA" },
+
+            { type: "milestone", text: "More than 300 feet below missed approach altitude" },
+            { who: "PF", type: "callout", text: "\"Set missed approach altitude.\"" },
+            { who: "PF", type: "action", text: "Set/request missed approach altitude on MCP" },
+            { who: "PM", type: "action", text: "Set missed approach altitude on MCP, if requested" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (2 ENG)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps ___, below the line.\"" },
+            { who: "PF", type: "action", text: "Verify, select, or request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select requested flaps, set speed if requested" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "Prior to 1000 feet AFL (1 ENG)" },
+            { who: "PF", type: "action", text: "Maintain flaps 15" },
+            { who: "PF", type: "callout", text: "\"Below the line.\"" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+
+            { type: "milestone", text: "1000 feet AFL" },
+            { who: "PM", type: "callout", text: "\"1000.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Verify altitude" },
+            { who: "PF", type: "callout", text: "\"Stable.\"" },
+
+            { type: "milestone", text: "500 feet AFL" },
+            { who: "PF", type: "action", text: "Verify altitude, speed, and sink rate" },
+            { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
+            { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
+
+            { type: "milestone", text: "100 feet above DA or DDA" },
+            { who: "PM", type: "callout", text: "\"Plus hundred.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Divide time between monitoring instruments and scanning outside for runway environment" },
+
+            { type: "milestone", text: "At DA or DDA — Choose One" },
+            { who: "PM", type: "callout", text: "\"Minimums.\" (auto callout)" },
+
+            { type: "milestone", text: "Approach lights and runway environment NOT in sight" },
+            { who: "PF", type: "callout", text: "\"No contact.\"" },
+            { who: "PF", type: "action", text: "Execute go-around maneuver" },
+            { who: "PM", type: "action", text: "Monitor go-around and perform PM duties" },
+
+            { type: "milestone", text: "Only approach lights in sight" },
+            { who: "PF", type: "callout", text: "\"Approach lights.\"" },
+
+            { type: "milestone", text: "Runway environment in sight" },
+            { who: "PF", type: "callout", text: "\"Runway.\"" },
+            { who: "PF", type: "callout", text: "\"Continuing.\"" },
+            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" }
           ],
           images: [],
           panelState: [
@@ -3021,20 +3255,40 @@ const FLIGHT_DATA = {
         },
         {
           id: "visual_approach",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Visual Approach",
+          title: "Visual Approach — Actions & Callouts",
           trigger: "Cleared for visual approach (or RNAV Visual / FMS-CVFP Visual)",
-          description: "2.5°-3° final approach path. Configuration is fixed by the time you're on final — only small adjustments to glide path, speed, and trim. ~300 ft per NM gives a normal profile. Stable on speed by ~500 ft above touchdown. Flaps are NOT used as drag — speedbrakes first, then early gear extension if needed.",
-          items: [
-            { num: 1, name: "Initial — downwind", setting: "1500 ft above runway elev, 2 NM abeam, flaps 5 at flaps 5 maneuver speed", critical: false, subitems: [] },
-            { num: 2, name: "Before turn to base", setting: "Gear down, flaps 15, arm speedbrake, slow to flaps 15 maneuver speed (or Vapp + wind if landing flaps 15)", critical: true, subitems: [] },
-            { num: 3, name: "Base leg — \"Flaps ___, below the line\"", setting: "Adjust thrust, descend ~600-700 fpm, extend landing flaps before turning final", critical: true, subitems: [] },
-            { num: 4, name: "Below the line / Before Landing checklist", setting: "Complete prior to 1000 ft AFL", critical: true, subitems: [] },
-            { num: 5, name: "Turn to final", setting: "Roll out on extended runway centerline at appropriate Vapp", critical: true, subitems: [] },
-            { num: 6, name: "On final", setting: "~300 ft per NM, RoD 700-900 fpm on glide path, in trim", critical: true, subitems: [] },
-            { num: 7, name: "1000 ft AFL", setting: "PM auto: \"1000\" — PF: \"Stable\"", critical: true, subitems: [] },
-            { num: 8, name: "500 ft AFL", setting: "PM auto: \"500\" — PF: \"Stable, target, sink ___\" — stabilize by ~500 ft above TDZ", critical: true, subitems: [] }
+          description: "2.5°-3° final approach path. Configuration is fixed by the time you're on final — only small adjustments to glide path, speed, and trim. ~300 ft per NM gives a normal profile. Stable on speed by ~500 ft above touchdown. Flaps are NOT used as drag — speedbrakes first, then early gear extension if needed. Note: 'Initial Approach' procedure (downwind/base setup) is in the AOM 10.7.3 Pattern Setup narrative — see Gotchas.",
+          calloutSequence: [
+            { type: "milestone", text: "Base leg (2 ENG)" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps ___, below the line.\"" },
+            { who: "PF", type: "action", text: "Set/request speed" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "callout", text: "\"Speed verified.\"" },
+            { who: "PM", type: "action", text: "Select requested flaps, set speed if requested" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "Base leg (1 ENG)" },
+            { who: "PF", type: "action", text: "Maintain flaps 15" },
+            { who: "PF", type: "callout", text: "\"Below the line.\"" },
+            { who: "PM", type: "action", text: "Complete Before Landing Checklist (below the line)" },
+            { who: "PF", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+            { who: "PM", type: "action", text: "Visually confirm all tabs on the mechanical checklist are closed out" },
+
+            { type: "milestone", text: "1000 feet AFL" },
+            { who: "PM", type: "callout", text: "\"1000.\" (auto callout)" },
+            { who: "PF", type: "action", text: "Verify altitude" },
+            { who: "PF", type: "callout", text: "\"Stable.\"" },
+
+            { type: "milestone", text: "500 feet AFL" },
+            { who: "PF", type: "action", text: "Verify altitude, speed, and sink rate" },
+            { who: "PM", type: "callout", text: "\"500.\" (auto callout)" },
+            { who: "PF", type: "callout", text: "\"Stable, target, sink ___.\"  or  \"Stable, ± ___, sink ___.\"" },
+            { who: "PF", type: "action", text: "Maintain stabilized approach to touchdown" }
           ],
           images: [],
           panelState: [
@@ -3115,21 +3369,56 @@ const FLIGHT_DATA = {
       steps: [
         {
           id: "normal_go_around",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Normal Go-Around",
+          title: "Normal Go-Around — Actions & Callouts",
           trigger: "Go-around required — either pilot may direct it",
           description: "Either pilot may make the go-around callout. The PF MUST execute the directed go-around unless an emergency overrides. From flaps 30/40 → flaps 15. From flaps 15 → flaps 1. Push TO/GA, verify thrust increase, rotate to GA pitch attitude. With positive rate: gear up. Comply with published miss or ATC.",
-          items: [
-            { num: 1, name: "Go-around called", setting: "PF: \"Go around, TOGA\" — push TO/GA switch", critical: true, subitems: [] },
-            { num: 2, name: "Flap call", setting: "From flaps 30/40 → \"Flaps 15\"; From flaps 15 → \"Flaps 1\"", critical: true, subitems: [] },
-            { num: 3, name: "Thrust", setting: "Verify thrust increases — verify pitch FMA TO/GA", critical: true, subitems: [] },
-            { num: 4, name: "Rotate", setting: "Smoothly to ~15° nose up GA pitch attitude", critical: true, subitems: [] },
-            { num: 5, name: "Positive rate", setting: "PM: \"Positive rate\" → PF: \"Gear up\"", critical: true, subitems: [] },
-            { num: 6, name: "Set missed approach altitude", setting: "PF: \"Set missed approach altitude\" → PM resets MCP alt", critical: true, subitems: [] },
-            { num: 7, name: "Above 400 ft RA", setting: "Verify or call for appropriate roll mode (HDG SEL or LNAV) — LNAV auto-engages above 400 ft RA", critical: true, subitems: [] },
-            { num: 8, name: "Flap retraction on schedule", setting: "PF calls flap settings as airspeed allows; speed window remains closed (flap maneuver speeds)", critical: true, subitems: [] },
-            { num: 9, name: "After flaps up", setting: "PF: \"Flaps up, after takeoff checklist\" → \"VNAV\" or \"LVL CHG, set speed\"", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Go-Around" },
+            { who: "PF", type: "callout", text: "\"Go around, TOGA.\"" },
+            { who: "PF", type: "action", text: "Push TO/GA switch" },
+            { who: "PF", type: "action", text: "Verify that the thrust increases" },
+            { who: "PF", type: "callout", text: "If landing from a Flaps 30 or 40 approach: \"Flaps 15.\"" },
+            { who: "PF", type: "callout", text: "If landing from a Flaps 15 approach: \"Flaps 1.\"" },
+            { who: "PF", type: "action", text: "Rotate to go-around pitch attitude" },
+            { who: "PM", type: "action", text: "Set Flaps 15 or 1 as requested" },
+            { who: "PM", type: "action", text: "Verify pitch FMA — TO/GA" },
+            { who: "PM", type: "action", text: "Verify rotation to go-around pitch attitude" },
+            { who: "PM", type: "action", text: "Verify desired thrust set" },
+
+            { type: "milestone", text: "Positive rate of climb" },
+            { who: "PF", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "callout", text: "\"Positive rate.\"" },
+            { who: "PM", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "callout", text: "\"Gear up.\"" },
+            { who: "PF", type: "action", text: "Execute published missed approach or proceed as instructed by ATC" },
+            { who: "PM", type: "action", text: "Position Gear Lever UP" },
+            { who: "PM", type: "action", text: "Monitor speed and attitude" },
+            { who: "PF", type: "callout", text: "\"Set missed approach altitude.\"" },
+            { who: "PM", type: "action", text: "Reset missed approach altitude as applicable" },
+            { who: "PM", type: "action", text: "Advise ATC" },
+
+            { type: "milestone", text: "Above 400 feet RA" },
+            { who: "PF", type: "action", text: "Verify or call for appropriate roll mode" },
+            { who: "PF", type: "action", text: "If requested, select HDG or LNAV (F/D holds ground track ≤400 ft RA; LNAV auto-engages >400 ft RA)" },
+            { who: "PF", type: "action", text: "Ensure appropriate roll mode is annunciated on FMA" },
+            { who: "PM", type: "action", text: "Ensure appropriate roll mode is annunciated on FMA" },
+            { who: "PF", type: "action", text: "Check airspeed (retract flaps on schedule)" },
+            { who: "PF", type: "callout", text: "\"Flaps ___.\"" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select proper flap setting" },
+            { who: "PM", type: "action", text: "Monitor flaps and slats retraction" },
+            { who: "PF", type: "callout", text: "\"Flaps up, after takeoff checklist.\"" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select flaps up" },
+            { who: "PM", type: "action", text: "Monitor flaps and slats retraction" },
+            { who: "PM", type: "action", text: "Monitor missed approach procedure" },
+
+            { type: "milestone", text: "After flap retraction or planned flaps set" },
+            { who: "PF", type: "callout", text: "\"VNAV.\"  or  \"LVL CHG, set speed.\"" },
+            { who: "PM", type: "action", text: "Select VNAV or select LVL CHG, set speed as requested" },
+            { who: "PM", type: "action", text: "Accomplish PM's After Takeoff Flow and After Takeoff Checklist" }
           ],
           images: [],
           panelState: [
@@ -3157,22 +3446,59 @@ const FLIGHT_DATA = {
         },
         {
           id: "engine_out_go_around",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Engine-Out Go-Around",
+          title: "Engine-Out Go-Around — Actions & Callouts",
           trigger: "Go-around required with engine inoperative",
           description: "Push TO/GA and advance thrust lever(s) — verify thrust increase. Rotate toward 13° pitch and select flaps 1. Control yaw with rudder and trim (some pedal pressure may be needed even with full trim). Lateral path: extended runway centerline OR ##-7E EO SID departure path. Maintain Vapp until at least 1000 ft AFL before accelerating.",
-          items: [
-            { num: 1, name: "Go-around called", setting: "PF: \"Go around, TOGA\" — push TO/GA, advance thrust lever(s) to GA thrust", critical: true, subitems: [] },
-            { num: 2, name: "Flap call", setting: "\"Flaps 1\"", critical: true, subitems: [] },
-            { num: 3, name: "Rotate", setting: "Toward 13° pitch attitude", critical: true, subitems: [] },
-            { num: 4, name: "Yaw control", setting: "Rudder + trim — some pedal pressure may remain even at full trim", critical: true, subitems: [] },
-            { num: 5, name: "Positive rate / Gear up", setting: "PM: \"Positive rate\" → PF: \"Gear up\"", critical: true, subitems: [] },
-            { num: 6, name: "Set missed approach altitude", setting: "MCP", critical: true, subitems: [] },
-            { num: 7, name: "Above 400 ft RA (or per EO SID miss)", setting: "Verify roll mode — fly extended centerline or ##-7E EO failure departure path", critical: true, subitems: [] },
-            { num: 8, name: "At/above 1000 ft AFL (or per ##-7E)", setting: "PF: \"LVL CHG, set speed\" → set to flap retraction speed", critical: true, subitems: [] },
-            { num: 9, name: "At flap retraction speed", setting: "\"Flaps up\"", critical: true, subitems: [] },
-            { num: 10, name: "At flaps up maneuvering speed (UP bug)", setting: "PF: \"MCT, ____ checklist\" — PM selects MCT, accomplishes appropriate non-normal", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Go-Around" },
+            { who: "PF", type: "callout", text: "\"Go around, TOGA.\"" },
+            { who: "PF", type: "action", text: "Push TO/GA switch" },
+            { who: "PF", type: "action", text: "Advance thrust lever(s) to go-around thrust" },
+            { who: "PF", type: "action", text: "Verify that the thrust increases" },
+            { who: "PF", type: "callout", text: "\"Flaps 1.\"" },
+            { who: "PF", type: "action", text: "Rotate to go-around pitch attitude" },
+            { who: "PM", type: "action", text: "Set flaps 1 as requested" },
+            { who: "PM", type: "action", text: "Verify pitch FMA — TO/GA" },
+            { who: "PM", type: "action", text: "Verify rotation to go-around pitch attitude" },
+            { who: "PM", type: "action", text: "Verify desired thrust set" },
+
+            { type: "milestone", text: "Positive rate of climb" },
+            { who: "PF", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "callout", text: "\"Positive rate.\"" },
+            { who: "PM", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "callout", text: "\"Gear up.\"" },
+            { who: "PF", type: "action", text: "Execute published missed approach or proceed as instructed by ATC" },
+            { who: "PM", type: "action", text: "Position gear lever UP" },
+            { who: "PM", type: "action", text: "Monitor speed and attitude" },
+            { who: "PF", type: "callout", text: "\"Set missed approach altitude.\"" },
+            { who: "PM", type: "action", text: "Reset missed approach altitude as applicable" },
+            { who: "PM", type: "action", text: "Advise ATC" },
+
+            { type: "milestone", text: "Above 400 ft RA (or as required by EO SID Missed Approach)" },
+            { who: "PF", type: "action", text: "Verify or call for appropriate roll mode" },
+            { who: "PF", type: "action", text: "Fly straight-out along extended runway centerline or follow ##-7E engine failure departure path" },
+            { who: "PF", type: "action", text: "If requested, select HDG or LNAV" },
+            { who: "PF", type: "action", text: "Ensure appropriate roll mode is annunciated on FMA" },
+            { who: "PM", type: "action", text: "Ensure appropriate roll mode is annunciated on FMA" },
+            { who: "PM", type: "action", text: "Monitor missed approach procedure" },
+
+            { type: "milestone", text: "At or above 1000 ft AFL (or as specified on Ops Advisory ##-7E)" },
+            { who: "PF", type: "callout", text: "\"LVL CHG, set speed.\"" },
+            { who: "PM", type: "action", text: "Select LVL CHG, set speed to flap retraction speed" },
+
+            { type: "milestone", text: "At flap retraction speed" },
+            { who: "PF", type: "action", text: "Check airspeed" },
+            { who: "PF", type: "callout", text: "\"Flaps up.\"" },
+            { who: "PM", type: "action", text: "Check airspeed" },
+            { who: "PM", type: "action", text: "Select flaps UP" },
+
+            { type: "milestone", text: "At flaps up maneuvering speed (UP bug)" },
+            { who: "PF", type: "callout", text: "\"MCT, ____ checklist.\"" },
+            { who: "PM", type: "action", text: "Select MCT and manually set thrust lever" },
+            { who: "PM", type: "action", text: "Accomplish appropriate non-normal checklist(s)" },
+            { who: "PM", type: "action", text: "Accomplish PM's After Takeoff Flow and After Takeoff Checklist" }
           ],
           images: [],
           panelState: [
@@ -3198,21 +3524,29 @@ const FLIGHT_DATA = {
         },
         {
           id: "rejected_landing",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Rejected Landing",
-          trigger: "Go-around initiated near or after touchdown — before reverse thrust selection",
-          description: "Two cases. (1) Before touchdown and touchdown occurs: continue normal go-around procedures — FD GA mode continues guidance throughout. The takeoff config warning may sound momentarily if flaps not yet at 15. (2) After touchdown but before reversers: smoothly advance thrust to GA, maintain landing flap config, verify speedbrakes retracted and autobrakes disarmed, rotate at VREF, then continue normal go-around. ⚠ Once reverse thrust is initiated, a full stop landing MUST be made.",
-          items: [
-            { num: 1, name: "Call", setting: "PF: \"Go around\"", critical: true, subitems: [] },
-            { num: 2, name: "Thrust levers", setting: "Smoothly advance to go-around thrust", critical: true, subitems: [] },
-            { num: 3, name: "Configuration", setting: "MAINTAIN landing flap configuration (do NOT reconfigure)", critical: true, subitems: [] },
-            { num: 4, name: "Speedbrakes", setting: "Verify RETRACTED", critical: true, subitems: [] },
-            { num: 5, name: "Autobrakes", setting: "Verify DISARM", critical: true, subitems: [] },
-            { num: 6, name: "At VREF", setting: "PM: \"Rotate\" — PF smoothly rotates toward 15° pitch", critical: true, subitems: [
-              { name: "FD pitch command not used for rotation; column forces during rotation can vary", isNote: true }
-            ]},
-            { num: 7, name: "When safely airborne", setting: "Verify positive rate → select TO/GA to attain FD GA mode → continue Normal Go-Around", critical: true, subitems: [] }
+          title: "Rejected Landing — Go-Around After Touchdown (Before Reversers)",
+          trigger: "Go-around initiated after touchdown but before thrust reverser selection",
+          description: "⚠ After reverse thrust is initiated, a full stop landing MUST be made — if an engine stays in reverse, safe flight is not possible. (Before touchdown case: continue Normal Go-Around procedures; FD GA mode continues guidance throughout.)",
+          calloutSequence: [
+            { type: "milestone", text: "Go-Around" },
+            { who: "PF", type: "callout", text: "\"Go around.\"" },
+            { who: "PF", type: "action", text: "Smoothly advance thrust levers to go-around thrust" },
+            { who: "PF", type: "action", text: "Maintain landing flap configuration" },
+            { who: "PM", type: "action", text: "Verify SPEEDBRAKES retracted" },
+            { who: "PM", type: "action", text: "Verify autobrakes disarm" },
+            { who: "PM", type: "action", text: "Verify desired thrust is set" },
+
+            { type: "milestone", text: "At VREF" },
+            { who: "PM", type: "callout", text: "\"Rotate.\"" },
+            { who: "PF", type: "action", text: "Smoothly rotate toward 15° pitch attitude (FD pitch command NOT used for rotation; column forces can vary)" },
+
+            { type: "milestone", text: "When safely airborne" },
+            { who: "PF", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "action", text: "Select TO/GA to attain FD go-around mode" },
+            { who: "PM", type: "action", text: "Verify positive rate of climb on altimeter" },
+            { who: "PF", type: "action", text: "Continue Normal Go-Around" }
           ],
           images: [],
           panelState: [
@@ -3234,22 +3568,34 @@ const FLIGHT_DATA = {
         },
         {
           id: "prm_breakouts",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "PRM Breakouts (Climbing & Descending)",
+          title: "PRM Breakouts (Climbing & Descending) — Actions & Callouts",
           trigger: "ATC: \"Traffic alert\" during PRM approach",
-          description: "Aggressive immediate maneuver away from a closely-spaced parallel runway approach when ATC issues a traffic alert. Disconnect AP/AT, immediately turn and climb (or descend, max 1000 fpm) as directed. Follow TCAS RA vertical guidance if received. If currently on approach with LOC/GS captured, cycle both flight directors OFF then ON.",
-          items: [
-            { num: 1, name: "Call", setting: "PF: \"Breakout\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage simultaneously", critical: true, subitems: [] },
-            { num: 3, name: "Heading", setting: "Immediately turn to ATC-assigned heading", critical: true, subitems: [] },
-            { num: 4, name: "Altitude — CLIMBING breakout", setting: "Immediately climb to ATC-assigned altitude", critical: true, subitems: [] },
-            { num: 5, name: "Altitude — DESCENDING breakout", setting: "Immediately descend to ATC-assigned altitude — NOT to exceed 1000 fpm", critical: true, subitems: [] },
-            { num: 6, name: "TCAS RA (if received)", setting: "Follow RA vertical guidance (overrides ATC vertical, comply with ATC lateral)", critical: true, subitems: [] },
-            { num: 7, name: "If LOC/GS captured", setting: "Both flight directors OFF, then ON", critical: true, subitems: [] },
-            { num: 8, name: "Set up MCP", setting: "Heading on MCP, HDG SEL; altitude on MCP, LVL CHG or V/S", critical: true, subitems: [] },
-            { num: 9, name: "Set speed", setting: "PF: \"Set speed ___\"", critical: false, subitems: [] },
-            { num: 10, name: "Leveled off & on heading", setting: "Re-establish automation, reconfigure as desired", critical: false, subitems: [] }
+          description: "Aggressive immediate maneuver away from a closely-spaced parallel runway approach when ATC issues a traffic alert. Disconnect AP/AT, immediately turn and climb (or descend, max 1000 fpm) as directed. Follow TCAS RA vertical guidance if received. If currently on approach with LOC/GS captured, cycle both flight directors OFF then ON. Climbing and descending procedures are identical except for the vertical action.",
+          calloutSequence: [
+            { type: "milestone", text: "ATC advised \"Traffic alert\"" },
+            { who: "PF", type: "callout", text: "\"Breakout.\"" },
+            { who: "PF", type: "action", text: "Simultaneously: Disengage the autopilot" },
+            { who: "PF", type: "action", text: "Disengage the autothrottle" },
+            { who: "PF", type: "action", text: "Immediately turn to assigned heading as directed by ATC" },
+            { who: "PF", type: "action", text: "CLIMBING breakout: Immediately climb to assigned altitude as directed by ATC" },
+            { who: "PF", type: "action", text: "DESCENDING breakout: Immediately descend to assigned altitude as directed, NOT to exceed 1000 fpm" },
+            { who: "PF", type: "action", text: "Follow TCAS RA vertical guidance, if received" },
+            { who: "PF", type: "action", text: "If on an approach with LOC/GS captured, select both Flight Directors OFF, then ON" },
+            { who: "PM", type: "action", text: "Set desired heading on MCP" },
+            { who: "PM", type: "action", text: "Select HDG SEL" },
+            { who: "PM", type: "action", text: "Set desired altitude on MCP" },
+            { who: "PM", type: "action", text: "Select appropriate pitch mode (LVL CHG or V/S)" },
+            { who: "PM", type: "action", text: "Verify all needed actions have been completed" },
+            { who: "PF", type: "callout", text: "\"Set speed ___.\"" },
+            { who: "PM", type: "action", text: "Set speed as requested" },
+            { who: "PM", type: "action", text: "Monitor flight path and speed: call out deviations" },
+
+            { type: "milestone", text: "Leveled off and established on heading" },
+            { who: "PF", type: "action", text: "Reestablish automation" },
+            { who: "PF", type: "action", text: "Reconfigure aircraft, as desired" },
+            { who: "PM", type: "action", text: "Reconfigure aircraft, as desired" }
           ],
           images: [],
           panelState: [
@@ -3363,24 +3709,39 @@ const FLIGHT_DATA = {
       steps: [
         {
           id: "stall_recovery",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Approach to Stall / Stall Recovery",
+          title: "Approach to Stall / Stall Recovery — Actions & Callouts",
           trigger: "First indication of stall — buffet OR stickshaker",
           description: "Recover from any approach to stall as if a real stall has occurred. Reduction of angle of attack is the SINGLE MOST IMPORTANT action. Do NOT use flight director commands during recovery. Same procedure for impending stall and full stall.",
-          items: [
-            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Control column", setting: "Hold firmly", critical: true, subitems: [] },
-            { num: 3, name: "Autopilot & Autothrottle", setting: "DISENGAGE both", critical: true, subitems: [] },
-            { num: 4, name: "Reduce AoA", setting: "Smoothly apply nose-down elevator until buffet/stickshaker stops — nose-down stab trim if needed", critical: true, subitems: [
-              { name: "Excessive trim or rudder can aggravate the condition or cause loss of control / high structural loads", isNote: true },
-              { name: "High thrust + low airspeed: elevator may not have authority — REDUCING thrust may help (underwing engines pitch up with thrust)", isNote: true }
-            ]},
-            { num: 5, name: "Roll wings level", setting: "Shortest direction — only after AoA reduced", critical: true, subitems: [] },
-            { num: 6, name: "Thrust", setting: "Advance thrust levers as needed", critical: true, subitems: [] },
-            { num: 7, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
-            { num: 8, name: "Configuration", setting: "Do NOT change gear/flap config — EXCEPTION: at liftoff with flaps up, call for flaps 1", critical: true, subitems: [] },
-            { num: 9, name: "Complete the recovery", setting: "Check airspeed, adjust thrust, establish pitch, return to flight path, re-engage AP/AT if desired", critical: true, subitems: [] }
+          calloutSequence: [
+            { who: "PF", type: "action", text: "Recognize and confirm the situation" },
+
+            { type: "milestone", text: "First indication of stall (buffet or stickshaker)" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Initiate the recovery — Hold the control column firmly" },
+            { who: "PF", type: "action", text: "Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Smoothly apply nose down elevator to reduce angle of attack until buffet or stick shaker stops. Nose down stabilizer trim may be needed." },
+            { who: "PM", type: "action", text: "Monitor attitude, airspeed, and altitude" },
+            { who: "PM", type: "action", text: "Verify all actions have been completed and call out: any omissions; trend toward terrain contact (e.g., \"300 Feet Descending\", \"400 Feet Climbing\")" },
+
+            { type: "milestone", text: "Continue the recovery" },
+            { who: "PF", type: "action", text: "Roll in the shortest direction to wings level if needed" },
+            { who: "PF", type: "action", text: "Advance thrust levers as needed (with high-thrust engines, REDUCING thrust may aid pitch control — underwing engines have nose-up pitch moment with thrust)" },
+            { who: "PF", type: "action", text: "Retract the speedbrakes" },
+            { who: "PF", type: "action", text: "Do NOT change gear or flap configuration, except: during liftoff with flaps up, call for flaps 1" },
+            { who: "PM", type: "action", text: "Monitor attitude, airspeed, and altitude" },
+            { who: "PM", type: "action", text: "Verify all actions completed and call out omissions / terrain trend" },
+            { who: "PM", type: "action", text: "Set the FLAP lever as directed" },
+
+            { type: "milestone", text: "Complete the recovery" },
+            { who: "PF", type: "action", text: "Check airspeed and adjust thrust as needed" },
+            { who: "PF", type: "action", text: "Establish pitch attitude" },
+            { who: "PF", type: "action", text: "Return to the desired flight path" },
+            { who: "PF", type: "action", text: "Re-engage the autopilot and autothrottle if desired" },
+            { who: "PM", type: "action", text: "Monitor attitude, airspeed, and altitude" },
+            { who: "PM", type: "action", text: "Verify all actions completed and call out omissions / terrain trend" }
           ],
           images: [],
           panelState: [
@@ -3408,22 +3769,31 @@ const FLIGHT_DATA = {
         },
         {
           id: "upset_nose_high",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Upset Recovery — Nose High",
+          title: "Upset Recovery — Nose High — Actions & Callouts",
           trigger: "Pitch >25° nose up (or inappropriate airspeed for conditions)",
           description: "Recover from stall first if stalled. Then disconnect AP/AT, apply nose-down elevator, nose-down trim if needed, REDUCE thrust (underwing engines pitch up with thrust), and roll (up to 60° bank) to obtain a nose-down pitch rate. As airspeed increases, roll wings level approaching the horizon.",
-          items: [
-            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
-            { num: 3, name: "Nose-down elevator", setting: "As much as needed to obtain nose-down pitch rate", critical: true, subitems: [] },
-            { num: 4, name: "Nose-down stabilizer trim", setting: "Apply as needed (incremental)", critical: true, subitems: [
-              { name: "Stop trimming when g lessens or required column force lessens", isNote: true },
-              { name: "Excessive trim/rudder can aggravate the upset", isNote: true }
-            ]},
-            { num: 5, name: "Reduce thrust", setting: "Helps achieve nose-down pitch rate (underwing engines pitch up with thrust)", critical: true, subitems: [] },
-            { num: 6, name: "Roll to obtain nose-down pitch rate", setting: "Bank ~45°, up to maximum 60° — unload wing with continuous nose-down elevator", critical: true, subitems: [] },
-            { num: 7, name: "When airspeed sufficiently increasing — complete recovery", setting: "Approaching horizon → roll wings level → check airspeed and adjust thrust → establish pitch", critical: true, subitems: [] }
+          calloutSequence: [
+            { who: "PF", type: "action", text: "Recognize and confirm the situation" },
+
+            { type: "milestone", text: "First indication of nose high upset" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Recover: Apply nose down elevator. Apply as much elevator as needed to obtain a nose down pitch rate" },
+            { who: "PF", type: "action", text: "Apply appropriate nose down stabilizer trim (excessive use of pitch trim or rudder can aggravate upset, result in loss of control or high structural loads)" },
+            { who: "PF", type: "action", text: "Reduce thrust" },
+            { who: "PF", type: "action", text: "Roll (adjust bank angle) to obtain a nose down pitch rate" },
+            { who: "PM", type: "action", text: "Verify all actions have been completed and call out any omissions" },
+            { who: "PM", type: "action", text: "Monitor attitude, airspeed, and altitude throughout the recovery" },
+            { who: "PM", type: "action", text: "Call out any continued deviation" },
+
+            { type: "milestone", text: "When airspeed is sufficiently increasing" },
+            { who: "PF", type: "action", text: "Complete the recovery: When approaching the horizon, roll to wings level" },
+            { who: "PF", type: "action", text: "Check airspeed and adjust thrust" },
+            { who: "PF", type: "action", text: "Establish pitch attitude" },
+            { who: "PM", type: "action", text: "Verify all needed actions have been done" }
           ],
           images: [],
           panelState: [
@@ -3449,18 +3819,29 @@ const FLIGHT_DATA = {
         },
         {
           id: "upset_nose_low",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Upset Recovery — Nose Low",
+          title: "Upset Recovery — Nose Low — Actions & Callouts",
           trigger: "Pitch >10° nose down (or inappropriate airspeed for conditions)",
           description: "Recover from stall first if stalled. Then disengage AP/AT, ROLL wings level (shortest direction — if bank >90°, unload and roll). When airspeed is sufficiently decreasing, apply nose-up elevator, nose-up trim if needed, adjust thrust and drag.",
-          items: [
-            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
-            { num: 3, name: "Recover from stall (if needed)", setting: "Nose-down elevator until shaker stops", critical: true, subitems: [] },
-            { num: 4, name: "Roll wings level — shortest direction", setting: "If bank >90°, UNLOAD then roll", critical: true, subitems: [] },
-            { num: 5, name: "Speedbrakes", setting: "Extend as needed for high airspeed", critical: false, subitems: [] },
-            { num: 6, name: "When airspeed sufficiently decreasing — complete recovery", setting: "Apply nose-up elevator → nose-up trim if needed → adjust thrust/drag", critical: true, subitems: [] }
+          calloutSequence: [
+            { who: "PF", type: "action", text: "Recognize and confirm the situation" },
+
+            { type: "milestone", text: "First indication of nose low upset" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Recover: Recover from stall, if needed" },
+            { who: "PF", type: "action", text: "Roll in the shortest direction to wings level. If bank angle is more than 90°, UNLOAD and roll" },
+            { who: "PM", type: "action", text: "Verify all actions have been completed and call out any omissions" },
+            { who: "PM", type: "action", text: "Monitor attitude, airspeed, and altitude throughout the recovery" },
+            { who: "PM", type: "action", text: "Call out any continued deviation" },
+
+            { type: "milestone", text: "When airspeed is sufficiently decreasing" },
+            { who: "PF", type: "action", text: "Complete the recovery: Apply nose up elevator" },
+            { who: "PF", type: "action", text: "Apply nose up trim, if needed" },
+            { who: "PF", type: "action", text: "Adjust thrust and drag, if needed" },
+            { who: "PM", type: "action", text: "Verify all needed actions have been done" }
           ],
           images: [],
           panelState: [
@@ -3485,22 +3866,37 @@ const FLIGHT_DATA = {
         },
         {
           id: "windshear_escape",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Windshear Escape Maneuver",
+          title: "Windshear Escape Maneuver — Actions & Callouts",
           trigger: "Windshear encounter, predictive WS WARNING, or unacceptable flight path/airspeed deviations",
           description: "Push TO/GA, aggressively apply max thrust, disengage AP/AT, simultaneously roll wings level and rotate to 15° initial pitch. Retract speedbrakes. Follow FD TO/GA guidance without exceeding pitch limit indication. Do NOT change gear/flap configuration and do NOT attempt to regain lost airspeed until windshear is no longer a factor.",
-          items: [
-            { num: 1, name: "Call", setting: "PF: \"Escape\" → \"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot", setting: "Disengage", critical: true, subitems: [] },
-            { num: 3, name: "TO/GA", setting: "Push either TO/GA switch", critical: true, subitems: [] },
-            { num: 4, name: "Thrust", setting: "Aggressively apply MAXIMUM thrust (full forward if EECs in normal mode; firewall if terrain contact imminent)", critical: true, subitems: [] },
-            { num: 5, name: "Autothrottle", setting: "Disengage", critical: true, subitems: [] },
-            { num: 6, name: "Roll wings level + rotate", setting: "Simultaneously, to 15° initial pitch", critical: true, subitems: [] },
-            { num: 7, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
-            { num: 8, name: "FD TO/GA guidance", setting: "Follow if available — do NOT exceed pitch limit indication (PLI)", critical: true, subitems: [] },
-            { num: 9, name: "Do NOT", setting: "Change gear/flap config OR attempt to regain lost airspeed until windshear no longer a factor", critical: true, subitems: [] },
-            { num: 10, name: "After escape successful", setting: "Resume normal flight, retract gear/flaps, issue PIREP to ATC", critical: false, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "When encountering a windshear" },
+            { who: "PF", type: "callout", text: "\"Escape.\"" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Immediately and simultaneously: Disengage autopilot" },
+            { who: "PF", type: "action", text: "Push either TO/GA switch" },
+            { who: "PF", type: "action", text: "Aggressively apply MAXIMUM thrust (full forward if EECs in normal mode)" },
+            { who: "PF", type: "action", text: "Disengage the autothrottle" },
+            { who: "PF", type: "action", text: "Simultaneously roll wings level and rotate toward an initial pitch attitude of 15°" },
+            { who: "PF", type: "action", text: "Retract speedbrakes" },
+            { who: "PF", type: "action", text: "Follow flight director TO/GA guidance (if available) without exceeding pitch limit indication (PLI)" },
+            { who: "PM", type: "action", text: "Verify maximum thrust" },
+            { who: "PM", type: "action", text: "Verify all actions have been completed and call out any omissions" },
+
+            { type: "milestone", text: "Climb established" },
+            { who: "PF", type: "action", text: "Monitor vertical speed and altitude" },
+            { who: "PF", type: "action", text: "Maintain wings level to maximize climb gradient (unless turn required for obstacle clearance)" },
+            { who: "PF", type: "action", text: "Do NOT: change gear/flap configuration until windshear is no longer a factor" },
+            { who: "PF", type: "action", text: "Do NOT: attempt to regain lost airspeed until windshear is no longer a factor" },
+            { who: "PM", type: "action", text: "Monitor vertical speed and altitude" },
+            { who: "PM", type: "action", text: "Call out any trend toward terrain contact, descending flight path, or significant airspeed changes" },
+
+            { type: "milestone", text: "After escape is successful" },
+            { who: "PF", type: "action", text: "Resume normal flight" },
+            { who: "PF", type: "action", text: "Retract gear and flaps as required" },
+            { who: "PF", type: "action", text: "Issue PIREP to ATC" }
           ],
           images: [],
           panelState: [
@@ -3531,20 +3927,38 @@ const FLIGHT_DATA = {
         },
         {
           id: "egpws_warning",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "EGPWS Warning (Pull Up)",
+          title: "EGPWS Warning (Pull Up) — Actions & Callouts",
           trigger: "\"PULL UP\", \"TERRAIN TERRAIN PULL UP\", \"OBSTACLE OBSTACLE PULL UP\", or unacceptable flight toward terrain",
           description: "Aggressive pull-up escape maneuver. Disengage AP/AT, max thrust, simultaneously roll wings level and rotate to 20° initial pitch. Retract speedbrakes. If terrain remains a threat, continue rotation up to PLI/stickshaker/initial buffet. Do NOT alter gear/flap configuration until terrain clearance assured. Cautions get a configuration/path correction or go-around — not the escape maneuver.",
-          items: [
-            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage simultaneously", critical: true, subitems: [] },
-            { num: 3, name: "Thrust", setting: "Aggressively apply MAXIMUM thrust", critical: true, subitems: [] },
-            { num: 4, name: "Pitch", setting: "Simultaneously roll wings level and rotate to 20° initial pitch attitude", critical: true, subitems: [] },
-            { num: 5, name: "Speedbrakes", setting: "RETRACT", critical: true, subitems: [] },
-            { num: 6, name: "If terrain remains threat", setting: "Continue rotation up to PLI / stickshaker / initial buffet", critical: true, subitems: [] },
-            { num: 7, name: "Configuration", setting: "Do NOT alter gear/flap config until terrain clearance assured", critical: true, subitems: [] },
-            { num: 8, name: "When clear of terrain", setting: "Slowly decrease pitch, accelerate, retract gear/flaps as required, climb to safe altitude, resume normal flight", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Caution alert (AIRSPEED LOW, CAUTION TERRAIN/OBSTACLE, SINK RATE, TERRAIN, DON'T SINK, TOO LOW FLAPS/GEAR/TERRAIN, GLIDESLOPE, BANK ANGLE)" },
+            { who: "PF", type: "action", text: "Correct the flight path, aircraft configuration, or airspeed" },
+            { who: "PF", type: "action", text: "If on approach and stabilized approach requirements cannot be met → execute a go-around" },
+
+            { type: "milestone", text: "Ground proximity WARNING alert (PULL UP, TERRAIN TERRAIN PULL UP, OBSTACLE OBSTACLE PULL UP)" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Immediately and simultaneously: Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Aggressively apply MAXIMUM thrust" },
+            { who: "PF", type: "action", text: "Simultaneously roll wings level and rotate to an initial pitch attitude of 20°" },
+            { who: "PF", type: "action", text: "Retract speedbrakes" },
+            { who: "PF", type: "action", text: "If terrain remains a threat, continue rotation up to the pitch limit indicator (if available) or stick shaker or initial buffet" },
+            { who: "PF", type: "action", text: "Monitor radio altimeter for sustained or increasing terrain separation" },
+            { who: "PM", type: "action", text: "Ensure maximum thrust" },
+            { who: "PM", type: "action", text: "Verify all actions have been completed and call out any omissions" },
+            { who: "PM", type: "action", text: "Monitor vertical speed and altitude (radio altitude for terrain clearance, baro altitude for MSA)" },
+            { who: "PM", type: "action", text: "Call out any trend toward terrain contact (e.g., \"300 Feet Descending\", \"400 Feet Climbing\")" },
+
+            { type: "milestone", text: "Configuration" },
+            { who: "PF", type: "action", text: "Do NOT alter gear/flap configuration until terrain clearance is assured" },
+
+            { type: "milestone", text: "When clear of the terrain" },
+            { who: "PF", type: "action", text: "Slowly decrease pitch attitude, and accelerate" },
+            { who: "PF", type: "action", text: "Retract gear/flaps as required" },
+            { who: "PF", type: "action", text: "Climb to safe altitude" },
+            { who: "PF", type: "action", text: "Resume normal flight" }
           ],
           images: [],
           panelState: [
@@ -3570,15 +3984,19 @@ const FLIGHT_DATA = {
         },
         {
           id: "tcas_ta",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "TCAS — Traffic Advisory (TA)",
+          title: "TCAS — Traffic Advisory (TA) — Actions & Callouts",
           trigger: "TCAS TA aural and traffic display",
           description: "Do NOT maneuver based on a TA alone. Both pilots look for the traffic using the display as a guide and call out conflicts. If traffic is sighted and a maneuver is necessary, maneuver visually.",
-          items: [
-            { num: 1, name: "Both pilots", setting: "Look for traffic using TA display as a guide", critical: true, subitems: [] },
-            { num: 2, name: "Call out", setting: "Any conflicting traffic", critical: true, subitems: [] },
-            { num: 3, name: "If traffic sighted and maneuver needed", setting: "Maneuver visually if needed", critical: false, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "TCAS Traffic Advisory (TA) occurs" },
+            { who: "PF", type: "action", text: "Look for traffic using traffic display as a guide" },
+            { who: "PF", type: "action", text: "Call out any conflicting traffic" },
+            { who: "PM", type: "action", text: "Look for traffic using traffic display as a guide" },
+            { who: "PM", type: "action", text: "Call out any conflicting traffic" },
+
+            { type: "milestone", text: "If traffic is sighted, maneuver if needed" }
           ],
           images: [],
           panelState: [
@@ -3595,18 +4013,38 @@ const FLIGHT_DATA = {
         },
         {
           id: "tcas_ra",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "TCAS — Resolution Advisory (RA)",
+          title: "TCAS — Resolution Advisory (RA) — Actions & Callouts",
           trigger: "TCAS RA — \"Climb / Descend / Adjust vertical speed / Maintain vertical speed\"",
           description: "Pilot must respond IMMEDIATELY to RA displays — even if conflicts with ATC. Disengage AP/AT, smoothly adjust pitch and thrust to satisfy the RA. Follow planned lateral path unless visual contact requires otherwise. SPECIAL CASE: a Climb RA in landing configuration uses an explicit go-around-style procedure (max thrust, flaps 15, gear up).",
-          items: [
-            { num: 1, name: "PF assumes control", setting: "\"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Autopilot & Autothrottle", setting: "Disengage", critical: true, subitems: [] },
-            { num: 3, name: "Pitch & thrust", setting: "Smoothly adjust to satisfy the RA command", critical: true, subitems: [] },
-            { num: 4, name: "Lateral path", setting: "Follow planned lateral path unless visual with conflict requires otherwise", critical: true, subitems: [] },
-            { num: 5, name: "PM", setting: "Attempt visual contact, call out conflicting traffic", critical: false, subitems: [] },
-            { num: 6, name: "Climb RA in landing configuration", setting: "AP/AT disengage → advance thrust to MAX → \"Flaps 15\" → \"Positive Rate\" → \"Gear Up\" → satisfy RA", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "TCAS Resolution Advisory (RA) — Standard (NOT a climb in landing configuration)" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "If maneuvering is required: Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Smoothly adjust pitch and thrust to satisfy the RA command" },
+            { who: "PF", type: "action", text: "Follow the planned lateral flight path unless visual contact with conflicting traffic requires other action" },
+            { who: "PM", type: "action", text: "Attempt to establish visual contact" },
+            { who: "PM", type: "action", text: "Call out any conflicting traffic" },
+
+            { type: "milestone", text: "Climb RA in Landing Configuration" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+            { who: "PF", type: "action", text: "Disengage autopilot" },
+            { who: "PF", type: "action", text: "Disengage autothrottle" },
+            { who: "PF", type: "action", text: "Advance thrust levers forward to ensure maximum thrust is attained" },
+            { who: "PM", type: "action", text: "Verify maximum thrust set" },
+            { who: "PF", type: "callout", text: "\"Flaps 15.\"" },
+            { who: "PF", type: "action", text: "Smoothly adjust pitch to satisfy the RA command" },
+            { who: "PF", type: "action", text: "Follow the planned lateral flight path unless visual contact with conflicting traffic requires other action" },
+            { who: "PM", type: "action", text: "Position flap lever to 15" },
+            { who: "PM", type: "action", text: "Verify a positive rate of climb on the altimeter" },
+            { who: "PF", type: "callout", text: "\"Positive Rate.\"" },
+            { who: "PF", type: "action", text: "Verify a positive rate of climb on the altimeter" },
+            { who: "PF", type: "callout", text: "\"Gear Up.\"" },
+            { who: "PM", type: "action", text: "Landing Gear Lever UP" },
+            { who: "PM", type: "action", text: "Attempt to establish visual contact" },
+            { who: "PM", type: "action", text: "Call out any conflicting traffic" }
           ],
           images: [],
           panelState: [
@@ -3635,23 +4073,46 @@ const FLIGHT_DATA = {
         },
         {
           id: "emergency_descent",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Emergency Descent",
+          title: "Emergency Descent — Actions & Callouts",
           trigger: "Rapid loss of cabin pressure or other condition requiring rapid descent",
           description: "PF: \"Emergency descent\", \"My aircraft\". Set MCP to lower altitude (10,000 ft or MSA, whichever higher), select LVL CHG, close thrust levers, deploy speedbrakes to flight detent, set MMO/VMO. PM applies the QRC, selects START switches CONT, makes the PA, notifies ATC, and calls out 2000 and 1000 above level off.",
-          items: [
-            { num: 1, name: "Call", setting: "PF: \"Emergency descent\" → \"My aircraft\"", critical: true, subitems: [] },
-            { num: 2, name: "Altitude", setting: "Set lower altitude on MCP — descend to 10,000 ft or MSA (whichever higher)", critical: true, subitems: [] },
-            { num: 3, name: "LVL CHG", setting: "Select", critical: true, subitems: [] },
-            { num: 4, name: "Thrust levers (both)", setting: "CLOSE — reduce thrust to minimum (or as needed for anti-ice)", critical: true, subitems: [] },
-            { num: 5, name: "Speedbrakes", setting: "FLIGHT DETENT", critical: true, subitems: [] },
-            { num: 6, name: "Speed", setting: "Set MMO/VMO (limit if structural integrity in doubt — avoid high maneuvering loads)", critical: true, subitems: [] },
-            { num: 7, name: "Heading", setting: "Turn (HDG SEL) to clear airway/track, or proceed straight ahead", critical: false, subitems: [] },
-            { num: 8, name: "PM duties", setting: "Apply QRC, START switches CONT, PA \"Emergency descent — Use oxygen — Fasten seat belts\", FASTEN BELTS ON, notify ATC, request altimeter, check safe altitude (MEA/MOCA/MORA/MSA)", critical: true, subitems: [] },
-            { num: 9, name: "When cabin <10,000 ft", setting: "Notify flight attendants", critical: false, subitems: [] },
-            { num: 10, name: "2000 ft above level off", setting: "PM: \"2000 feet above level off\"", critical: false, subitems: [] },
-            { num: 11, name: "1000 ft above level off", setting: "PM: \"1000 feet above level off\" — speedbrakes RETRACT", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "Emergency descent required" },
+            { who: "PF", type: "callout", text: "\"Emergency Descent.\"" },
+            { who: "PF", type: "callout", text: "\"My aircraft.\"" },
+
+            { type: "milestone", text: "Altitude" },
+            { who: "PF", type: "action", text: "Set MCP lower — Select a lower altitude and after descent is established select appropriate altitude" },
+            { who: "PF", type: "action", text: "Descend to 10,000 feet or minimum safe altitude (whichever is higher)" },
+            { who: "PF", type: "action", text: "Continue descent to 10,000 feet when able" },
+
+            { type: "milestone", text: "Airspeed" },
+            { who: "PF", type: "action", text: "Select LVL CHG" },
+            { who: "PF", type: "action", text: "Close Thrust Levers (both) — reduce thrust to minimum or as needed for anti-ice" },
+            { who: "PF", type: "action", text: "Speedbrakes — FLIGHT DETENT" },
+            { who: "PF", type: "action", text: "Set MMO/VMO (if structural integrity in doubt, limit speed and avoid high maneuvering loads)" },
+
+            { type: "milestone", text: "Heading" },
+            { who: "PF", type: "action", text: "Select a turn or proceed straight ahead" },
+
+            { type: "milestone", text: "PM duties" },
+            { who: "PM", type: "action", text: "Notify ATC and request altimeter setting" },
+            { who: "PM", type: "callout", text: "PA: \"Emergency descent - Use Oxygen - Fasten Seat Belts.\"" },
+            { who: "PM", type: "action", text: "FASTEN BELTS — ON" },
+            { who: "PM", type: "action", text: "ENGINE START switches — CONT" },
+            { who: "PM", type: "action", text: "Check safe altitude (MEA, MOCA, MORA, MSA, depressurization cloud altitudes)" },
+
+            { type: "milestone", text: "When cabin has descended below 10,000 feet" },
+            { who: "PM", type: "action", text: "Notify flight attendants" },
+
+            { type: "milestone", text: "2000 feet above level off" },
+            { who: "PM", type: "callout", text: "\"2000 feet above level off.\"" },
+
+            { type: "milestone", text: "1000 feet above level off" },
+            { who: "PM", type: "callout", text: "\"1000 feet above level off.\"" },
+            { who: "PF", type: "action", text: "Speedbrakes — Retract" }
           ],
           images: [],
           panelState: [
@@ -3681,21 +4142,36 @@ const FLIGHT_DATA = {
         },
         {
           id: "driftdown",
-          type: "flow",
+          type: "callout",
           who: "PF/PM",
-          title: "Driftdown / One Engine Cruise",
+          title: "Driftdown / One Engine Cruise — Actions & Callouts",
           trigger: "Engine fails at cruise — current altitude not maintainable, minimum descent rate desired",
           description: "Disconnect autothrottle, set MCT on operating engine, set engine-out driftdown speed in IAS/MACH window, set max engine-out altitude in MCP altitude. After aircraft decelerates to driftdown speed, select LVL CHG. PM notifies ATC and refers to QRH > ENGINES, APU > Driftdown and One Engine Cruise.",
-          items: [
-            { num: 1, name: "Autothrottle", setting: "DISENGAGE", critical: true, subitems: [] },
-            { num: 2, name: "Operating engine thrust lever", setting: "Set MCT", critical: true, subitems: [] },
-            { num: 3, name: "MCP IAS/MACH", setting: "Set engine-out driftdown speed (.79/335 KIAS over water on Long Overwater Flights)", critical: true, subitems: [] },
-            { num: 4, name: "MCP altitude", setting: "Set max engine-out altitude", critical: true, subitems: [] },
-            { num: 5, name: "After decel to driftdown speed", setting: "Select LVL CHG", critical: true, subitems: [] },
-            { num: 6, name: "PM", setting: "Notify ATC, request altimeter, refer to QRH ENGINES/APU > Driftdown and One Engine Cruise", critical: true, subitems: [] },
-            { num: 7, name: "After bottom of driftdown — terrain a concern", setting: "Continue MCT, cruise/climb at driftdown speed", critical: true, subitems: [] },
-            { num: 8, name: "After bottom of driftdown — terrain NOT a concern", setting: "Use One Engine LRC chart, level at desired alt, set thrust for level cruise (not exceeding MCT), cruise at One Engine LRC", critical: true, subitems: [] },
-            { num: 9, name: "Long Overwater portion", setting: "Use One Engine High Speed Cruise chart, MCT, 335 KIAS", critical: true, subitems: [] }
+          calloutSequence: [
+            { type: "milestone", text: "An engine fails, current altitude cannot be maintained, minimum descent rate desired" },
+            { who: "PF", type: "action", text: "Autothrottle — Disengage" },
+            { who: "PF", type: "action", text: "Thrust Lever operating engine — Set MCT" },
+            { who: "PF", type: "action", text: "MCP IAS/MACH window — Set engine out driftdown speed (.79/335 KIAS over water on Long Overwater Flights)" },
+            { who: "PF", type: "action", text: "MCP ALTITUDE window — Set maximum engine out altitude" },
+
+            { type: "milestone", text: "After aircraft decelerates to driftdown speed" },
+            { who: "PF", type: "action", text: "Select LVL CHG" },
+            { who: "PM", type: "action", text: "Notify ATC and request altimeter setting" },
+            { who: "PM", type: "action", text: "Refer to QRH > ENGINES, APU > Driftdown and One Engine Cruise" },
+
+            { type: "milestone", text: "After reaching bottom of driftdown — Terrain clearance IS a concern" },
+            { who: "PF", type: "action", text: "Thrust: Continue with MCT" },
+            { who: "PF", type: "action", text: "Speed: Cruise/Climb at the driftdown speed" },
+
+            { type: "milestone", text: "After reaching bottom of driftdown — Terrain clearance is NOT a concern" },
+            { who: "PF", type: "action", text: "Altitude: Use the One Engine LRC chart and level off at desired cruise altitude" },
+            { who: "PF", type: "action", text: "Thrust: Set thrust to maintain level cruise (do not exceed MCT)" },
+            { who: "PF", type: "action", text: "Speed: Cruise at One Engine LRC" },
+
+            { type: "milestone", text: "If over water portion of Long Overwater Flights" },
+            { who: "PF", type: "action", text: "Altitude: Use the appropriate One Engine High Speed Cruise chart" },
+            { who: "PF", type: "action", text: "Thrust: Continue with MCT" },
+            { who: "PF", type: "action", text: "Speed: Cruise/Climb at 335 KIAS — use One Engine High Speed Cruise chart" }
           ],
           images: [],
           panelState: [
