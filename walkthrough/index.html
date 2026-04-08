@@ -958,7 +958,7 @@ body {
 /* ===== RESPONSIVE — TABLET ===== */
 @media (max-width: 768px) {
   :root {
-    --sidebar-width: 240px;
+    --sidebar-width: 260px;
   }
   .btn-menu { display: block; }
   .sidebar {
@@ -969,16 +969,77 @@ body {
     z-index: 200;
     transform: translateX(-100%);
     transition: transform 0.25s ease;
+    width: var(--sidebar-width);
+    max-width: 85vw;
   }
   .sidebar.open { transform: translateX(0); }
   .sidebar-overlay.open { display: block; }
   .app-layout { margin-left: 0; }
-  .main-content { padding: 20px 24px; }
+  .main-content {
+    padding: 20px 24px;
+    /* Allow native vertical scroll; horizontal swipes are captured in JS for nav */
+    touch-action: pan-y;
+    /* Subtle translate during swipe via inline transform */
+    transition: transform 0.18s ease;
+    will-change: transform;
+  }
+  .main-content.swiping { transition: none; }
   .header-title span { display: none; }
   .progress-bar-outer { width: 100px; }
   .btn-header { padding: 5px 10px; font-size: 0.75rem; }
   .nav-keys { display: none; }
-  .btn-nav { padding: 8px 14px; font-size: 0.8rem; }
+  .btn-nav {
+    padding: 12px 18px;
+    font-size: 0.88rem;
+    min-height: 44px; /* iOS touch target */
+    min-width: 44px;
+  }
+  /* Bigger hamburger target */
+  .btn-menu {
+    font-size: 1.5rem;
+    padding: 8px 12px;
+    min-height: 44px;
+    min-width: 44px;
+  }
+  /* Bigger phase list touch targets */
+  .phase-header { padding: 14px 18px; min-height: 48px; }
+  .step-item { padding: 12px 18px 12px 36px; min-height: 44px; }
+  /* Edge-swipe catcher: invisible strip on left edge to open sidebar */
+  .edge-swipe-catcher {
+    display: block;
+    position: fixed;
+    top: var(--header-height);
+    bottom: var(--nav-height);
+    left: 0;
+    width: 18px;
+    z-index: 150;
+    touch-action: pan-y;
+  }
+  /* Swipe hint toast */
+  .swipe-hint {
+    position: fixed;
+    left: 50%;
+    bottom: calc(var(--nav-height) + 18px);
+    transform: translateX(-50%);
+    background: rgba(0,0,0,0.85);
+    color: #fff;
+    padding: 10px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    z-index: 300;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    white-space: nowrap;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  .swipe-hint.show { opacity: 1; }
+}
+/* Hide edge-swipe catcher on desktop */
+.edge-swipe-catcher { display: none; }
+.swipe-hint { display: none; }
+@media (max-width: 768px) {
+  .swipe-hint { display: block; }
 }
 
 /* ===== RESPONSIVE — PHONE ===== */
@@ -1043,10 +1104,12 @@ body {
 </header>
 
 <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+<div class="edge-swipe-catcher" id="edgeSwipeCatcher"></div>
 <div class="app-layout">
   <nav class="sidebar" id="sidebar"></nav>
   <main class="main-content" id="main"></main>
 </div>
+<div class="swipe-hint" id="swipeHint">Swipe left/right to navigate &nbsp;&middot;&nbsp; swipe from left edge for menu</div>
 
 <div class="nav-bar" id="navBar">
   <button class="btn-nav" id="btnPrev" onclick="prevStep()">&#9664; Previous</button>
@@ -1704,6 +1767,179 @@ body {
     state.helpOpen = !state.helpOpen;
     $('helpModal').classList.toggle('open', state.helpOpen);
   };
+
+  // ===== TOUCH / SWIPE NAVIGATION (MOBILE ONLY) =====
+  (function setupSwipe() {
+    const MOBILE_BREAKPOINT = 768;
+    const isMobile = () => window.innerWidth <= MOBILE_BREAKPOINT;
+
+    // Treat these as "do not hijack swipe" — they need native horizontal pan
+    // (scrollable horizontally, or dragged by user)
+    const NO_SWIPE_SELECTOR =
+      '.callout-grid, .image-gallery, .flashcard-preview, .modal, .lightbox, ' +
+      '.help-modal, img, a, button, input, textarea, select, [data-no-swipe]';
+
+    function shouldIgnoreSwipe(target) {
+      if (!target) return false;
+      if (target.closest && target.closest(NO_SWIPE_SELECTOR)) return true;
+      // Element is horizontally scrollable and has overflow
+      let el = target;
+      while (el && el !== document.body) {
+        const cs = window.getComputedStyle(el);
+        if (el.scrollWidth > el.clientWidth + 2 &&
+            (cs.overflowX === 'auto' || cs.overflowX === 'scroll')) {
+          return true;
+        }
+        el = el.parentElement;
+      }
+      return false;
+    }
+
+    // ---- Main content area: horizontal swipe = next/prev step ----
+    const main = $('main');
+    let startX = 0, startY = 0, startT = 0;
+    let tracking = false, locked = false, direction = 0;
+    const DRAG_THRESHOLD = 10;    // px before we decide axis
+    const SWIPE_MIN_DISTANCE = 60; // px to trigger
+    const SWIPE_MAX_DURATION = 700; // ms
+    const SWIPE_AXIS_RATIO = 1.3;   // horizontal must dominate vertical
+
+    main.addEventListener('touchstart', function(e) {
+      if (!isMobile()) return;
+      if (state.lightboxOpen || state.helpOpen) return;
+      if (e.touches.length !== 1) return;
+      if (shouldIgnoreSwipe(e.target)) return;
+      const t = e.touches[0];
+      startX = t.clientX;
+      startY = t.clientY;
+      startT = Date.now();
+      tracking = true;
+      locked = false;
+      direction = 0;
+      main.classList.add('swiping');
+    }, { passive: true });
+
+    main.addEventListener('touchmove', function(e) {
+      if (!tracking) return;
+      const t = e.touches[0];
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      if (!locked) {
+        if (Math.abs(dx) < DRAG_THRESHOLD && Math.abs(dy) < DRAG_THRESHOLD) return;
+        if (Math.abs(dy) > Math.abs(dx) * 0.9) {
+          // Vertical intent → release control entirely
+          tracking = false;
+          main.style.transform = '';
+          main.classList.remove('swiping');
+          return;
+        }
+        locked = true;
+      }
+      // Apply subtle translate (damped) for visual feedback
+      const pull = Math.sign(dx) * Math.min(Math.abs(dx) * 0.35, 40);
+      main.style.transform = `translateX(${pull}px)`;
+    }, { passive: true });
+
+    function endSwipe(e) {
+      if (!tracking) return;
+      tracking = false;
+      main.classList.remove('swiping');
+      main.style.transform = '';
+      if (!locked) return;
+      const t = (e.changedTouches && e.changedTouches[0]) || null;
+      if (!t) return;
+      const dx = t.clientX - startX;
+      const dy = t.clientY - startY;
+      const dt = Date.now() - startT;
+      if (dt > SWIPE_MAX_DURATION) return;
+      if (Math.abs(dx) < SWIPE_MIN_DISTANCE) return;
+      if (Math.abs(dx) < Math.abs(dy) * SWIPE_AXIS_RATIO) return;
+      if (dx < 0) {
+        // swipe left → next
+        nextStep();
+      } else {
+        // swipe right → previous
+        prevStep();
+      }
+    }
+    main.addEventListener('touchend', endSwipe, { passive: true });
+    main.addEventListener('touchcancel', endSwipe, { passive: true });
+
+    // ---- Edge swipe catcher: swipe from left edge = open sidebar ----
+    const edge = $('edgeSwipeCatcher');
+    let edgeStartX = 0, edgeStartY = 0, edgeTracking = false;
+    edge.addEventListener('touchstart', function(e) {
+      if (!isMobile()) return;
+      if (state.lightboxOpen || state.helpOpen) return;
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      edgeStartX = t.clientX;
+      edgeStartY = t.clientY;
+      edgeTracking = true;
+    }, { passive: true });
+    edge.addEventListener('touchend', function(e) {
+      if (!edgeTracking) return;
+      edgeTracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - edgeStartX;
+      const dy = t.clientY - edgeStartY;
+      if (dx > 40 && Math.abs(dy) < Math.abs(dx)) {
+        toggleSidebar();
+      }
+    }, { passive: true });
+
+    // ---- Sidebar: swipe left inside sidebar = close ----
+    const sidebar = $('sidebar');
+    let sbStartX = 0, sbStartY = 0, sbTracking = false;
+    sidebar.addEventListener('touchstart', function(e) {
+      if (!isMobile()) return;
+      if (e.touches.length !== 1) return;
+      const t = e.touches[0];
+      sbStartX = t.clientX;
+      sbStartY = t.clientY;
+      sbTracking = true;
+    }, { passive: true });
+    sidebar.addEventListener('touchend', function(e) {
+      if (!sbTracking) return;
+      sbTracking = false;
+      const t = e.changedTouches[0];
+      const dx = t.clientX - sbStartX;
+      const dy = t.clientY - sbStartY;
+      if (dx < -50 && Math.abs(dy) < Math.abs(dx)) {
+        closeSidebar();
+      }
+    }, { passive: true });
+
+    // ---- First-visit hint on mobile ----
+    function maybeShowHint() {
+      if (!isMobile()) return;
+      try {
+        if (localStorage.getItem('aa737-swipe-hint-seen')) return;
+      } catch (_) {}
+      const hint = $('swipeHint');
+      if (!hint) return;
+      // Wait until user has actually entered the walkthrough (past welcome)
+      if (!state.started) return;
+      setTimeout(() => {
+        hint.classList.add('show');
+        setTimeout(() => {
+          hint.classList.remove('show');
+          try { localStorage.setItem('aa737-swipe-hint-seen', '1'); } catch (_) {}
+        }, 3500);
+      }, 600);
+    }
+    // Hook into startWalkthrough / resumeProgress to show hint after first render
+    const origStart = window.startWalkthrough;
+    window.startWalkthrough = function() {
+      origStart && origStart();
+      maybeShowHint();
+    };
+    const origResume = window.resumeProgress;
+    window.resumeProgress = function() {
+      origResume && origResume();
+      maybeShowHint();
+    };
+  })();
 
   // ===== KEYBOARD =====
   document.addEventListener('keydown', function(e) {
