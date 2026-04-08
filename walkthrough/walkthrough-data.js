@@ -3022,7 +3022,10 @@ const FLIGHT_DATA = {
             { who: "PF", type: "callout", text: "Captain: \"My aircraft.\"" },
             { who: "PM", type: "callout", text: "First Officer: \"Your aircraft.\"" }
           ],
-          images: [],
+          images: [
+            { file: "approach_profile_cat1_2eng", label: "CAT I ILS Approach Profile — Two Engine (AOM 10.4.5)" },
+            { file: "approach_profile_cat1_1eng", label: "CAT I ILS Approach Profile — One Engine Inoperative (AOM 10.4.5)" }
+          ],
           panelState: [
             "MCP: APP armed → LOC/GS captured → MAA set after GS capture",
             "Gear: down by ~2000 ft AFL",
@@ -3171,7 +3174,9 @@ const FLIGHT_DATA = {
             { who: "PM", type: "action", text: "Verify REV indication extinguished" },
             { who: "PM", type: "action", text: "Call out any inadvertent selection of forward thrust as reverse thrust is canceled" }
           ],
-          images: [],
+          images: [
+            { file: "approach_profile_cat23", label: "ILS CAT II/III Approach Profile (AOM 10.5.6)" }
+          ],
           panelState: [
             "HUD: AIII (or AII/IMC)",
             "MINS: RADIO DH (50 ft for CAT III)",
@@ -3334,7 +3339,9 @@ const FLIGHT_DATA = {
             { who: "PF", type: "callout", text: "Captain: \"My aircraft.\"" },
             { who: "PM", type: "callout", text: "First Officer: \"Your aircraft.\"" }
           ],
-          images: [],
+          images: [
+            { file: "approach_profile_nonils", label: "Non-ILS Approach Profile (AOM 10.6.9)" }
+          ],
           panelState: [
             "Roll: LNAV (or appropriate)",
             "Pitch: VNAV PTH → VNAV ALT/ALT HLD at minimums",
@@ -3469,7 +3476,9 @@ const FLIGHT_DATA = {
             { num: 10, name: "If not visual", setting: "Execute missed approach", critical: true, subitems: [] },
             { num: 11, name: "Missed approach", setting: "Climbing turn in shortest direction TOWARD landing runway, then established on missed approach course", critical: true, subitems: [] }
           ],
-          images: [],
+          images: [
+            { file: "approach_profile_circling", label: "Circling Approach Profile (AOM 10.8.5)" }
+          ],
           panelState: [
             "BARO MINS: max(1000 ft AFL, charted) rounded up to 100 ft",
             "MCP altitude: minimums (then MAA at MDA)",
