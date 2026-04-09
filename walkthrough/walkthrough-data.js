@@ -18,7 +18,7 @@ const FLIGHT_DATA = {
   meta: {
     title: "AA 737 FO Flight Walkthrough",
     subtitle: "Gate to Gate — Every Flow, Checklist & Callout in Sequence",
-    totalPhases: 26,
+    totalPhases: 28,
     version: "1.0.0"
   },
 
@@ -4825,6 +4825,1101 @@ const FLIGHT_DATA = {
           timing: "~15 sec",
           aomRef: "AOM 21p.1.5 TCAS Test",
           relatedFlashcards: ["Warning Systems", "Communications"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 27 — FMS WORKFLOWS (AOM 21j Flight Management, Nav)
+    // ========================================================
+    // Structured exactly like AOM 21j:
+    //   21j.1 Supplementary Procedures (abnormal / one-off items)
+    //   21j.2 FMS System Operation (LNAV, VNAV, Other)
+    //   21j.2.5 Quick Reference Guide
+    // Procedures listed verbatim in step/setting format as they appear
+    // in the AOM. Every line-select key (e.g. "[6L]"), page name, and
+    // switch callout is preserved so the flow matches the real FMC.
+    {
+      id: "fms_21j_sup",
+      number: 27,
+      title: "FMS Workflows (AOM 21j.1 Supp. Procedures)",
+      category: "reference",
+      steps: [
+
+        // ── 21j.1.1 IRS ALIGN Light(s) Flashing ───────────────
+        {
+          id: "fms_irs_align_flashing",
+          type: "flow",
+          who: "FO",
+          title: "IRS ALIGN Light(s) Flashing",
+          trigger: "One or more IRS ALIGN lights flashing (position error / disagreement)",
+          description: "Do NOT move IRS mode selector to OFF except where called for in procedure. Re-enter present position via POS INIT page; if still flashing, cycle to OFF (wait 30 sec), back to NAV, and re-enter. Persistent flashing = mx.",
+          items: [
+            { num: 1, name: "POS INIT page", setting: "Select", critical: true, subitems: [] },
+            { num: 2, name: "Set IRS position", setting: "Enter present position (most accurate lat/long available)", critical: true, subitems: [
+              { name: "If position already displayed on SET IRS POS line, enter new position over displayed position", isNote: true }
+            ]},
+            { num: 3, name: "If ALIGN light continues to flash", setting: "Re-enter same present position", critical: true, subitems: [] },
+            { num: 4, name: "If ALIGN light STILL continues to flash", setting: "IRS mode selector — OFF", critical: true, subitems: [
+              { name: "ALIGN light — Extinguished", isNote: true },
+              { name: "Wait 30 seconds; light MUST be off before continuing", isNote: true }
+            ]},
+            { num: 5, name: "IRS mode selector", setting: "NAV", critical: true, subitems: [
+              { name: "ALIGN light — Illum", isNote: true }
+            ]},
+            { num: 6, name: "Set IRS position", setting: "Enter present position", critical: true, subitems: [
+              { name: "If ALIGN flashes, re-enter same position over displayed position", isNote: true }
+            ]},
+            { num: 7, name: "If ALIGN still flashing", setting: "MAINTENANCE ACTION REQUIRED", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "IRS: NAV (or cycled through OFF)",
+            "POS INIT page reflecting current PPOS",
+            "ALIGN lights steady (or extinguished)"
+          ],
+          gotchas: [
+            "Full alignment takes 5–17 minutes (latitude dependent; longer near equator)",
+            "Do NOT move the aircraft during alignment",
+            "Never move IRS selector to OFF except when called for — loses alignment and requires full restart"
+          ],
+          timing: "5–17 min for full alignment",
+          aomRef: "AOM 21j.1.1 IRS ALIGN Light(s) Flashing",
+          relatedFlashcards: ["Navigation", "Flight Management Systems"]
+        },
+
+        // ── 21j.1.2 IRS Fast Realignment ──────────────────────
+        {
+          id: "fms_irs_fast_realign",
+          type: "flow",
+          who: "FO",
+          title: "IRS Fast Realignment",
+          trigger: "Aircraft parked after flight — faster realign option before next departure",
+          description: "Quicker than a full alignment but less precise. Aircraft must be parked and not moved until ALIGN light extinguishes. If time permits, a full alignment is preferred.",
+          items: [
+            { num: 1, name: "IRS mode selectors", setting: "ALIGN", critical: true, subitems: [
+              { name: "Observe ALIGN light illuminate STEADY", isNote: true }
+            ]},
+            { num: 2, name: "POS INIT page", setting: "Select", critical: true, subitems: [] },
+            { num: 3, name: "SET IRS POS line", setting: "Enter correct present position (PPOS)", critical: true, subitems: [
+              { name: "Use the most accurate PPOS available", isNote: true }
+            ]},
+            { num: 4, name: "Box prompts [4R]", setting: "Press — confirm box prompts replaced by entered PPOS", critical: true, subitems: [
+              { name: "If ALIGN flashes, re-enter same position to scratchpad and LSK 4R (box prompts not required)", isNote: true }
+            ]},
+            { num: 5, name: "IRS mode selectors", setting: "NAV", critical: true, subitems: [
+              { name: "Observe ALIGN lights extinguished within 30 seconds", isNote: true }
+            ]},
+            { num: 6, name: "If ALIGN continues to flash", setting: "See IRS ALIGN Light(s) Flashing procedure", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "IRS selectors: NAV after ALIGN step",
+            "ALIGN lights: extinguished within 30 sec",
+            "POS INIT: PPOS loaded"
+          ],
+          gotchas: [
+            "Aircraft must be stationary until ALIGN extinguishes",
+            "If mode selector accidentally goes to OFF or ATT: select OFF, wait for ALIGN to extinguish, then do full alignment",
+            "Full alignment is preferred when time permits"
+          ],
+          timing: "~30 sec (vs 5–17 min for full)",
+          aomRef: "AOM 21j.1.2 IRS Fast Realignment",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.3 Inadvertent ATT Mode Selection ────────────
+        {
+          id: "fms_inadvertent_att",
+          type: "flow",
+          who: "FO",
+          title: "Inadvertent Selection of Attitude Mode (Ground)",
+          trigger: "ATT mode selected on ground instead of NAV (e.g., physical switch overpowering)",
+          description: "Inadvertent ATT selection may come from physically overpowering the switch during turn-on or from a faulty switch preventing accurate mode determination.",
+          items: [
+            { num: 1, name: "If ATT position selected inadvertently when switching to NAV", setting: "IRS mode selectors — OFF", critical: true, subitems: [
+              { name: "Observe ALIGN lights extinguish", isNote: true }
+            ]},
+            { num: 2, name: "After ALIGN lights extinguish", setting: "Initiate a FULL alignment", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "IRS: OFF then NAV (full alignment)",
+            "ALIGN lights: extinguished, then illum for new alignment"
+          ],
+          gotchas: [
+            "Always verify mode selector is actually in NAV after turn-on",
+            "Suspect faulty switch if selection is uncertain — reference other panel indications"
+          ],
+          timing: "~30 sec to extinguish + full alignment time",
+          aomRef: "AOM 21j.1.3 Inadvertent Selection of Attitude Mode",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.4 Full IRS Alignment ────────────────────────
+        {
+          id: "fms_full_irs_align",
+          type: "flow",
+          who: "FO",
+          title: "Full IRS Alignment",
+          trigger: "Preferred before each flight when time allows",
+          description: "Recommended full IRS alignment before each flight. If time does not allow, refer to IRS Fast Realignment.",
+          items: [
+            { num: 1, name: "L and R IRS mode selectors", setting: "OFF then NAV", critical: true, subitems: [
+              { name: "ON DC lights — Illum then Extg", isNote: true },
+              { name: "ALIGN lights — Illum", isNote: true },
+              { name: "UNABLE REQD NAV PERF-RNP message may show until alignment complete", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "IRS: NAV",
+            "ALIGN lights: illuminated (5–17 min)",
+            "POS INIT ready for PPOS entry"
+          ],
+          gotchas: [
+            "Alignment takes 5–17 minutes, latitude dependent — longer near equator",
+            "Do NOT move aircraft during alignment",
+            "UNABLE REQD NAV PERF-RNP message is normal until alignment completes"
+          ],
+          timing: "5–17 min",
+          aomRef: "AOM 21j.1.4 Full IRS Alignment",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.5 IRS Entries ───────────────────────────────
+        {
+          id: "fms_irs_entries",
+          type: "flow",
+          who: "FO",
+          title: "IRS Entries — Present Position & Heading",
+          trigger: "Manual entry of present position or heading into IRS/FMC",
+          description: "Enter present position via ISDU (PPOS display selector) or via FMC POS INIT. Heading can be entered via CDU POS INIT (line 5R) or ISDU (HDG display selector).",
+          items: [
+            { num: "PPOS.1", name: "IRS mode selectors", setting: "NAV (ALIGN lights steady or flashing)", critical: true, subitems: [] },
+            { num: "PPOS.2", name: "IRS display selector", setting: "PPOS", critical: true, subitems: [] },
+            { num: "PPOS.3", name: "Latitude", setting: "Enter — begin with N or S, then press ENT (cue lights extinguish)", critical: true, subitems: [] },
+            { num: "PPOS.4", name: "Longitude", setting: "Enter — begin with E or W, then press ENT (cue lights extinguish)", critical: true, subitems: [
+              { name: "Verify correct lat/long displayed and ALIGN light is NOT flashing", isNote: true }
+            ]},
+            { num: "HDG.1", name: "Heading via CDU — POS INIT page", setting: "Select", critical: false, subitems: [
+              { name: "Enter correct heading into scratchpad, press LSK 5R", isNote: true },
+              { name: "Verify entered heading appears on line 5R", isNote: true },
+              { name: "IRS display selector: HDG — verify heading displayed on nav displays", isNote: true }
+            ]},
+            { num: "HDG.2", name: "Heading via ISDU", setting: "IRS display selector — HDG", critical: false, subitems: [
+              { name: "Press H key to initiate heading entry", isNote: true },
+              { name: "Key in present magnetic heading", isNote: true },
+              { name: "Press ENT key (cue lights extinguish)", isNote: true },
+              { name: "Verify proper heading on nav displays", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "IRS: NAV, ALIGN steady",
+            "ISDU: PPOS displaying entered lat/long",
+            "POS INIT: entered PPOS and heading reflected"
+          ],
+          gotchas: [
+            "Always verify the entered position against a charted parking position or GPS",
+            "Heading entry is typically only needed when GPS is unreliable or during manual alignment",
+            "Cue lights extinguish when ENT is accepted — confirms valid entry"
+          ],
+          timing: "~1 min",
+          aomRef: "AOM 21j.1.5 IRS Entries",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.6 FMC Navigation Check ──────────────────────
+        {
+          id: "fms_nav_check",
+          type: "flow",
+          who: "PF/PM",
+          title: "FMC Navigation Check",
+          trigger: "Any nav accuracy alert or suspected course deviation (e.g., FMC POS/RW DISAGREE, UNABLE REQD NAV PERF, VERIFY POS, IRS DRIFT)",
+          description: "When any position-disagreement or RNP alert is displayed, check raw data against FMC position and determine what to trust. Caution: navigating in LNAV with unreliable FMC position will cause significant navigation errors.",
+          items: [
+            { num: "RNP", name: "Default RNP values", setting: "Oceanic/Remote 12.0 / Enroute 2.0 / Terminal 1.0 / Approach 0.3", critical: false, subitems: [] },
+            { num: 1, name: "Actual position vs FMC", setting: "Determine actual position using raw data from VHF nav radios; compare with FMC position using FIX page", critical: true, subitems: [] },
+            { num: 2, name: "NAV STATUS page", setting: "Check radio updating is occurring", critical: true, subitems: [
+              { name: "If radio navaids unavailable: compare FMC position with the two IRS positions using POS REF page", isNote: true },
+              { name: "If both IRS positions agree and FMC is significantly different → FMC position is probably unreliable", isNote: true }
+            ]},
+            { num: 3, name: "POS SHIFT page (if required)", setting: "Line-select IRS or radio position, then press EXEC", critical: true, subitems: [
+              { name: "This shifts FMC position to the chosen source", isNote: true }
+            ]},
+            { num: 4, name: "Confirm actual position", setting: "ATC radar or visual reference points (if available)", critical: true, subitems: [] },
+            { num: 5, name: "Navigate using most accurate info available", setting: "VOR procedures / ATC vectors / Dead reckoning / Visual references", critical: true, subitems: [
+              { name: "Continue to monitor FMC position using VOR raw data on PM's ND", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "FIX page: reference fix with raw data verification",
+            "NAV STATUS: updating sources visible",
+            "POS REF: IRS vs FMC comparison"
+          ],
+          gotchas: [
+            "CAUTION: Navigating in LNAV with an unreliable FMC position results in significant navigation errors",
+            "Alerts that trigger this: FMC POS/RW DISAGREE, IRS POS/ORIGIN DISAGREE, GPS-L/R INVALID (both), IRS-L/R DRIFT, UNABLE REQD NAV PERF-RNP, VERIFY POS (FMC-FMC, FMC-GPS, FMC-RADIO, IRS-FMC, IRS-IRS, IRS-RADIO)",
+            "If radio navaids are unavailable, trust the IRS-to-IRS comparison before the FMC",
+            "Default RNP is auto-selected by phase; manual entry is via PROG page"
+          ],
+          timing: "Immediate on any nav-accuracy alert",
+          aomRef: "AOM 21j.1.6 FMC Navigation Check",
+          relatedFlashcards: ["Navigation", "Flight Management Systems"]
+        },
+
+        // ── 21j.1.7 Inhibiting VOR/DME for Position Update ────
+        {
+          id: "fms_inhibit_vordme",
+          type: "flow",
+          who: "PF/PM",
+          title: "Inhibiting VOR/DME Use for Position Updating",
+          trigger: "Known-unreliable VOR or DME station affecting FMC position updating",
+          description: "Prevents FMC from using a specific VOR/DME for position updating. Use DEL key to remove a station from inhibit status.",
+          items: [
+            { num: 1, name: "PROG key", setting: "Press — observe NAV STATUS prompt", critical: true, subitems: [] },
+            { num: 2, name: "NAV STATUS [6R]", setting: "Select", critical: true, subitems: [] },
+            { num: 3, name: "NAV OPTIONS page", setting: "Select via NEXT/PREV page", critical: true, subitems: [
+              { name: "Observe dash prompts for VOR/DME INHIBIT", isNote: true }
+            ]},
+            { num: 4, name: "VOR/DME identifier", setting: "Enter (overwrite any previous entry, which will no longer be inhibited)", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "PROG → NAV STATUS → NAV OPTIONS",
+            "Target VOR/DME entered in INHIBIT line"
+          ],
+          gotchas: [
+            "Only one VOR/DME can be inhibited at a time — overwriting removes the previous inhibit",
+            "Use DEL key to clear the inhibit",
+            "Does NOT affect ILS or LOC updating"
+          ],
+          timing: "~30 sec",
+          aomRef: "AOM 21j.1.7 Inhibiting VOR/DME Use for Position Updating",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.8 Inhibiting GPS Updating ───────────────────
+        {
+          id: "fms_inhibit_gps",
+          type: "flow",
+          who: "PF/PM",
+          title: "Inhibiting GPS Updating",
+          trigger: "GPS unreliable or not needed; WGS-84 approach requirement outside US airspace",
+          description: "Disable GPS position updating at pilot discretion. Not recommended to disable for the entire flight. GPS-dependent functions like look-ahead terrain alerting are NOT affected by this inhibit.",
+          items: [
+            { num: 1, name: "PROG page", setting: "Select — observe NAV STATUS prompt", critical: true, subitems: [] },
+            { num: 2, name: "NAV STATUS page", setting: "Select", critical: true, subitems: [] },
+            { num: 3, name: "NAV OPTIONS page", setting: "Select (NEXT/PREV page)", critical: true, subitems: [] },
+            { num: 4, name: "GPS UPDATE", setting: "OFF", critical: true, subitems: [
+              { name: "If GPS UPDATE is OFF, VERIFY that DME UPDATE, VOR UPDATE, and LOC UPDATE are ON", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "PROG → NAV STATUS → NAV OPTIONS",
+            "GPS UPDATE: OFF",
+            "DME/VOR/LOC UPDATE: verified ON"
+          ],
+          gotchas: [
+            "GPS updating is needed for some mandatory nav specifications",
+            "Inhibiting GPS does NOT inhibit GPWS look-ahead terrain — use GPWS TERR INHIBIT switch for that",
+            "Inhibit GPS for non-WGS-84 approach operations (China, Russia historically)",
+            "3UN-3VM: Inhibiting GPS also inhibits Perspective Runway (PRW) on HUD",
+            "Not recommended to disable GPS for the entire flight"
+          ],
+          timing: "~30 sec",
+          aomRef: "AOM 21j.1.8 Inhibiting GPS Updating",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.9 Manual Alignment ──────────────────────────
+        {
+          id: "fms_manual_align",
+          type: "flow",
+          who: "FO",
+          title: "Manual Alignment (GPS Unreliable)",
+          trigger: "GPS unreliable — manual IRS alignment required on the ground",
+          description: "Performed when GPS cannot be used to provide position. Use charted coordinates for the parking position; do NOT use LAST POS or GPS position.",
+          items: [
+            { num: 1, name: "IRS mode selectors", setting: "OFF, then NAV", critical: true, subitems: [
+              { name: "Verify ON DC lights illuminate then extinguish", isNote: true },
+              { name: "Verify ALIGN lights illuminated", isNote: true },
+              { name: "UNABLE REQD NAV PERF-RNP may show until alignment complete", isNote: true }
+            ]},
+            { num: 2, name: "CDU — POS INIT page", setting: "Select", critical: true, subitems: [] },
+            { num: 3, name: "SET IRS POS line", setting: "Enter present position (charted parking coordinates)", critical: true, subitems: [
+              { name: "Do NOT use LAST POS or GPS position if GPS is unreliable", isNote: true },
+              { name: "Use the most accurate lat/long available", isNote: true },
+              { name: "If manual update unsuccessful, maintenance action is required", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "IRS: NAV, ALIGN illum",
+            "POS INIT: charted parking coords entered"
+          ],
+          gotchas: [
+            "CAUTION: If manual update is unsuccessful, mx action required",
+            "Alignment takes 5–17 minutes depending on latitude",
+            "Cannot manually align in flight — ground only",
+            "Verify the parking position coordinates before trusting them"
+          ],
+          timing: "5–17 min",
+          aomRef: "AOM 21j.1.9 Manual Alignment",
+          relatedFlashcards: ["Navigation"]
+        },
+
+        // ── 21j.1.10 Required Time of Arrival (RTA) ───────────
+        {
+          id: "fms_rta",
+          type: "flow",
+          who: "PF/PM",
+          title: "Required Time of Arrival (RTA)",
+          trigger: "ATC-assigned RTA, or operational need to hit a specific time at a specific waypoint",
+          description: "Requires an active FMC flight plan with complete performance data. The FMC will adjust speed to meet the RTA within the entered time tolerance.",
+          items: [
+            { num: "RTA.1", name: "PROGRESS page", setting: "Select", critical: true, subitems: [
+              { name: "On PROGRESS page 3, line 1L, enter flight plan waypoint where RTA applies", isNote: true },
+              { name: "Observe MOD RTA PROGRESS page with computed ETA in line 1R", isNote: true }
+            ]},
+            { num: "RTA.2", name: "RTA", setting: "Enter required time (HHMMSS or similar) on line 1R", critical: true, subitems: [
+              { name: "Examples: 174530, 1745, 1745.5", isNote: true },
+              { name: "Observe EXEC key illuminated", isNote: true }
+            ]},
+            { num: "RTA.3", name: "EXEC key", setting: "Press — observe ACT RTA PROGRESS page", critical: true, subitems: [] },
+            { num: "LIM.1", name: "Speed restrictions for RTA — PERF LIMITS page", setting: "Select", critical: false, subitems: [
+              { name: "Enter minimum or maximum speed restriction on lines 2, 3, or 4 per phase of flight", isNote: true },
+              { name: "Observe RTA parameters change and EXEC illuminated", isNote: true }
+            ]},
+            { num: "LIM.2", name: "EXEC key", setting: "Press — MOD PERF LIMITS → ACT PERF LIMITS", critical: false, subitems: [
+              { name: "Entered restrictions on lines 2/3/4 ALSO restrict other nav modes like ECON", isNote: true }
+            ]},
+            { num: "TOL", name: "Time error tolerance", setting: "PERF LIMITS page line 1L — enter 5 to 30 seconds (e.g. 25)", critical: false, subitems: [
+              { name: "Observe MOD PERF LIMITS and EXEC illuminated", isNote: true },
+              { name: "Press EXEC → ACT PERF LIMITS", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "PROG page: ACT RTA with waypoint and target time",
+            "PERF LIMITS: speed bounds and time tolerance set",
+            "VNAV/LNAV respecting RTA speed profile"
+          ],
+          gotchas: [
+            "Active FMC flight plan with full performance data is REQUIRED",
+            "Time tolerance range: 5 to 30 seconds",
+            "Speed restrictions for RTA will also affect ECON speed",
+            "RTA is flown in the active phase — verify FMC is meeting the window"
+          ],
+          timing: "~1 min to set up",
+          aomRef: "AOM 21j.1.10 Required Time of Arrival (RTA)",
+          relatedFlashcards: ["Flight Management Systems", "Performance"]
+        },
+
+        // ── 21j.1.11 VNAV INVALID-PERF Scratchpad Message ─────
+        {
+          id: "fms_vnav_invalid_perf",
+          type: "flow",
+          who: "PF/PM",
+          title: "VNAV INVALID-PERF Scratchpad Message",
+          trigger: "\"VNAV INVALID-PERF\" scratchpad message shown — U11/U12/U13 FMC anomaly",
+          description: "A software anomaly on U11.0/U12.0/U13.0: when forecast winds are entered on DES FORECAST page and no approach is selected, FMC predictions stop, VNAV disengages, the message shows, and CI on PERF INIT is replaced with box prompts. Recover by selecting an approach, reentering CI, and EXEC.",
+          items: [
+            { num: 1, name: "Enter an approach", setting: "Into the active flight plan", critical: true, subitems: [] },
+            { num: 2, name: "PERF INIT page", setting: "Reenter original CI (or a new CI)", critical: true, subitems: [] },
+            { num: 3, name: "EXEC key", setting: "Push to activate data modification", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Active flight plan with approach",
+            "PERF INIT with CI reentered",
+            "VNAV eligible to reengage"
+          ],
+          gotchas: [
+            "AVOIDANCE: Select an approach into the active flight plan PRIOR to FMC-calculated Top of Descent, OR do NOT enter winds on the DES FORECAST page",
+            "Affects FMC U11.0, U12.0, and U13.0 software",
+            "CI is replaced with box prompts — you MUST reenter it",
+            "This anomaly is expected to be corrected in a future FMC software update",
+            "Source: Boeing bulletin AAL-86 and FSB 17-004"
+          ],
+          timing: "~30 sec if caught immediately",
+          aomRef: "AOM 21j.1.11 VNAV INVALID-PERF Scratchpad Message",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight"]
+        },
+
+        // ── 21j.1.12 NAV Database Out of Date ─────────────────
+        {
+          id: "fms_nav_db_oodate",
+          type: "flow",
+          who: "PF/PM",
+          title: "NAV Database Out of Date",
+          trigger: "NAV database past current cycle — MEL for NAV DATA OUT OF DATE applies",
+          description: "Before dispatch or enroute clearance change, verify waypoints, nav equipment, and published procedures manually against current charts. Several RNAV procedure types have date-based authorization restrictions.",
+          items: [
+            { num: 1, name: "Verify required waypoints", setting: "Use current flight plan or current aeronautical charts", critical: true, subitems: [] },
+            { num: 2, name: "Verify navigation equipment", setting: "Installed and operational for designated airspace", critical: true, subitems: [] },
+            { num: 3, name: "Verify status and suitability of nav facilities", setting: "Airway routes / off-airway routes / terminal approach procedures", critical: true, subitems: [] },
+            { num: 4, name: "RNAV (GPS / GNSS / RNP / AR) and RNAV SIDs/STARs", setting: "Only authorized if charted procedure effective date is PRIOR to DB expiration", critical: true, subitems: [] },
+            { num: 5, name: "RNAV airways without verifiable lat/long", setting: "NOT authorized", critical: true, subitems: [] },
+            { num: 6, name: "AA-published engine failure procedures with RNAV fixes", setting: "Only authorized if charted procedure effective date is PRIOR to DB expiration", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Current charts in use for all RNAV verification",
+            "MEL limitations applied",
+            "Raw data monitoring in use for conventional approaches"
+          ],
+          gotchas: [
+            "Raw data must be monitored at all times for conventional (non-RNAV) approaches",
+            "MEL for NAV DATA OUT OF DATE must be applied",
+            "RNAV airway unable to be verified by crew → NOT authorized",
+            "Always check the effective date vs DB expiration for any RNAV procedure"
+          ],
+          timing: "Dispatch/reclearance phase",
+          aomRef: "AOM 21j.1.12 NAV Database Out of Date",
+          relatedFlashcards: ["Flight Management Systems", "Navigation"]
+        },
+
+        // ── 21j.1.13 Raw Data Instrument Approach ─────────────
+        {
+          id: "fms_raw_data_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Raw Data Instrument Approach",
+          trigger: "MAP mode unavailable OR approach not in database — VOR or APP mode required",
+          description: "Procedure for flying an instrument approach without MAP-mode FMC support. Requires careful raw-data monitoring and manual waypoint construction where possible.",
+          items: [
+            { num: 1, name: "ND MODE selector", setting: "Select VOR or APP", critical: true, subitems: [
+              { name: "If MAP mode IS available it may be used for awareness; raw data via VOR switch on EFIS Control Panel", isNote: true },
+              { name: "MAP mode is NOT required for CAT I, II, or III ILS approaches", isNote: true }
+            ]},
+            { num: 2, name: "VOR switches (if applicable)", setting: "Select VOR", critical: true, subitems: [] },
+            { num: 3, name: "NAV RADIOS / MCP COURSE selectors", setting: "Set", critical: true, subitems: [
+              { name: "Select ILS freq/front course, VOR freq/final approach course, or LOC, for approach + missed approach", isNote: true }
+            ]},
+            { num: 4, name: "MCP ROLL MODE", setting: "Select", critical: true, subitems: [
+              { name: "ILS or LOC: APP or VOR/LOC mode", isNote: true },
+              { name: "VOR: VOR/LOC mode", isNote: true }
+            ]},
+            { num: 5, name: "MCP PITCH MODE", setting: "Select", critical: true, subitems: [
+              { name: "ILS: APP mode", isNote: true },
+              { name: "VOR or LOC: V/S inside FAF — ~700–800 fpm, max 1000 fpm", isNote: true }
+            ]},
+            { num: "DEV", name: "Deviation callouts", setting: "LOC > 1/3 dot / Glideslope > 1/2 dot / VOR > 1 dot", critical: true, subitems: [] },
+            { num: "GA", name: "Conditions requiring go-around", setting: "DA/DDA without visual / significant nav disagreement / nav or flight instrument failure / full-scale LOC-GS-VOR", critical: true, subitems: [] },
+            { num: "MAN", name: "Manual waypoint entry for approach construction", setting: "Avoid below 10,000 ft AGL", critical: false, subitems: [
+              { name: "Waypoints can be defined by name, bearing/distance, intersection of radials, or lat/long", isNote: true },
+              { name: "Procedure turns and DME arcs usually cannot be manually entered (use HDG SEL)", isNote: true },
+              { name: "LNAV cannot track FIX page data — FIX line is reference only, not raw data", isNote: true },
+              { name: "On missed approach, ensure required navaids are tuned", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "ND: VOR or APP mode",
+            "NAV RADIOS and MCP COURSE: set for approach and missed",
+            "Roll: APP or VOR/LOC",
+            "Pitch: APP (ILS) or V/S (VOR/LOC)"
+          ],
+          gotchas: [
+            "CAUTION: No excessive heads-down FMC manipulation at low altitude — avoid map building below 10,000 ft AGL",
+            "FIX page course line on map is FMC-calculated, NOT raw data",
+            "Procedure turns and DME arcs usually require HDG SEL",
+            "Use the MAP mode for awareness when available, but fly raw data for primary guidance"
+          ],
+          timing: "Setup before FAF",
+          aomRef: "AOM 21j.1.13 Raw Data Instrument Approach",
+          relatedFlashcards: ["Navigation", "Approach", "Flight Management Systems"]
+        }
+      ]
+    },
+
+    // ========================================================
+    // PHASE 28 — FMS SYSTEM OPERATION (AOM 21j.2)
+    // ========================================================
+    {
+      id: "fms_21j_ops",
+      number: 28,
+      title: "FMS Workflows (AOM 21j.2 System Operation)",
+      category: "reference",
+      steps: [
+
+        // ── 21j.2.1 When Load Closeout is Received ────────────
+        {
+          id: "fms_load_closeout",
+          type: "flow",
+          who: "PF/PM",
+          title: "When Load Closeout is Received",
+          trigger: "Load closeout data received (ACARS uplink or verbal)",
+          description: "Standard FMC preflight completion sequence after closeout. Load ZFW, verify thrust/assumed temperature, and process TAKEOFF REF page.",
+          items: [
+            { num: "1", name: "INIT REF key", setting: "Select", critical: true, subitems: [] },
+            { num: "1a", name: "If closeout uplink available", setting: "LOAD [6L] → EXEC", critical: true, subitems: [] },
+            { num: "1b", name: "If closeout uplink NOT available", setting: "ZFW [3L] → Enter → EXEC → verify ZFW matches closeout", critical: true, subitems: [] },
+            { num: "2", name: "N1 LIMIT [6R]", setting: "Select — check thrust and assumed temperature against TPS, check climb thrust", critical: true, subitems: [] },
+            { num: "3", name: "TAKEOFF [6R]", setting: "Select", critical: true, subitems: [] },
+            { num: "3a", name: "If closeout uplink available", setting: "ACCEPT [5R] → wait a few seconds → ACCEPT [5R] again", critical: true, subitems: [] },
+            { num: "3b", name: "If closeout uplink NOT available", setting: "ACCEPT [5R] → CG [3L] Enter → confirm CG matches closeout → set trim → verify V2 on MCP", critical: true, subitems: [] },
+            { num: "4", name: "After closeout processing", setting: "PF: TAKEOFF REF page / PM: LEGS page", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "ZFW loaded and matched to closeout",
+            "N1 LIMIT verified against TPS",
+            "TAKEOFF REF complete with CG and trim set",
+            "V2 on MCP"
+          ],
+          gotchas: [
+            "3AA-3PX: With FMC U11.0/U12.0, a >500 lbs difference between TOW and Actual GW triggers 'Verify T/O Speeds' message at engine start",
+            "ACCEPT is pressed TWICE on closeout uplink (the second press is after a short delay)",
+            "CG entry (non-uplink path) sets the trim — verify it matches the closeout slip",
+            "Verify V2 on MCP before 'before takeoff' flow completes"
+          ],
+          timing: "~2 min including closeout processing",
+          aomRef: "AOM 21j.2.1 When Load Closeout is Received",
+          relatedFlashcards: ["Flight Management Systems", "Performance"]
+        },
+
+        // ── 21j.2.2 LNAV Ops — Return to Departure / Direct-To / Discontinuity ──
+        {
+          id: "fms_lnav_basic",
+          type: "flow",
+          who: "PF/PM",
+          title: "LNAV — Return to Departure, Direct-To, Discontinuity",
+          trigger: "Need to return to departure airport, proceed direct, or link a route discontinuity",
+          description: "Three fundamental LNAV manipulations. Always verify reasonableness and confirm with the other pilot before EXEC.",
+          items: [
+            { num: "R.1", name: "Return to departure airport — DEP/ARR key", setting: "Press", critical: true, subitems: [] },
+            { num: "R.2", name: "ARR [1R]", setting: "Select — select STARS/TRANS and APPROACHES/TRANS as desired", critical: true, subitems: [] },
+            { num: "R.3", name: "EXEC key", setting: "Press", critical: true, subitems: [] },
+            { num: "D.1", name: "Direct to a waypoint — LEGS key", setting: "Press", critical: true, subitems: [] },
+            { num: "D.2", name: "Line 1L of page 1/XX", setting: "Enter desired waypoint over active waypoint; correct any ROUTE DISCONTINUITY if not in original plan", critical: true, subitems: [
+              { name: "Verify reasonableness of course and distance; check ND; confirm with other pilot", isNote: true }
+            ]},
+            { num: "D.3", name: "EXEC key", setting: "Press — observe MOD RTE/LEGS → ACT", critical: true, subitems: [
+              { name: "If abeam points desired: ABEAM PTS [5R] → verify MOD LEGS → ACT → EXEC", isNote: true }
+            ]},
+            { num: "DISC", name: "Linking a route discontinuity", setting: "Enter/delete waypoints to provide continuous path, then EXEC", critical: true, subitems: [
+              { name: "Observe MOD RTE or MOD LEGS → ACT", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "Active flight plan with no open discontinuities",
+            "MOD highlighted during edits, ACT after EXEC"
+          ],
+          gotchas: [
+            "ALWAYS verify before EXEC — crosscheck course and distance against the ND and brief the other pilot",
+            "DIRECT TO can bypass intended constraints — check downstream LEGS page after execution",
+            "Route discontinuities in VNAV can blank predictions — resolve them before EXEC"
+          ],
+          timing: "30 sec each",
+          aomRef: "AOM 21j.2.2 LNAV Operations",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight"]
+        },
+
+        // ── Intercepting a Leg / Course to a Waypoint ─────────
+        {
+          id: "fms_lnav_intercept_leg",
+          type: "flow",
+          who: "PF/PM",
+          title: "Intercepting a Leg (Course) to a Waypoint",
+          trigger: "Need to intercept a specific course inbound to a waypoint",
+          description: "Use INTC CRS on the LEGS page (line 6R) to fly a specific course into an active waypoint. LNAV may disengage on execution of an intercept leg.",
+          items: [
+            { num: 1, name: "LEGS key", setting: "Press", critical: true, subitems: [] },
+            { num: 2, name: "Line 1L of page 1/XX", setting: "Enter desired waypoint over current active waypoint", critical: true, subitems: [
+              { name: "Observe INTC CRS prompt in line 6R", isNote: true }
+            ]},
+            { num: 3, name: "INTC CRS line", setting: "Enter desired intercept course", critical: true, subitems: [
+              { name: "Displayed course on 6R; line 1L course may vary slightly from entered due to magnetic variation", isNote: true }
+            ]},
+            { num: 4, name: "If acceptable", setting: "EXEC", critical: true, subitems: [] },
+            { num: 5, name: "If route discontinuity created", setting: "Correct, then EXEC → MOD LEGS → ACT", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "LEGS page showing modified course into waypoint",
+            "LNAV may briefly disengage; re-engage when capture criteria met"
+          ],
+          gotchas: [
+            "LNAV may disengage after EXEC of an intercept leg",
+            "Turn to a heading that satisfies LNAV capture criteria, then reengage LNAV",
+            "Magnetic variation can cause minor course display differences on 1L vs 6R"
+          ],
+          timing: "~30 sec",
+          aomRef: "AOM 21j.2.2 Intercepting a Leg (Course) to a Waypoint",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight"]
+        },
+
+        // ── Created Waypoints (Place/Bearing, Along-Track, Lat/Long, Fix) ──
+        {
+          id: "fms_created_waypoints",
+          type: "flow",
+          who: "PF/PM",
+          title: "Creating Waypoints (Place/Bearing, Along-Track, Lat/Long, FIX)",
+          trigger: "Need to build or insert a waypoint that isn't in the nav DB",
+          description: "Several methods for defining temporary waypoints: place/bearing/distance, place bearing/place bearing, along-track displacement, lat/long, or FIX page bearing/distance. Created waypoints are stored in the temporary nav DB for ONE FLIGHT only (unless entered on SUPP NAV DATA which is ground-only and persistent).",
+          items: [
+            { num: "PBD", name: "Place/bearing/distance", setting: "Example: BKX250/40", critical: false, subitems: [] },
+            { num: "PBPB", name: "Place bearing / place bearing", setting: "Example: SLC190/FFU270", critical: false, subitems: [] },
+            { num: "ATD", name: "Along-track displacement", setting: "Example: DRK/-10 (10 NM before DRK) or SLC/15 (15 NM past SLC)", critical: false, subitems: [] },
+            { num: "LL", name: "Latitude/longitude", setting: "Example: N4731.8W12218.3", critical: false, subitems: [] },
+            { num: "FIX", name: "From FIX INFO page — cross-radial from a reference waypoint", setting: "FIX INFO → enter identifier → enter radial/distance (or ABM prompt)", critical: false, subitems: [
+              { name: "Line-select desired intersection (lines 2L–5L) to scratchpad → new waypoint as fix/radial/distance", isNote: true },
+              { name: "LEGS key → line-select to desired sequence → correct discontinuities → EXEC", isNote: true }
+            ]},
+            { num: "ATWP", name: "Along-track waypoint creation", setting: "LEGS → line-select reference waypoint to scratchpad → add /+dist or /-dist → line-select on top of reference waypoint → EXEC", critical: false, subitems: [
+              { name: "FMC automatically positions the created waypoint", isNote: true }
+            ]},
+            { num: "LATLON", name: "Manual lat/long waypoint naming", setting: "Displayed as WPT01, WPT02, etc.", critical: false, subitems: [
+              { name: "N47W008 → displayed as WPT01", isNote: true },
+              { name: "N4715.4W00803.4 → displayed as WPT02", isNote: true },
+              { name: "Leading zeros required, decimal points to 1/10 minute", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "LEGS page with created waypoints inserted",
+            "Temporary nav DB used (one-flight scope)"
+          ],
+          gotchas: [
+            "Created waypoints entered on RTE/LEGS are ONE-FLIGHT ONLY",
+            "Created waypoints entered on SUPP NAV DATA (ground only) persist indefinitely",
+            "Place identifiers must already be in one of the FMC databases",
+            "After any edit, check for ROUTE DISCONTINUITY and resolve before EXEC"
+          ],
+          timing: "~30 sec each",
+          aomRef: "AOM 21j.2.2 Created Waypoints",
+          relatedFlashcards: ["Flight Management Systems"]
+        },
+
+        // ── Active/Inactive Route Modification, Copy, Removal ──
+        {
+          id: "fms_route_mod",
+          type: "flow",
+          who: "PF/PM",
+          title: "Route Modification, Copy, Activation, Removal",
+          trigger: "Edit active or inactive route; copy or activate alternate route; remove an entire route",
+          description: "LEGS and RTE page manipulation for active/alternate routes. Flight number should NOT be edited in the inactive route — it propagates to active.",
+          items: [
+            { num: "ACT", name: "Active route modification", setting: "ACT RTE x LEGS or ACT RTE x page → line-select waypoints / key-in new → correct discontinuities → EXEC", critical: true, subitems: [] },
+            { num: "INACT", name: "Inactive route modification", setting: "RTE x LEGS or RTE x page → line-select waypoints / key-in new → correct discontinuities", critical: false, subitems: [
+              { name: "Do NOT change flight number in inactive route — it will also change in active", isNote: true }
+            ]},
+            { num: "COPY", name: "Route copy", setting: "ACT RTE x LEGS or ACT RTE x page → RTE COPY [5R]", critical: false, subitems: [] },
+            { num: "ACTIV", name: "Inactive route activation", setting: "RTE x LEGS or RTE x page → ACTIVATE [6R] → correct discontinuities → EXEC", critical: true, subitems: [] },
+            { num: "REM", name: "Route removal", setting: "RTE page → enter ORIGIN → EXEC if EXEC light illuminates", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "Active route reflects all planned modifications",
+            "Alternate route staged and ready to activate"
+          ],
+          gotchas: [
+            "NEVER change flight number on inactive route — it changes the active one too",
+            "Always resolve discontinuities before EXEC",
+            "ACTIVATE + EXEC is a two-step operation on inactive routes",
+            "Route removal requires re-entering the origin to trigger EXEC"
+          ],
+          timing: "~1 min for a moderate route edit",
+          aomRef: "AOM 21j.2.2 Route Modification / Copy / Activation / Removal",
+          relatedFlashcards: ["Flight Management Systems"]
+        },
+
+        // ── Lateral Offset, Holding, Exit Hold ────────────────
+        {
+          id: "fms_offset_hold",
+          type: "flow",
+          who: "PF/PM",
+          title: "Lateral Offset, Holding Fix, Exit Hold",
+          trigger: "ATC offset clearance; holding; exit hold for resumption of active route",
+          description: "Three related modifications. Offset is entered on the LATERAL OFFSET page; holding is built on the HOLD AT page via HOLD key; exit hold is EXIT HOLD [6R] then EXEC.",
+          items: [
+            { num: "OFF.1", name: "RTE key", setting: "Press — observe OFFSET prompt", critical: true, subitems: [] },
+            { num: "OFF.2", name: "LATERAL OFFSET page", setting: "Select → enter OFFSET DIST (LXX or RXX, up to 99.9 nm)", critical: true, subitems: [] },
+            { num: "OFF.3", name: "START / END WAYPOINT", setting: "Enter", critical: false, subitems: [
+              { name: "If no start/end entered, offset begins/ends at first/last valid offset leg", isNote: true }
+            ]},
+            { num: "HLD.1", name: "HOLD key", setting: "Press — if RTE HOLD displayed, line-select 6L until HOLD AT page shown", critical: true, subitems: [] },
+            { num: "HLD.2", name: "Line [6L]", setting: "Enter holding fix OR line-select PPOS", critical: true, subitems: [
+              { name: "If holding fix is a waypoint not in active route, observe HOLD AT XXXXX message in scratchpad; line-select into desired waypoint sequence", isNote: true }
+            ]},
+            { num: "HLD.3", name: "Holding details", setting: "Enter corrections if displayed defaults are inadequate", critical: true, subitems: [] },
+            { num: "HLD.4", name: "EXEC key", setting: "Press — MOD RTE HOLD → RTE HOLD (or ACT RTE HOLD if holding at PPOS)", critical: true, subitems: [] },
+            { num: "EXIT.1", name: "Exit hold — HOLD key", setting: "Press — observe EXIT HOLD prompt", critical: true, subitems: [] },
+            { num: "EXIT.2", name: "EXIT HOLD [6R]", setting: "Select — EXIT HOLD → EXIT ARMED", critical: true, subitems: [] },
+            { num: "EXIT.3", name: "EXEC key", setting: "Press — LNAV returns to fix then resumes active route", critical: true, subitems: [
+              { name: "Alternative: DIRECT TO modification exits hold without returning to fix first", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "LATERAL OFFSET active with distance and start/end waypoints",
+            "RTE HOLD active at entered fix",
+            "EXIT ARMED highlighted before EXEC to exit"
+          ],
+          gotchas: [
+            "Max lateral offset: 99.9 nm (L or R)",
+            "If exiting hold after multiple late route modifications, LNAV guidance may be temporarily interrupted at sequence",
+            "DIRECT TO bypasses the return-to-fix behavior on exit",
+            "Always verify holding details (course, leg time/distance) match the clearance"
+          ],
+          timing: "~30–60 sec each",
+          aomRef: "AOM 21j.2.2 Lateral Offset / Holding Fix / Exit Hold",
+          relatedFlashcards: ["Flight Management Systems", "Autoflight"]
+        },
+
+        // ── Selecting Arrival / Approach, Runway Centerline, Change Destination ──
+        {
+          id: "fms_arrival_approach",
+          type: "flow",
+          who: "PF/PM",
+          title: "Arrival / Approach Selection, Runway Centerline Extension, Change Destination",
+          trigger: "Loading arrival and approach procedure; extending runway centerline for visual; changing destination",
+          description: "Standard arrival setup: enter DES FORECAST first, then select arrival/transition/approach/transition on the ARR page. LEGS review before EXEC.",
+          items: [
+            { num: "ARR.1", name: "DES FORECAST page entries", setting: "Complete first (see Entering Descent Forecasts)", critical: true, subitems: [] },
+            { num: "ARR.2", name: "DEP/ARR key", setting: "Press", critical: true, subitems: [] },
+            { num: "ARR.3", name: "ARR page", setting: "Select", critical: true, subitems: [] },
+            { num: "ARR.4", name: "Selections", setting: "ARRIVAL / TRANSITION / APPROACH / APPROACH TRANS as required", critical: true, subitems: [] },
+            { num: "ARR.5", name: "LEGS key", setting: "Press — confirm waypoints/crossings vs approach chart/NOTAMs; resolve discrepancies", critical: true, subitems: [] },
+            { num: "ARR.6", name: "EXEC key", setting: "Press", critical: true, subitems: [] },
+            { num: "VOR", name: "VOR updating OFF (if required)", setting: "PROG → NAV STATUS [6R] → NEXT PAGE → VOR UPDATE [3L]", critical: false, subitems: [] },
+            { num: "RNP.1", name: "Lateral RNP (if required)", setting: "PROG → PREV PAGE → desired RNP value [2L] Enter", critical: false, subitems: [] },
+            { num: "RNP.2", name: "3KU-3VM Vertical RNP", setting: "RNP value 125 [2R] Enter", critical: false, subitems: [] },
+            { num: "DEL", name: "Delete arrival transition or procedure turn", setting: "DEP/ARR → Approach → reselect same or new approach (removes transitions/PT, selects straight-in) → EXEC", critical: false, subitems: [
+              { name: "Alternative: LEGS → select last waypoint of PT to scratchpad → overwrite PROC TURN line → check sequencing → EXEC", isNote: true }
+            ]},
+            { num: "RCE.1", name: "Runway Centerline Extension — DEP/ARR key", setting: "Press", critical: false, subitems: [] },
+            { num: "RCE.2", name: "ARR AIRPORT [2R]", setting: "Select", critical: false, subitems: [] },
+            { num: "RCE.3", name: "RUNWAYS", setting: "Select as desired", critical: false, subitems: [] },
+            { num: "RCE.4", name: "RWY EXT [3R]", setting: "Enter as desired", critical: false, subitems: [] },
+            { num: "RCE.5", name: "FPA [4R]", setting: "Enter (default 3.0°)", critical: false, subitems: [] },
+            { num: "RCE.6", name: "LEGS key", setting: "Press — remove discontinuities", critical: false, subitems: [] },
+            { num: "RCE.7", name: "EXEC key", setting: "Press", critical: false, subitems: [] },
+            { num: "CD.1", name: "Change destination — RTE key", setting: "Press", critical: true, subitems: [] },
+            { num: "CD.2", name: "PREVIOUS PAGE key", setting: "Press", critical: true, subitems: [] },
+            { num: "CD.3", name: "New destination [1R]", setting: "Enter over original destination", critical: true, subitems: [] },
+            { num: "CD.4", name: "New routing", setting: "Enter via RTE / LEGS / ARRIVALS pages as appropriate", critical: true, subitems: [] },
+            { num: "CD.5", name: "EXEC key", setting: "Press", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "ARR page: arrival + transition + approach + transition selected",
+            "LEGS verified against chart",
+            "RWY EXT and FPA set for visual approaches (default 3.0°)",
+            "VOR/RNP tweaks applied if required"
+          ],
+          gotchas: [
+            "Enter DES FORECASTS BEFORE selecting arrival/approach — or hit the VNAV INVALID-PERF anomaly",
+            "U11/U12/U13 FMC anomaly: changing an approach with a common waypoint to the STAR uses the HIGHER constraint altitude for the common waypoint — verify manually",
+            "Approach constraint higher than arrival bottom altitude triggers an error and prevents EXEC: delete the offending waypoint altitude, or reselect approach without transition, or move the last approach waypoint with equal/lower alt below the route discontinuity",
+            "Change destination in climb can blank performance predictions if new plan is incompatible with cruise altitude — correct via lower CRZ ALT on CLB page",
+            "Default FPA for runway centerline extension is 3.0° — does NOT meet VNAV instrument approach criteria"
+          ],
+          timing: "~1–2 min full arrival setup",
+          aomRef: "AOM 21j.2.2 Selecting Arrival / Approach Procedure, Runway Centerline Extension, Change Destination",
+          relatedFlashcards: ["Flight Management Systems", "Approach"]
+        },
+
+        // ── 21j.2.3 VNAV Operations ───────────────────────────
+        {
+          id: "fms_vnav_ops",
+          type: "flow",
+          who: "PF/PM",
+          title: "VNAV Operations — Level Off, Altitude / Speed Intervention",
+          trigger: "Temporary level-off, deleting FMC constraints, or speed intervention while in VNAV",
+          description: "Core VNAV manipulation: temporary level-off (not at FMC cruise), constraint deletion via ALT INTV, cruise altitude intervention, SPD INTV for temporary speed change.",
+          items: [
+            { num: "LVL.1", name: "Temporary level off during climb/descent — MCP altitude selector", setting: "Set desired altitude", critical: true, subitems: [
+              { name: "Verify VNAV ALT annunciated on FMA when level at selected MCP altitude", isNote: true },
+              { name: "MCP N1 light extinguishes if leveling from a climb; N1 limit changes to CRZ from a climb", isNote: true }
+            ]},
+            { num: "LVL.2", name: "Continue climb/descent", setting: "Set new altitude on MCP → push ALT INTV switch (3DM-3VM: push VNAV switch)", critical: true, subitems: [
+              { name: "Climb or descent is initiated; mode annunciations show initial climb/descent", isNote: true }
+            ]},
+            { num: "CLB.1", name: "Intervention of FMC altitude constraints in VNAV CLIMB", setting: "MCP → new altitude HIGHER than constraint(s) to delete → ALT INTV", critical: true, subitems: [
+              { name: "Each push deletes ONE FMC altitude constraint", isNote: true }
+            ]},
+            { num: "CRZ.1", name: "Intervention of FMC cruise altitude in VNAV CRUISE", setting: "MCP → new altitude → ALT INTV", critical: true, subitems: [
+              { name: "Higher altitude selected → CRZ climb starts", isNote: true },
+              { name: ">50 nm from T/D and lower altitude at or above FMC constraint → CRZ descent", isNote: true },
+              { name: ">50 nm from T/D and lower altitude below FMC constraint → EARLY descent", isNote: true },
+              { name: "≤50 nm from T/D and lower altitude → EARLY descent", isNote: true }
+            ]},
+            { num: "DES.1", name: "Intervention of FMC altitude constraints in VNAV DESCENT", setting: "MCP → new altitude LOWER than constraint(s) to delete → ALT INTV", critical: true, subitems: [
+              { name: "Each push deletes one FMC altitude constraint", isNote: true },
+              { name: "If all constraints deleted, descent reverts to VNAV SPEED descent", isNote: true }
+            ]},
+            { num: "SPD.1", name: "Speed Intervention — SPD INTV switch", setting: "Push — MCP IAS/MACH shows current FMC target speed", critical: false, subitems: [] },
+            { num: "SPD.2", name: "MCP speed selector", setting: "Set desired speed — VNAV remains engaged", critical: false, subitems: [
+              { name: "Pitch mode change to VNAV SPD if it was VNAV PATH (exceptions: GEO PATH, approach phase)", isNote: true }
+            ]},
+            { num: "SPD.3", name: "To resume former FMC speed", setting: "SPD INTV switch — push", critical: false, subitems: [
+              { name: "MCP IAS/MACH blanks and FMC commanded VNAV speed is active", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "FMA: VNAV ALT / VNAV PATH / VNAV SPD as appropriate",
+            "MCP altitude: set to target or constraint",
+            "SPD window: open during SPD INTV, blank when FMC speed active"
+          ],
+          gotchas: [
+            "ALT INTV is a CONSTRAINT DELETER — do not use it casually; each push removes the nearest constraint on the side you moved",
+            "VNAV PATH in approach phase controls to the path — SPD INTV may not give the selected speed",
+            "3DM-3VM uses the VNAV switch rather than ALT INTV for some reengagements",
+            "FMC time and fuel calcs during SPD INTV are based on ACTIVE FMC mode, not the intervened speed"
+          ],
+          timing: "Immediate",
+          aomRef: "AOM 21j.2.3 VNAV Operations",
+          relatedFlashcards: ["Autoflight", "Flight Management Systems"]
+        },
+
+        // ── VNAV Speed/Altitude Restrictions, Schedule Changes, Early Descent, Step Climb ──
+        {
+          id: "fms_vnav_restrictions",
+          type: "flow",
+          who: "PF/PM",
+          title: "VNAV Speed/Altitude Restrictions & Early Descent",
+          trigger: "Change/delete waypoint speed or altitude restrictions, change climb/cruise/descent schedule, early descent, step climb/descent",
+          description: "LEGS/CLB/CRZ/DES page manipulation for vertical-path changes.",
+          items: [
+            { num: "CH.1", name: "Change speed/alt restriction during CLB or DES", setting: "CLB/DES page → DEL in scratchpad (or key in new SPD/ALT) → line-select to SPD REST line → EXEC", critical: true, subitems: [] },
+            { num: "CH.2", name: "Delete waypoint speed/alt restriction", setting: "RTE LEGS page → DEL → line-select waypoint → EXEC", critical: true, subitems: [
+              { name: "Restriction is replaced with FMC-predicted value (small characters)", isNote: true }
+            ]},
+            { num: "CH.3", name: "Enter waypoint speed/alt restriction (climb/descent legs only)", setting: "RTE LEGS → key speed+alt OR speed only + / OR alt only", critical: true, subitems: [
+              { name: "Alt followed by A = 'at or above'; B = 'at or below' (e.g., 220A, 240B)", isNote: true },
+              { name: "Changes ANY prior restriction at that waypoint", isNote: true },
+              { name: "EXEC → MOD RTE LEGS → ACT", isNote: true }
+            ]},
+            { num: "SCHED", name: "Change CLB/CRZ/DES speed schedule", setting: "CLB/CRZ/DES page → select prompt or key-in TGT SPD → line-select to TGT SPD → EXEC", critical: false, subitems: [
+              { name: "Min speeds: climb waypoints 210 kt; descent waypoints 150 kt", isNote: true }
+            ]},
+            { num: "EARLY", name: "Early descent", setting: "MCP altitude → next level-off → DES page → DES NOW → EXEC", critical: true, subitems: [
+              { name: "PATH DES: 1000 fpm until planned path intercepted", isNote: true },
+              { name: "SPD DES: idle thrust normal rate of descent", isNote: true }
+            ]},
+            { num: "STEP", name: "Step climb/descent from cruise", setting: "MCP altitude → new level-off → FLT ALT indicator → CRZ page → enter new alt on CRZ ALT", critical: false, subitems: [
+              { name: "If desired TGT SPD differs from displayed CRZ speed, manually enter or access CLB/DES page", isNote: true },
+              { name: "EXEC → MOD CRZ CLB / MOD CRZ DES (or selected MOD CLB/DES) → ACT", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "LEGS page with edited or predicted restrictions",
+            "CLB/CRZ/DES reflecting new TGT SPD",
+            "Early descent engaged if DES NOW used"
+          ],
+          gotchas: [
+            "Minimum speed values: climb WPTs 210 kt, descent WPTs 150 kt — do not go below",
+            "A/B suffix on altitudes is critical: A = at-or-above, B = at-or-below",
+            "PATH early descent uses 1000 fpm until path capture; SPD early descent uses idle",
+            "Changing a restriction REPLACES any prior restriction at that waypoint"
+          ],
+          timing: "~30 sec each",
+          aomRef: "AOM 21j.2.3 VNAV Operations — restrictions, schedules, early descent, step climb",
+          relatedFlashcards: ["Autoflight", "Flight Management Systems"]
+        },
+
+        // ── Descent Forecasts + Speed Intervention Details ────
+        {
+          id: "fms_des_forecast",
+          type: "flow",
+          who: "PF/PM",
+          title: "Descent Forecasts Entry",
+          trigger: "Preparing descent plan; international operations require transition level verification",
+          description: "Enter forecast descent winds (up to 3 altitudes), TAI on/off altitudes, ISA deviation, and destination QNH. Transition level verification is critical for international ops. WATCH for the U11/U12/U13 VNAV anomaly.",
+          items: [
+            { num: 1, name: "DES page", setting: "Select — observe FORECAST prompt", critical: true, subitems: [] },
+            { num: 2, name: "DES FORECAST page [6L]", setting: "Select", critical: true, subitems: [] },
+            { num: 3, name: "Forecast descent WINDs", setting: "Enter for up to 3 different altitudes", critical: true, subitems: [] },
+            { num: 4, name: "TRANS LVL", setting: "Verify and revise if required", critical: true, subitems: [] },
+            { num: 5, name: "TAI ON/OFF altitudes", setting: "Enter if appropriate", critical: false, subitems: [] },
+            { num: 6, name: "Average ISA DEV", setting: "Enter forecast for descent", critical: false, subitems: [] },
+            { num: 7, name: "Destination QNH", setting: "Enter", critical: false, subitems: [] },
+            { num: 8, name: "EXEC key", setting: "Press — observe MOD DES FORECASTS → ACT", critical: true, subitems: [] },
+            { num: "INT", name: "International ops additional verification", setting: "Verify transition level on DES FORECAST; verify speed restriction on DES page", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "DES FORECAST active with winds, TRANS LVL, ISA DEV, QNH",
+            "Speed restriction on DES page verified"
+          ],
+          gotchas: [
+            "U11/U12/U13 ANOMALY: entering descent forecast winds BEFORE selecting an approach can cause VNAV INVALID-PERF and VNAV disengagement — see that procedure to recover",
+            "AVOID by selecting approach into active flight plan PRIOR to T/D, or by not entering DES FORECAST winds",
+            "TAI ON/OFF altitudes are relevant for fuel burn and anti-ice planning"
+          ],
+          timing: "~1 min",
+          aomRef: "AOM 21j.2.3 Entering Descent Forecasts",
+          relatedFlashcards: ["Flight Management Systems", "Performance"]
+        },
+
+        // ── 21j.2.4 Other Operations ──────────────────────────
+        {
+          id: "fms_other_ops",
+          type: "flow",
+          who: "PF/PM",
+          title: "Plan Mode, New Destination ETA/Fuel, Cruise Winds, Step Climb Eval",
+          trigger: "Flight-plan review on ND PLAN mode; new-destination fuel check; updating cruise winds; step-climb evaluation",
+          description: "PLAN mode: use EFIS center step to walk the route. For diversions, use RTE to enter new destination and review PROGRESS page with MOD title before EXEC or ERASE.",
+          items: [
+            { num: "PLAN.1", name: "EFIS control panel mode selector", setting: "PLAN", critical: false, subitems: [] },
+            { num: "PLAN.2", name: "RTE LEGS page", setting: "Press", critical: false, subitems: [] },
+            { num: "PLAN.3", name: "EFIS control panel range selector", setting: "As required", critical: false, subitems: [] },
+            { num: "PLAN.4", name: "MAP CTR STEP key [6R]", setting: "Press — each press moves CTR label to next waypoint", critical: false, subitems: [
+              { name: "PREV/NEXT PAGE moves CTR label to first waypoint on new page", isNote: true }
+            ]},
+            { num: "PLAN.5", name: "EFIS control panel mode selector", setting: "Restore as required", critical: false, subitems: [] },
+            { num: "DIV.1", name: "Determining ETA/fuel for new destination — RTE page", setting: "Select → enter new DEST over original → correct routing via RTE/LEGS/ARRIVALS → correct discontinuities", critical: true, subitems: [] },
+            { num: "DIV.2", name: "PROGRESS page", setting: "Select — observe new destination with MOD title; check ETA and FUEL remaining", critical: true, subitems: [] },
+            { num: "DIV.3", name: "RTE page", setting: "EXEC or ERASE new routing as desired → MOD RTE → ACT", critical: true, subitems: [] },
+            { num: "WIND.1", name: "Estimated cruise waypoint wind entries — LEGS key", setting: "Press — observe DATA prompt", critical: false, subitems: [] },
+            { num: "WIND.2", name: "RTE DATA [6R]", setting: "Select — enter estimated true wind direction/speed on appropriate lines", critical: false, subitems: [] },
+            { num: "UPL.1", name: "Updating cruise winds (uplink) — LEGS → RTE DATA [6R] → REQUEST [6R]", setting: "When CRZ WIND UPLINK appears: LOAD [6L] → EXEC when CRZ WINDS FLXXX LOADED", critical: false, subitems: [] },
+            { num: "UPL.2", name: "If FORECAST WINDS UPLINK appears", setting: "VNAV key → NEXT PAGE → when VNAV DES: FORECAST [6L] → LOAD [6R] → EXEC", critical: false, subitems: [] },
+            { num: "STEP.1", name: "Step climb evaluation — CRZ page", setting: "Select", critical: false, subitems: [] },
+            { num: "STEP.2", name: "STEP TO line", setting: "Enter desired step climb altitude", critical: false, subitems: [] },
+            { num: "STEP.3", name: "ACTUAL or EST WIND line", setting: "Enter estimated average true wind direction/speed for step altitude (if known)", critical: false, subitems: [] },
+            { num: "STEP.4", name: "Fuel savings determination", setting: "Observe SAVINGS/PENALTY and FUEL AT <destination> lines", critical: false, subitems: [
+              { name: "If savings significant, initiate climb when NOW appears on STEP POINT line", isNote: true },
+              { name: "Does NOT consider buffet margin limits", isNote: true },
+              { name: "MAX ALT FLXXX message if step altitude > max buffet-safe alt", isNote: true }
+            ]}
+          ],
+          images: [],
+          panelState: [
+            "ND PLAN mode walking through LEGS",
+            "PROGRESS showing MOD new-destination ETA/fuel before commit",
+            "Cruise winds loaded via uplink or manually"
+          ],
+          gotchas: [
+            "Step climb evaluation ignores buffet margin — ensure new CRZ ALT is at or below MAX ALT FLXXX",
+            "Review with MOD title on PROGRESS page BEFORE EXEC or ERASE",
+            "Cruise winds uplink has two forms depending on CRZ vs FORECAST uplink path",
+            "PLAN mode CTR STEP advances one waypoint at a time; PREV/NEXT PAGE jumps pages"
+          ],
+          timing: "30 sec – 2 min",
+          aomRef: "AOM 21j.2.4 Other Operations",
+          relatedFlashcards: ["Flight Management Systems", "Performance"]
+        },
+
+        // ── Creating / Deleting Waypoints on NAV DATA Pages ───
+        {
+          id: "fms_nav_data",
+          type: "flow",
+          who: "PF/PM",
+          title: "Creating & Deleting Waypoints on NAV DATA Pages",
+          trigger: "Custom waypoint, navaid, or airport identifier needed",
+          description: "INIT/REF → INDEX → NAV DATA. SUPP NAV DATA is ground-only but persists indefinitely; REF NAV DATA is temporary (one-flight). Use 'SUPP' scratchpad to access SUPP page.",
+          items: [
+            { num: "C.1", name: "INIT/REF key", setting: "Press — observe INDEX prompt", critical: false, subitems: [] },
+            { num: "C.2", name: "INDEX [6L]", setting: "Select — observe NAV DATA prompt", critical: false, subitems: [
+              { name: "To access SUPP NAV DATA: key SUPP into scratchpad first (GROUND ONLY for SUPP)", isNote: true }
+            ]},
+            { num: "C.3", name: "NAV DATA [1R]", setting: "Select", critical: false, subitems: [
+              { name: "If SUPP NAV DATA: observe EFF FRM date line — enter date on line 3R (e.g. AUG04/13) and execute", isNote: true }
+            ]},
+            { num: "C.4", name: "Identifier entry", setting: "WPT IDENT, NAVAID IDENT, or AIRPORT IDENT line", critical: false, subitems: [
+              { name: "Use navaid category ONLY for stations with DME", isNote: true }
+            ]},
+            { num: "C.5", name: "DATA", setting: "Enter", critical: false, subitems: [
+              { name: "WPT: lat/long OR REF IDENT + RADIAL/DIST (REF IDENT must already be in DB)", isNote: true },
+              { name: "NAVAID/AIRPORT: appropriate data fields", isNote: true }
+            ]},
+            { num: "C.6", name: "EXEC key", setting: "Press (illuminates when all box prompts filled)", critical: false, subitems: [
+              { name: "Repeat for additional waypoints; new identifier overwrites previous in same category", isNote: true }
+            ]},
+            { num: "D.1", name: "Delete waypoint — INIT/REF key", setting: "Press", critical: false, subitems: [] },
+            { num: "D.2", name: "INDEX [6L]", setting: "Select (use SUPP in scratchpad for SUPP NAV DATA)", critical: false, subitems: [] },
+            { num: "D.3", name: "NAV DATA [2R]", setting: "Select", critical: false, subitems: [] },
+            { num: "D.4", name: "Identifier line", setting: "Enter on WPT/NAVAID/AIRPORT IDENT line", critical: false, subitems: [] },
+            { num: "D.5", name: "DATA → DEL key → line-select identifier", setting: "EXEC illuminates", critical: false, subitems: [] },
+            { num: "D.6", name: "EXEC key", setting: "Press — data deleted, page with prompts displayed", critical: false, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "NAV DATA or SUPP NAV DATA page showing created or deleted entries",
+            "EXEC illuminated when all required fields present"
+          ],
+          gotchas: [
+            "SUPP NAV DATA is GROUND ONLY (indefinite persistence)",
+            "REF NAV DATA is temporary — one flight only",
+            "Navaid category (with DME) matters for nav updating selection",
+            "To insert a created waypoint into the flight plan, key the identifier into scratchpad and use the route modification procedure"
+          ],
+          timing: "~1 min per entry",
+          aomRef: "AOM 21j.2.4 Creating/Deleting Waypoints on NAV DATA Pages",
+          relatedFlashcards: ["Flight Management Systems"]
+        },
+
+        // ── TO SHIFT for GPS Updating INOP ────────────────────
+        {
+          id: "fms_to_shift",
+          type: "flow",
+          who: "PF/PM",
+          title: "TO SHIFT — Runway Position Shift (GPS Updating INOP)",
+          trigger: "GPS updating inoperative — runway threshold position update required at TO/GA",
+          description: "With GPS inoperative, FMC position update at TO/GA is inhibited. Use TO SHIFT on TAKEOFF REF to update FMC position to runway threshold + entered distance at the TO/GA event.",
+          items: [
+            { num: 1, name: "TAKEOFF REF page", setting: "Select", critical: true, subitems: [] },
+            { num: 2, name: "TO SHIFT distance", setting: "Enter desired distance from runway threshold", critical: true, subitems: [
+              { name: "When TO/GA is pressed, FMC updates position to runway threshold + entered distance", isNote: true }
+            ]},
+            { num: "REM", name: "If TO SHIFT must be removed — RTE page", setting: "Select → RWY Enter (reenter runway on RTE page) → recheck/reenter other performance data as required", critical: true, subitems: [] }
+          ],
+          images: [],
+          panelState: [
+            "TAKEOFF REF with TO SHIFT value",
+            "FMC ready to accept position update at TO/GA press"
+          ],
+          gotchas: [
+            "Note: With operable GPS, FMC position update at TO/GA is INHIBITED — TO SHIFT is only relevant when GPS is inop",
+            "Removing TO SHIFT requires reentering runway on RTE page and rechecking performance data",
+            "Verify the shift distance against the charted position relative to threshold"
+          ],
+          timing: "~30 sec",
+          aomRef: "AOM 21j.2.4 Enter Position Shift on Runway (GPS Updating INOP)",
+          relatedFlashcards: ["Flight Management Systems", "Navigation"]
+        },
+
+        // ── 21j.2.5 FMS Quick Reference Guide ─────────────────
+        {
+          id: "fms_quick_ref",
+          type: "info",
+          who: "PF/PM",
+          title: "FMS Quick Reference Guide (AOM 21j.2.5)",
+          trigger: "At-a-glance index by phase of flight — which FMS procedure to use when",
+          description: "Organized by phase of flight: the AOM's own quick-reference index to FMS procedures in this chapter.",
+          items: [
+            { text: "PREFLIGHT: FMS Preflight" },
+            { text: "PREFLIGHT: IRS ALIGN Light(s) Flashing" },
+            { text: "TAXI: Runway / Departure Change" },
+            { text: "TAXI: When Load Closeout is Received" },
+            { text: "ENROUTE: Intercepting a Leg (Course) to a Waypoint" },
+            { text: "ENROUTE: Updating Cruise Winds" },
+            { text: "ENROUTE: Entering a Lateral Offset" },
+            { text: "ENROUTE: Entering Holding Fix Into Route" },
+            { text: "ARRIVAL: Selecting Arrival or Approach Procedure" },
+            { text: "ARRIVAL: Entering Speed Restrictions for RTA Navigation" },
+            { text: "ARRIVAL: Runway Centerline Extension" },
+            { text: "ARRIVAL: Change Destination" }
+          ],
+          images: [],
+          panelState: [],
+          gotchas: [
+            "AOM 21j.2.5 is literally just a phase-indexed table of contents pointing back to the procedures in 21j.1 and 21j.2",
+            "Use it as a checklist when briefing or when troubleshooting an FMS issue by phase"
+          ],
+          timing: "Reference — zero execution time",
+          aomRef: "AOM 21j.2.5 FMS Quick Reference Guide",
+          relatedFlashcards: ["Flight Management Systems"]
         }
       ]
     }
